@@ -1,212 +1,224 @@
 .. _doc_scenes_and_nodes:
 
-Scenes and nodes
+Escenas y nodos
 ================
 
-Introduction
+Introducción
 ------------
 
 .. image:: /img/chef.png
 
-Imagine for a second that you are not a game developer anymore. Instead,
-You are a chef! Change your hipster outfit for a toque and a double
-breasted jacket. Now, instead of making games, you create new and
-delicious recipes for your guests.
+Imagina por un segundo que ya no eres un desarrollador de juegos. En
+su lugar, eres un chef! Cambia tu atuendo hípster por un un gorro de
+cocinero y una chaqueta doblemente abotonada. Ahora, en lugar de hacer
+juegos, creas nuevas y deliciosas recetas para tus invitados.
 
-So, how does a chef create a recipe? Recipes are divided in two
-sections, the first is the ingredients and the second is the
-instructions to prepare it. This way, anyone can follow the recipe and
-savor your magnificent creation.
+Entonces, ¿Como crea un chef su receta? Las recetas se dividen en dos
+secciones, la primera son los ingredientes y en segundo lugar las
+instrucciones para prepararlos. De esta manera, cualquiera puede seguir
+la receta y saborear tu magnifica creación.
 
-Making games in Godot feels pretty much the same way. Using the engine
-feels like being in a kitchen. In this kitchen, *nodes* are like a
-refrigerator full of fresh ingredients to cook with.
+Hacer juegos en Godot se siente prácticamente igual. Usar el motor es
+como estar en una cocina. En esta cocina, los *nodos* son como un
+refrigerador lleno de ingredientes frescos con los cuales cocinar.
 
-There are many types of nodes, some show images, others play sound,
-other nodes display 3D models, etc. There's dozens of them.
+Hay muchos tipos de nodos, algunos muestran imágenes, otros reproducen
+sonido, otros muestran modelos 3D, etc. Hay docenas de ellos.
 
-Nodes
+Nodos
 -----
 
-But let's go to the basics. A node is a basic element for creating a
-game, it has the following characteristics:
+Pero vayamos a lo básico. Un nodo es el elemento básico para crear un
+juego, tiene las siguientes características:
 
--  Has a name.
--  Has editable properties.
--  Can receive a callback to process every frame.
--  Can be extended (to have more functions).
--  Can be added to other nodes as children.
+- Tiene un nombre.
+- Tiene propiedades editables.
+- Puede recibir una llamada a procesar en cada frame.
+- Puede ser extendido (para tener mas funciones).
+- Puede ser agregado a otros nodos como hijo.
 
 .. image:: /img/tree.png
 
-The last one is very important. Nodes can have other nodes as
-children. When arranged in this way, the nodes become a **tree**.
+La  última  es muy importante. Los nodos pueden tener otros nodos como
+hijos. Cuando se ordenan de esta manera, los nodos se transforman en
+un **árbol**.
 
-In Godot, the ability to arrange nodes in this way creates a powerful
-tool for organizing the projects. Since different nodes have different
-functions, combining them allows to create more complex functions.
+En Godot, la habilidad para ordenar nodos de esta forma crea una
+poderosa herramienta para organizar los proyectos. Dado que diferentes
+nodos tienen diferentes funciones, combinarlos permite crear funciones
+mas complejas.
 
-This is probably not clear yet and it makes little sense, but everything
-will click a few sections ahead. The most important fact to remember for
-now is that nodes exist and can be arranged this way.
+Esto probablemente no es claro aun y tiene poco sentido, pero todo va
+a va a encajar unas secciones mas adelante. El hecho mas importante a
+recordar por ahora es que los nodos existen y pueden ser ordenados de
+esa forma.
 
-Scenes
+Escenas
 ------
 
 .. image:: /img/scene_tree_example.png
 
-Now that the existence of nodes has been defined, the next logical
-step is to explain what a Scene is.
+Ahora que la existencia de nodos ha sido definida, el siguiente paso
+lógico es explicar que es una Escena.
 
-A scene is composed of a group of nodes organized hierarchically (in
-tree fashion). It has the following properties:
+Una escena esta compuesta por un grupo de nodos organizados
+jerárquicamente (con estilo de árbol). Tiene las siguientes
+propiedades:
 
--  A scene always has only one root node.
--  Scenes can be saved to disk and loaded back.
--  Scenes can be *instanced* (more on that later).
--  Running a game means running a scene.
--  There can be several scenes in a project, but for it to start, one of
-   them must selected to be loaded first.
+- Una escena siempre tiene un solo nodo raíz.
+- Las escenas pueden ser guardadas a disco y cargadas nuevamente.
+- Las escenas pueden ser *instanciadas* (mas sobre esto después).
+- Correr un juego significa ejecutar una escena.
+- Puede haber varias escenas en un proyecto, pero para iniciar,
+  una de ellas debe ser seleccionada y cargada primero.
 
-Basically, the Godot editor is a **scene editor**. It has plenty of
-tools for editing 2D and 3D scenes as well as user interfaces, but all
-the editor revolves around the concept of editing a scene and the nodes
-that compose it.
+Básicamente, el motor Godot es un **editor de escenas**. Tiene mas
+que suficientes herramientas para editar escenas 2D y 3D así como
+interfaces de usuario, pero el editor gira entorno al concepto de
+editar una escena y los nodos que la componen.
 
-Creating a new project
+Creando un Nuevo Proyecto
 ----------------------
 
-Theory is boring, so let's change subject and go practical. Following a
-long tradition in tutorials, the first project will be a hello world.
-For this, the editor will be used.
+La teoría es aburrida, asique vamos a cambiar de enfoque y ponernos
+prácticos. Siguiendo una larga tradición de tutoriales, el primer
+proyecto va a ser el "Hola Mundo!". Para esto, se usara el editor.
 
-When godot executable is run outside a project, the Project Manager
-appears. This helps developers manage their projects.
+Cuando godot se ejecuta sin un proyecto, aparecerá el Administrador
+Proyectos. Esto ayuda a los desarrolladores a administrar sus
+proyectos.
 
 .. image:: /img/project_manager.png
 
-To create a new project, the "New Project" option must be used. Choose
-and create a path for the project and specify the project name:
+Para crear un nuevo proyecto, la opción "Nuevo Proyecto" debe ser
+utilizada. Elije y crea una ruta para el proyecto y especifica el
+nombre del proyecto.
 
 .. image:: /img/create_new_project.png
 
 Editor
 ------
 
-Once the "New Project" is created, the next step is opening it. This
-will open the Godot editor. Here is how the editor looks when freshly
-opened:
+Una vez que el "Nuevo Proyecto" es creado, el siguiente paso es
+abrirlo. Esto abrirá el editor Godot. Así luce el editor cuando
+se abre:
 
 .. image:: /img/empty_editor.png
 
-As mentioned before, making games in Godot feels like being in a
-kitchen, so let's open the refrigerator and add some fresh nodes to the
-project. We'll begin with a Hello World! To do this, the "New Node"
-button must be pressed:
+Como mencionamos antes, hacer juegos en Godot se siente como estar
+en una cocina, asique abramos el refrigerador y agreguemos algunos
+nodos frescos al proyecto. Comenzaremos con un "Hola Mundo!" Para
+hacer esto, el botón "Nuevo Nodo" debe ser presionado.
 
 .. image:: /img/newnode_button.png
 
-This will open the Create Node dialog, showing the long list of nodes
-that can be created:
+Esto abrirá el dialogo de Crear Nodo, mostrando una larga lista de
+nodos que pueden ser creados:
 
 .. image:: /img/node_classes.png
 
-From there, select the "Label" node first. Searching for it is probably
-the quickest way:
+Desde allí, selecciona el nodo "Etiqueta" primero. Buscarlo es
+probablemente la forma mas rápida:
 
 .. image:: /img/node_search_label.png
 
-And finally, create the Label! A lot happens when Create is pressed:
+Y finalmente, crea la Etiqueta! Un montón de cosas suceden cuando
+Crear es presionado:
 
 .. image:: /img/editor_with_label.png
 
-First of all, the scene is changed to the 2D editor (because Label is
-a 2D Node type), and the Label appears, selected, at the top left
-corner of the viewport.
+Primero que nada, la escena cambia hacia el editor 2D (porque
+etiqueta es un Nodo de tipo 2D), y la etiqueta aparece, seleccionada,
+en la esquina superior izquierda del viewport.
 
-The node appears in the scene tree editor (box in the top left
-corner), and the label properties appear in the Inspector (box on the
-right side).
+El nodo aparece en el editor de árbol de escena (caja en la esquina
+superior izquierda), y las propiedades de etiqueta están en el
+Inspector (caja en el costado derecho)
 
-The next step will be to change the "Text" Property of the label, let's
-change it to "Hello, World!":
+El siguiente paso será cambiar la propiedad "Text" de la etiqueta,
+vamos a cambiarla a "Hola, Mundo!":
 
 .. image:: /img/hw.png
 
-Ok, everything's ready to run the scene! Press the PLAY SCENE Button on
-the top bar (or hit F6):
+Bien, todo esta listo para correr la escena! Presiona el botón
+"PLAY SCENE" en la barra superior (o presiona F6):
 
 .. image:: /img/playscene.png
 
-Aaaand... Oops.
+Aaaand... Uups.
 
 .. image:: /img/neversaved.png
 
-Scenes need to be saved to be run, so save the scene to something like
-hello.scn in Scene -> Save:
+Las escenas necesitan ser salvadas para correr, por lo que guarda la
+escena en algo como hola.scn en Escena -> Guardar:
 
 .. image:: /img/save_scene.png
 
-And here's when something funny happens. The file dialog is a special
-file dialog, and only allows to save inside the project. The project
-root is "res://" which means "resource path. This means that files can
-only be saved inside the project. For the future, when doing file
-operations in Godot, remember that "res://" is the resource path, and no
-matter the platform or install location, it is the way to locate where
-resource files are from inside the game.
+Y aquí es donde algo gracioso sucede. El de archivo es especial, y
+solo permite guardar dentro del proyecto. La raiz del proyecto es
+"res://" que significa "resource path" (camino de recursos).
+Esto significa que los archivos solo pueden ser guardados dentro
+del proyecto. En el futuro, cuando hagas operaciones con archivos
+en Godot, recuerda que "res://" es el camino de recursos, y no
+importa la plataforma o lugar de instalación, es la forma de
+localizar donde están los archivos de recursos dentro del juego.
 
-After saving the scene and pressing run scene again, the "Hello, World!"
-demo should finally execute:
+Luego de salvar la escena y presionar Run Scene nuevamente, el
+demo "Hola, Mundo!" debería finalmente ejecutarse:
 
 .. image:: /img/helloworld.png
 
-Success!
+Exito!
 
 .. _doc_scenes_and_nodes-configuring_the_project:
 
-Configuring the project
+Configurando el proyecto
 -----------------------
 
-Ok, It's time to do some configuration to the project. Right now, the
-only way to run something is to execute the current scene. Projects,
-however, have several scenes so one of them must be set as the main
-scene. This scene is the one that will be loaded at the time the project
-is run.
+Ok, es momento de hacer algunas configuraciones en el proyecto. En
+este momento, la única forma de correr algo es ejecutar la escena
+actual. Los proyectos, sin embargo, tienen varias escenas por lo que
+una de ellas debe ser configurada como la escena principal. Esta
+escena es la que será cargada cuando el proyecto corre.
 
-These settings are all stored in the engine.cfg file, which is a
-plaintext file in win.ini format, for easy editing. There are dozens of
-settings that can be set in that file to alter how a project executes,
-so to make matters simpler, a project setting dialog exists, which is
-sort of a frontend to editing engine.cfg
+Estas configuraciones son todas guardadas en el archivo engine.cfg,
+que es un archivo de texto plano en el formato win.ini, para una
+edición fácil. Hay docenas de configuraciones que pueden ser
+configuradas in ese archivo para alterar como un proyecto se
+ejecuta, por lo que para hacer mas simple el proceso, existe un
+cuadro de dialogo de configuración del proyecto, el cual es un tipo
+de interfaz para editar engine.cfg
 
-To access that dialog, simply go to Scene -> Project Settings.
+Para acceder al cuadro de dialogo, simplemente ve a Escena ->
+Configuración de proyecto.
 
-Once the window opens, the task will be to select a main scene. This can
-be done easily by changing the application/main_scene property and
-selecting 'hello.scn'.
+Cuando la ventana abre, la tarea será seleccionar la escena
+principal. Esto puede ser hecho fácilmente cambiando la propiedad
+application/main_scene y seleccionando 'hola.scn'
 
 .. image:: /img/main_scene.png
 
-With this change, pressing the regular Play button (or F5) will run the
-project, no matter which scene is being edited.
+Con este cambio, presionar el botón de Play regular (o F5) va a
+correr el proyecto, no importa la escena que se esta editando.
 
-Going back to the project settings dialog. This dialog provides a lot
-of options that can be added to engine.cfg and show their default
-values. If the default value is ok, then there isn't any need to
-change it.
+Yendo atrás con el dialogo de configuración de proyecto. Este dialogo
+permite una cantidad de opciones que pueden ser agregadas a engine.cfg
+y mostrar sus valores por omisión. Si el valor por omisión esta bien,
+entonces no hay necesidad de cambiarlo.
 
-When a value is changed, a tick is marked to the left of the name.
-This means that the property will be saved to the engine.cfg file and
-remembered.
+Cuando un valor cambia, se marca un tick a la izquierda del nombre.
+Esto significa que la propiedad va a ser grabada al archivo
+engine.cfg y recordada.
 
-As a side note, for future reference and a little out of context (this
-is the first tutorial after all!), it is also possible to add custom
-configuration options and read them in run-time using the
-:ref:`Globals <class_Globals>` singleton.
+Como una nota aparte, para futura referencia y un poco fuera de
+contexto (al fin de cuentas este es el primer tutorial!), también
+es posible agregar opciones de configuración personalizadas y
+leerlas en tiempo de ejecución usando el singleton :ref:`Globals <class_Globals>`
 
-To be continued...
+
+Continuara...
 ------------------
 
-This tutorial talks about "scenes and nodes", but so far there has been
-only *one* scene and *one* node! Don't worry, the next tutorial will
-deal with that...
+Este tutorial habla de "escenas y nodos", pero hasta ahora ha habido
+solo *una* escena y *un* nodo! No te preocupes, el próximo tutorial
+se encargara de ello...
