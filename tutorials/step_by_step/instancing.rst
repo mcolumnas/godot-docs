@@ -8,14 +8,14 @@ Fundamento
 
 Tener una escena y tirar nodos en ella puede funcionar para proyectos
 pequeños, pero en la medida que el proyecto crece, mas y mas nodos son
-usados y rapidamente se puede volver inmanejable. Para resolver esto,
+usados y rápidamente se puede volver inmanejable. Para resolver esto,
 Godot permite que un proyecto este separado en varias escenas. Esto,
 sin embargo, no funciona de la misma forma que en otros motores de
 juegos. De hecho, es bastante diferente, por lo que por favor no
 saltees este tutorial!
 
-Para resumir: Una escena es una coleccion de nodos organizados como
-un arbol, donde solo pueden tener un nodo particular como nodo raiz.
+Para resumir: Una escena es una colección de nodos organizados como
+un árbol, donde solo pueden tener un nodo particular como nodo raíz.
 
 .. image:: /img/tree.png
 
@@ -34,42 +34,42 @@ una instancia. Puede parecer extraño al principio, pero al final de
 este tutorial va a tener completo sentido!
 
 Instanciando, paso a paso
-------------------------
+-------------------------
 
-Para aprender como instanciar, comenzemos descargando un proyecto de
+Para aprender como instanciar, comencemos descargando un proyecto de
 muestra: :download:`instancing.zip </files/instancing.zip>`.
 
 Descomprime esta escena in el lugar de tu preferencia. Luego, agrega
-esta escena al gestro de proyectos usando la opcion 'Importar':
-Unzip this scene in any place of your preference. Then, add this scene to
-the project manager using the 'Import' option:
+esta escena al gestor de proyectos usando la opción 'Importar':
 
 .. image:: /img/importproject.png
 
-Simply browse to inside the project location and open the "engine.cfg"
-file. The new project will appear on the list of projects. Edit the
-project by using the 'Edit' option.
+Simplemente navega hasta el lugar donde esta el proyecto y abre
+"engine.cfg". El nuevo proyecto aparecerá en la lista de proyectos.
+Edita el proyecto usando la opción 'Editar'.
 
-This project contains two scenes "ball.scn" and "container.scn". The
-ball scene is just a ball with physics, while container scene has a
-nicely shaped collision, so balls can be thrown in there.
+Este proyecto contiene dos escenas "ball.scn"(pelota) y
+"container.scn"(contenedor). La escena ball es solo una
+pelota con fisica, mientras que la escena container tiene una
+linda forma de colisión, de forma que las pelotas pueden tirarse
+allí.
 
 .. image:: /img/ballscene.png
 
 .. image:: /img/contscene.png
 
-Open the container scene, then select the root node:
+Abre la escena container, luego selecciona el nodo raíz:
 
 .. image:: /img/controot.png
 
-Afterwards, push the '+' shaped button, this is the instancing button!
+Después, presiona el botón con forma de cadena, este es el botón de
+instanciamiento!
 
 .. image:: /img/continst.png
 
-Select the ball scene (ball.scn), the ball should appear in the origin
-(0,0), move it to around the center
-
-of the scene, like this:
+Selecciona la escena de la pelota (ball.scn), la pelota debería
+aparecer en el origen (0,0), la mueves hasta el centro de la escena,
+algo así:
 
 .. image:: /img/continstanced.png
 
@@ -77,40 +77,42 @@ Press Play and Voila!
 
 .. image:: /img/playinst.png
 
-The instanced ball fell to the bottom of the pit.
+La pelota instanciada cayo hasta el fondo del pozo.
 
-A little more
--------------
+Un poco mas
+-----------
 
-There can be as many instances as desired in a scene, just try
-instancing more balls, or duplicating them (ctrl-D or duplicate button):
+Puede haber tantas instancias como se desee en una escena,
+simplemente intenta instancias mas pelotas, o duplícalas (Ctrl-D
+o botón derecho -> Duplicar):
 
 .. image:: /img/instmany.png
 
-Then try running the scene again:
+Luego intenta correr la escena nuevamente:
 
 .. image:: /img/instmanyrun.png
 
-Cool, huh? This is how instancing works.
+Esta bueno, eh? Asi es como funciona el instanciamiento.
 
-Editing instances
------------------
+Editando instancias
+-------------------
 
-Select one of the many copies of the balls and go to the property
-editor. Let's make it bounce a lot more, so look for the bounce
-parameter and set it to 1.0:
+Selecciona una de las muchas copias de las pelotas y ve al Inspector.
+Hagamos que rebote mucho mas, por lo que busca el parámetro
+bounce(rebote) y configuralo en 1.0:
 
 .. image:: /img/instedit.png
 
-The next it will happen is that a green "revert" button appears. When
-this button is present, it means we modified a property from the
-instanced scene to override for a specific value in this instance. Even
-if that property is modified in the original scene, the custom value
-will always overwrite it. Pressing the revert button will restore the
-property to the original value that came from the scene.
+Lo próximo que sucederá es que un botón de "revertir" con forma de
+"flecha en circulo" aparecerá. Cuando este botón esta presente,
+significa que hemos modificado una propiedad en la escena
+instanciada, ignorando el valor original. Aun si esa propiedad es
+modificada en la escena original, el valor personalizado siempre lo
+sobreescribirá. Tocando el botón de revertir restaurara la propiedad
+al valor original que vino de la escena.
 
-Conclusion
+Conclusión
 ----------
 
-Instancing seems handy, but there is more to it than it meets the eye!
-The next part of the instancing tutorial should cover the rest..
+Instanciar parece útil, pero hay mas de lo que se ve a simple vista!
+La próxima parte del tutorial de instanciamiento cubrirá el resto..
