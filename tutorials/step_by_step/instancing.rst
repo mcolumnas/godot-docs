@@ -1,6 +1,6 @@
 .. _doc_instancing:
 
-Instanciando
+Instanciar
 ============
 
 Fundamento
@@ -33,7 +33,7 @@ En la imagen anterior, la escena B fue agregada a la escena A como
 una instancia. Puede parecer extraño al principio, pero al final de
 este tutorial va a tener completo sentido!
 
-Instanciando, paso a paso
+Instanciar, paso a paso
 -------------------------
 
 Para aprender como instanciar, comencemos descargando un proyecto de
@@ -63,7 +63,7 @@ Abre la escena container, luego selecciona el nodo raíz:
 .. image:: /img/controot.png
 
 Después, presiona el botón con forma de cadena, este es el botón de
-instanciamiento!
+instanciar!
 
 .. image:: /img/continst.png
 
@@ -73,7 +73,7 @@ algo así:
 
 .. image:: /img/continstanced.png
 
-Press Play and Voila!
+Presiona Reproducir y Voila!
 
 .. image:: /img/playinst.png
 
@@ -83,7 +83,7 @@ Un poco mas
 -----------
 
 Puede haber tantas instancias como se desee en una escena,
-simplemente intenta instancias mas pelotas, o duplícalas (Ctrl-D
+simplemente intenta instanciar mas pelotas, o duplícalas (Ctrl-D
 o botón derecho -> Duplicar):
 
 .. image:: /img/instmany.png
@@ -92,7 +92,7 @@ Luego intenta correr la escena nuevamente:
 
 .. image:: /img/instmanyrun.png
 
-Esta bueno, eh? Asi es como funciona el instanciamiento.
+Esta bueno, eh? Asi es como funciona instanciar.
 
 Editando instancias
 -------------------
@@ -108,11 +108,11 @@ Lo próximo que sucederá es que un botón de "revertir" con forma de
 significa que hemos modificado una propiedad en la escena
 instanciada, ignorando el valor original. Aun si esa propiedad es
 modificada en la escena original, el valor personalizado siempre lo
-sobreescribirá. Tocando el botón de revertir restaurara la propiedad
+sobrescribirá. Tocando el botón de revertir restaurara la propiedad
 al valor original que vino de la escena.
 
 Conclusión
 ----------
 
 Instanciar parece útil, pero hay mas de lo que se ve a simple vista!
-La próxima parte del tutorial de instanciamiento cubrirá el resto..
+La próxima parte del tutorial de instanciar cubrirá el resto..

@@ -1,77 +1,86 @@
 .. _doc_instancing_continued:
 
-Instancing (continued)
-======================
+Instanciar (continuación)
+=========================
 
-Recap
------
+Recapitulación
+--------------
 
-Instancing has many handy uses. At a glance, with instancing you have:
+Instanciar tiene muchos usos. A simple vista, al instanciar tienes:
 
--  The ability to subdivide scenes and make them easier to manage.
--  A more flexible alternative to prefabs (and much more powerful given
-   instances work at many levels).
--  A way to design more complex game flows or even UIs (UI Elements are
-   nodes in Godot too).
+-  La habilidad de subdividir las escenas y hacerlas mas fáciles de
+   administrar.
+-  Una alternativa flexible a los prefabricados (y mucho mas poderoso
+   dado que las instancias trabajan en varios niveles)
+-  Una forma de diseñar flujos de juegos mas complejos o incluso UIs
+   (interfaces de usuario) (Los elementos de UIs son nodos en Godot
+   también)
 
-Design language
+Lenguaje de diseño
 ---------------
 
-But the real strong point of instancing scenes is that it works as an
-excellent design language. This is pretty much what makes Godot special
-and different to any other engine out there. The entire engine was designed
-from the ground up around this concept.
+Pero el verdadero punto fuerte de instanciar escenas es que como un
+excelente lenguaje de diseño. Esto es básicamente lo que hace
+especial a Godot y diferente a cualquier otro motor en existencia.
+Todo el motor fue diseñado desde cero en torno a este concepto.
 
-When making games with Godot, the recommended approach is to leave aside
-other design patterns such as MVC or Entity-Relationship diagrams and
-start thinking games in a more natural way. Start by imagining the
-visible elements in a game, the ones that can be named not by just a
-programmer but by anyone.
+Cuando se hacen juegos con Godot, el enfoque recomendado es dejar a
+un costado otros patrones de diseño como MVC o diagramas de
+entidad-relación y empezar a pensar en juegos de una forma mas
+natural. Comienza imaginando los elementos visibles en un juego, los
+que pueden ser nombrados no solo por un programador sino por
+cualquiera.
 
-For example, here's how a simple shooter game can be imagined:
+Por ejemplo, aquí esta como puede imaginarse un juego de disparo
+simple:
 
 .. image:: /img/shooter_instancing.png
 
-It's pretty easy to come up with a diagram like this for almost any kind
-of game. Just write down the elements that come to mind, and then the
-arrows that represent ownership.
+Es bastante sencillo llegar a un diagrama como este para casi
+cualquier tipo de juego. Solo anota los elementos que te vienen a la
+cabeza, y luego las flechas que representan pertenencia.
 
-Once this diagram exists, making a game is about creating a scene for
-each of those nodes, and use instancing (either by code or from the editor) to represent ownership.
+Una vez que este diagrama existe, hacer el juego se trata de crear
+una escena para cada uno de esos nodos, y usar instancias (ya sea por
+código o desde el editor) para representar la pertenencia.
 
-Most of the time programming games (or software in general) is spent
-designing an architecture and fitting game components to that
-architecture. Designing based on scenes replaces that and makes
-development much faster and more straightforward, allowing to
-concentrate on the game itself. Scene/Instancing based design is
-extremely efficient at saving a large part of that work, since most of
-the components designed map directly to a scene. This way, none or
-little architectural code is needed.
+La mayoría del tiempo programando juegos (o software en general) es
+usada diseñando una arquitectura y adecuando los componentes del
+juego a dicha arquitectura. Diseñar basado en escenas reemplaza eso
+y vuelve el desarrollo mucho mas rápido y directo, permitiendo
+concentrarse en el juego. El diseño basado en Escenas/Instancias es
+extremadamente eficiente para ahorrar una gran parte de ese trabajo,
+ya que la mayoría de los componentes diseñados se mapean directamente
+a una escena. De esta forma, se precisa poco y nada de código de
+arquitectura.
 
-The following is a more complex example, an open-world type of game with
-lots of assets and parts that interact:
+El siguiente es un ejemplo mas complejo, un juego de mundo abierto
+con un montón de assets(activos) y partes que interactúan.
 
 .. image:: /img/openworld_instancing.png
 
-Make some rooms with furniture, then connect them. Make a house later,
-and use those rooms as the interior.
+Crea algunas habitaciones con muebles, luego conectalos. Crea una
+casa mas tarde, y usa esas habitaciones como su interior.
 
-The house can be part of a citadel, which has many houses. Finally the
-citadel can be put on the world map terrain. Add also guards and other
-NPCs to the citadel by previously creating their scenes.
+La casa puede ser parte de la ciudadela, que tiene muchas casas.
+Finalmente la ciudadela puede ser colocada en el terreno del mapa
+del mundo. También agrega guardias y otros NPCs(personajes no jugador)
+a la ciudadela, creando previamente sus escenas.
 
-With Godot, games can grow as quickly as desired, as only more scenes
-have to be made and instanced. The editor UI is also designed to be
-operated by non programmers too, so an usual team development process
-involves 3D or 2D artists, level designers, game designers, animators,
-etc all working with the editor interface.
+Con Godot, los juegos pueden crecer tan rápido como se desee, ya que
+se trata de crear mas escenas e instanciarlas. El editor UI(interfaz
+de usuario) también esta diseñado para ser operado por personas que
+no son programadores, por lo que un equipo usual de desarrollo
+consiste de artistas 2D o 3D, diseñadores de niveles, diseñadores de
+juegos, animadores, etc todos trabajando en la interfaz del editor.
 
-Information overload!
----------------------
+Sobrecarga de información!
+--------------------------
 
-Do not worry too much, the important part of this tutorial is to create
-awareness on how scenes and instancing are used in real life. The best
-way to understand all this is to make some games.
+No te preocupes demasiado, la parte importante de este tutorial es
+crear la conciencia de como las escenas e instanciar son usados en
+la vida real. La mejor forma de entender todo esto es hacer algunos
+juegos.
 
-Everything will become very obvious when put to practice, so, please do
-not scratch your head and go on to the next tutorial!
+Todo se volverá muy obvio cuando se pone en practica, entonces, por
+favor no te rasques la cabeza y ve al siguiente tutorial!
