@@ -84,7 +84,7 @@ La teoría es aburrida, asique vamos a cambiar de enfoque y ponernos
 prácticos. Siguiendo una larga tradición de tutoriales, el primer
 proyecto va a ser el "Hola Mundo!". Para esto, se usara el editor.
 
-Cuando godot se ejecuta sin un proyecto, aparecerá el Administrador
+Cuando godot se ejecuta sin un proyecto, aparecerá el Gestor
 Proyectos. Esto ayuda a los desarrolladores a administrar sus
 proyectos.
 
@@ -117,22 +117,23 @@ nodos que pueden ser creados:
 
 .. image:: /img/node_classes.png
 
-Desde allí, selecciona el nodo "Etiqueta" primero. Buscarlo es
+Desde allí, selecciona el nodo Label (Etiqueta) primero. Buscarlo es
 probablemente la forma mas rápida:
 
 .. image:: /img/node_search_label.png
 
-Y finalmente, crea la Etiqueta! Un montón de cosas suceden cuando
+Y finalmente, crea el Label! Un montón de cosas suceden cuando
 Crear es presionado:
 
 .. image:: /img/editor_with_label.png
 
 Primero que nada, la escena cambia hacia el editor 2D (porque
-etiqueta es un Nodo de tipo 2D), y la etiqueta aparece, seleccionada,
-en la esquina superior izquierda del viewport.
+Label es un Nodo de tipo 2D), y el Label aparece, seleccionada,
+en la esquina superior izquierda del viewport (ventana de
+visualización).
 
 El nodo aparece en el editor de árbol de escena (caja en la esquina
-superior izquierda), y las propiedades de etiqueta están en el
+superior izquierda), y las propiedades de Label están en el
 Inspector (caja en el costado derecho)
 
 El siguiente paso será cambiar la propiedad "Text" de la etiqueta,
@@ -145,7 +146,7 @@ Bien, todo esta listo para correr la escena! Presiona el botón
 
 .. image:: /img/playscene.png
 
-Aaaand... Uups.
+Y... Uups.
 
 .. image:: /img/neversaved.png
 
@@ -163,8 +164,8 @@ en Godot, recuerda que "res://" es el camino de recursos, y no
 importa la plataforma o lugar de instalación, es la forma de
 localizar donde están los archivos de recursos dentro del juego.
 
-Luego de salvar la escena y presionar Run Scene nuevamente, el
-demo "Hola, Mundo!" debería finalmente ejecutarse:
+Luego de salvar la escena y presionar Reproducir Escena nuevamente,
+el demo "Hola, Mundo!" debería finalmente ejecutarse:
 
 .. image:: /img/helloworld.png
 
@@ -203,7 +204,7 @@ correr el proyecto, no importa la escena que se esta editando.
 
 Yendo atrás con el dialogo de configuración de proyecto. Este dialogo
 permite una cantidad de opciones que pueden ser agregadas a engine.cfg
-y mostrar sus valores por omisión. Si el valor por omisión esta bien,
+y mostrar sus valores por omisión. Si el valor por defecto esta bien,
 entonces no hay necesidad de cambiarlo.
 
 Cuando un valor cambia, se marca un tick a la izquierda del nombre.

@@ -1,43 +1,46 @@
 .. _doc_instancing:
 
-Instancing
-==========
+Instanciando
+============
 
-Rationale
----------
+Fundamento
+----------
 
-Having a scene and throwing nodes into it might work for small projects,
-but as a project grows, more and more nodes are used and it can quickly
-become unmanageable. To solve this, Godot allows a project to be
-separated in several scenes. This, however, does not work the same way
-as in other game engines. In fact, it's quite different, so please do
-not skip this tutorial!
+Tener una escena y tirar nodos en ella puede funcionar para proyectos
+pequeños, pero en la medida que el proyecto crece, mas y mas nodos son
+usados y rapidamente se puede volver inmanejable. Para resolver esto,
+Godot permite que un proyecto este separado en varias escenas. Esto,
+sin embargo, no funciona de la misma forma que en otros motores de
+juegos. De hecho, es bastante diferente, por lo que por favor no
+saltees este tutorial!
 
-To recap: A scene is a collection of nodes organized as a tree, where
-they can have only one single node as the tree root.
+Para resumir: Una escena es una coleccion de nodos organizados como
+un arbol, donde solo pueden tener un nodo particular como nodo raiz.
 
 .. image:: /img/tree.png
 
-In Godot, a scene can be created and saved to disk. As many scenes
-can be created and saved as desired.
+En Godot, una escena puede ser creada y salvada a disco. Se pueden
+crear y guardar tantas escenas como se desee.
 
 .. image:: /img/instancingpre.png
 
-Afterwards, while editing an existing or a new scene, other scenes can
-be instanced as part of it:
+Luego, mientras editas una escena existente o creas una nueva, otras
+escenas pueden ser instanciadas como parte de esta:
 
 .. image:: /img/instancing.png
 
-In the above picture, Scene B was added to Scene A as an instance. It
-may seem weird at first, but at the end of this tutorial it will make
-complete sense!
+En la imagen anterior, la escena B fue agregada a la escena A como
+una instancia. Puede parecer extraño al principio, pero al final de
+este tutorial va a tener completo sentido!
 
-Instancing, step by step
+Instanciando, paso a paso
 ------------------------
 
-To learn how to do instancing, let's start with downloading a sample
-project: :download:`instancing.zip </files/instancing.zip>`.
+Para aprender como instanciar, comenzemos descargando un proyecto de
+muestra: :download:`instancing.zip </files/instancing.zip>`.
 
+Descomprime esta escena in el lugar de tu preferencia. Luego, agrega
+esta escena al gestro de proyectos usando la opcion 'Importar':
 Unzip this scene in any place of your preference. Then, add this scene to
 the project manager using the 'Import' option:
 
