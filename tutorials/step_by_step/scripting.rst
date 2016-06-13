@@ -7,21 +7,21 @@ Introducción
 ------------
 
 Mucho se ha dicho sobre herramientas que permiten a los usuarios crear
-juegos sin programar. Ha sido un sueño para muchos desarolladores
-independientes el crear juegos sin aprender a escribir codigo. Esto ha
-sido asi por un largo tiempo, aun dentro de compañias, donde los
-desarolladores de juegos desean tener mas control del flujo del juego
+juegos sin programar. Ha sido un sueño para muchos desarrolladores
+independientes el crear juegos sin aprender a escribir código. Esto ha
+sido así por un largo tiempo, aun dentro de compañias, donde los
+desarrolladores de juegos desean tener mas control del flujo del juego
 (game flow).
 
 Muchos productos han sido presentados prometiendo un entorno sin
-programacion, pero el resultado es generalmente incompleto, demasiado
-complejo o ineficiente comparado con el codigo tradicional. Como
-resultado, la programacion esta aqui para quedarse por un largo tiempo.
-De hecho, la direccion general en los motores de jugos ha sido agregar
-herramientas que reducen la cantidad de codigo que necesita ser escrito
-para tareas especificas, para acelerar el desarollo.
+programación, pero el resultado es generalmente incompleto, demasiado
+complejo o ineficiente comparado con el código tradicional. Como
+resultado, la programación esta aquí para quedarse por un largo tiempo.
+De hecho, la dirección general en los motores de jugos ha sido agregar
+herramientas que reducen la cantidad de código que necesita ser escrito
+para tareas especificas, para acelerar el desarrollo.
 
-En ese sentido, Godot ha tomado algunas decisiones de diseño utiles con
+En ese sentido, Godot ha tomado algunas decisiones de diseño útiles con
 ese objetivo. La primera y mas importante es el sistema de escenas. El
 objetivo del mismo no es obvio al principio, pero trabaja bien mas
 tarde. Esto es, descargar a los programadores de la responsabilidad de
@@ -30,42 +30,42 @@ la arquitectura del codigo.
 Cuando se diseñan juegos usando el sistema de escenas, el proyecto
 entero esta fragmentado en escenas complementarias (no individuales).
 Las escenas se complementar entre si, en lugar de estar separadas.
-Habra un monton de ejemplos sobre esto mas tarde, pero es muy
+Tendremos un montón de ejemplos sobre esto mas tarde, pero es muy
 importante recordarlo.
 
-Para aquellos con una buena base de programacion, esto significa que
-un patron de diseño diferente a MVC(modelo-vista-controlador). Godot
-promete eficiencia al costo de dejar los habitos MVC, los cuales se
-reemplazan por el patron *escenas como complementos*.
+Para aquellos con una buena base de programación, esto significa que
+un patrón de diseño diferente a MVC(modelo-vista-controlador). Godot
+promete eficiencia al costo de dejar los hábitos MVC, los cuales se
+reemplazan por el patrón *escenas como complementos*.
 
-Godot tambien utiliza el <http://c2.com/cgi/wiki?EmbedVsExtend>`__
-pattern para scripting, por lo que los scripts se extienden desde
+Godot también utiliza el <http://c2.com/cgi/wiki?EmbedVsExtend>`__
+patrones para scripting, por lo que los scripts se extienden desde
 todas las clases disponibles.
 
 GDScript
 --------
 
-:ref:`doc_gdscript` es un lenguaje de scripting dinámicamente tipado
+:ref:`doc_gdscript` es un lenguaje de scripting de tipado dinámico
 hecho a medida de Godot. Fue diseñado con los siguientes objetivos:
 
--  El primero y mas importante, hacerlo simple, familiar y facil tan
-   facil de aprender como sea posible.
--  Hacer el codigo leible y libre de errores. La sintaxis es
-   principalmente extraida de Python.
+-  El primero y mas importante, hacerlo simple, familiar y fácil,
+   tan fácil  de aprender como sea posible.
+-  Hacer el código legible y libre de errores. La sintaxis es
+   principalmente extraída de Python.
 
-A los programadores generalmente les toma unos dias aprenderlo, y
-entre las primeras dos semanas para sentirse comodos con el.
+A los programadores generalmente les toma unos días aprenderlo, y
+entre las primeras dos semanas para sentirse cómodos con el.
 
-Como con la mayoria de los lenguajes dinamicameante tipados, la mayor
-productividad (el codigo es mas facil de aprender, mas rapido de
-escrubur, no hay compilacion, etc) es balanceada con una pena de
-performance, pero el codigo mas critido esta escrito en C++ en primer
+Como con la mayoría de los lenguajes de tipado dinámico, la mayor
+productividad (el código es mas fácil de aprender, mas rápido de
+escribir, no hay compilación, etc) es balanceada con una pena de
+rendimiento, pero el código mas critico esta escrito en C++ en primer
 lugar dentro del motor (vector ops, physics, match, indexing, etc),
-haciendo que la performance resultante sea mas que suficiente para
-la mayoria de los juegos.
+haciendo que la rendimiento resultante sea mas que suficiente para
+la mayoría de los juegos.
 
-En cualquier caso, si se requiere performance, secciones criticas
-pueden ser rescritas en C++ y expuestas transparentementes al script.
+En cualquier caso, si se requiere rendimiento, secciones criticas
+pueden ser reescritas en C++ y expuestas transparentemente al script.
 Esto permite reemplazar una clase GDScript con una clase C++ sin
 alterar el resto del juego.
 
