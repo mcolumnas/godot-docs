@@ -1,23 +1,23 @@
 .. _doc_scripting_continued:
 
-Scripting (continued)
+Scripting (continuación)
 =====================
 
-Processing
+Procesando
 ----------
 
-Several actions in Godot are triggered by callbacks or virtual
-functions, so there is no need to check for writing code that runs all
-the time. Additionally, a lot can be done with animation players.
+Varias acciones en godot son disparadas por callbacks o funciones
+virtuales, por lo que no hay necesidad de escribir código de chequeo
+que corre todo el tiempo. Además, mucho puede ser hecho con animation
+players (reproductores de animación).
 
-However, it is still a very common case to have a script process on every
-frame. There are two types of processing, idle processing and fixed
-processing.
+Sin embargo, es aun un caso muy común tener un script procesando en
+cada frame. Hay dos tipos de procesamiento, procesamiento idle(inactivo)
+y procesamiento fixed(fijo).
 
-Idle processing is activated with the
-:ref:`Node.set_process() <class_Node_set_process>`
-function. Once active, the :ref:`Node._process() <class_Node__process>`
-callback will be called every frame. Example:
+El procesamiento Idle es activado con la funcion :ref:`Node.set_process() <class_Node_set_process>`
+Una vez activado, el callback :ref:`Node._process() <class_Node__process>`
+podrá ser llamado en cada frame(cuadro). Ejemplo:
 
 ::
 
@@ -25,15 +25,15 @@ callback will be called every frame. Example:
         set_process(true)
 
     func _process(delta):
-        # do something...
+        # hacer algo...
 
-The delta parameter describes the time elapsed (in seconds, as
-floating point) since the previous call to _process().
-Fixed processing is similar, but only needed for synchronization with
-the physics engine.
+El parámetro delta describe el tiempo que paso (en segundos, como
+numero de punto flotante) desde la llamada previa a la funcion
+_process(). El procesamiento fijo es similar, pero solo se necesita
+para sincronización con el motor de física.
 
-A simple way to test this is to create a scene with a single Label node,
-with the following script:
+Una forma simple de probar esto es crear una escena con un solo nodo
+Label, con el siguiente script:
 
 ::
 
@@ -48,186 +48,195 @@ with the following script:
         accum += delta
         set_text(str(accum))
 
-Which will show a counter increasing each second.
+Lo que mostrara un contador aumentando cada segundo.
 
-Groups
+Grupos
 ------
 
-Nodes can be added to groups (as many as desired per node). This is a
-simple yet useful feature for organizing large scenes. There are two
-ways to do this, the first is from the UI, from the Groups button:
+Los nodos pueden ser agregados a grupos (tantos como se desee por
+nodo). Esta es una característica simple pero efectiva para
+organizar escenas grandes. Hay dos formas de hacer esto, la primera
+es por la UI, con el botón Grupos en la pestaña Nodo.
 
 .. image:: /img/groups.png
 
-And the second from code. One useful example would be, for example, to
-tag scenes which are enemies.
+Y la segunda desde el código. Un ejemplo útil podría ser, por ejemplo,
+marcar escenas que son enemigos.
 
 ::
 
     func _ready():
-        add_to_group("enemies")
+        add_to_group("enemigos")
 
-This way, if the player, sneaking into the secret base, is discovered,
-all enemies can be notified about the alarm sounding, by using
-:ref:`SceneTree.call_group() <class_SceneTree_call_group>`:
+De esta forma, si el jugador, entrando sigilosamente a la base secreta,
+es descubierto, todos los enemigos pueden ser notificados sobre la
+alarma activada, usando :ref:`SceneTree.call_group() <class_SceneTree_call_group>`:
 
 ::
 
     func _on_discovered():
-        get_tree().call_group(0, "guards", "player_was_discovered")
+        get_tree().call_group(0, "guardias", "jugador_fue_descubierto")
 
-The above code calls the function "player_was_discovered" on every
-member of the group "guards".
+El código superior llama la función "jugador_fue_descubierto" en cada
+miembro del grupo "guardias".
 
-Optionally, it is possible to get the full list of "guards" nodes by
-calling
-:ref:`SceneTree.get_nodes_in_group() <class_SceneTree_get_nodes_in_group>`:
+Opcionalmente, es posible obtener la lista completa de nodos "guardias"
+llamando a :ref:`SceneTree.get_nodes_in_group() <class_SceneTree_get_nodes_in_group>`:
 
 ::
 
-    var guards = get_tree().get_nodes_in_group("guards")
+    var guardias = get_tree().get_nodes_in_group("guardias")
 
-More will be added about
-:ref:`SceneTree <class_SceneTree>`
-later.
+Luego agregaremos mas sobre :ref:`SceneTree <class_SceneTree>`
 
-Notifications
+Notificaciones
 -------------
 
-Godot has a system of notifications. This is usually not needed to be
-used from scripting, as it's too low level and virtual functions are
-provided for most of them. It's just good to know they exists. Simply
-add a
-:ref:`Object._notification() <class_Object__notification>`
-function in your script:
+Godot utiliza un sistema de notificaciones. Usualmente no son
+necesarias desde scripts, debido a que es demasiado bajo nivel y
+las funciones virtuales están disponibles para la mayoría de ellas.
+Es solo que es bueno saber que existen. Simplemente agrega una
+funcion :ref:`Object._notification() <class_Object__notification>`
+en tu script:
 
 ::
 
-    func _notification(what):
+    func notificacion (what):
         if (what == NOTIFICATION_READY):
-            print("This is the same as overriding _ready()...")
-        elif (what == NOTIFICATION_PROCESS):     
+            print("Esto es lo mismo que sobrescribir _ready()...")
+        elif (what == NOTIFICATION_PROCESS):
             var delta = get_process_time()
-            print("This is the same as overriding _process()...")
+            print("Esto es lo mismo que sobrescribir _process()...")
 
-The documentation of each class in the :ref:`Class Reference <toc-class-ref>`
-shows the notifications it can receive. However, again, for most cases
-script provides simpler overrideable functions.
+La documentación de cada clase en :ref:`Class Reference <toc-class-ref>`
+muestra las notificaciones que puede recibir. Sin embargo, nuevamente,
+para la mayoría de los casos los scripts proveen funciones mas simples
+Sobreescribibles.
 
-Overrideable functions
-----------------------
+Funciones Sobreescribibles
+--------------------------
 
-As mentioned before, it's better to use these functions. Nodes provide
-many useful overrideable functions, which are described as follows:
+Como mencionamos antes, es mejor usar estas funciones. Los nodos
+proveen muchas funciones sobreescribibles útiles, las cuales se
+describen a continuación:
 
 ::
 
     func _enter_tree():
-        # When the node enters the _Scene Tree_, it become active 
-        # and  this function is called. Children nodes have not entered 
-        # the active scene yet. In general, it's better to use _ready() 
-        # for most cases.
+        # Cuando el nodo entre en la _Scene Tree_. se vuelve activa
+        # y esta función se llama. Los nodos hijos aun no entraron
+        # la escena activa. En general, es mejor usar _ready()
+        # para la mayoría de los casos.
         pass
 
     func _ready():
-        # This function is called after _enter_tree, but it ensures 
-        # that all children nodes have also entered the _Scene Tree_, 
-        # and became active.
-        pass 
+        # Esta función es llamada luego de _enter_tree, pero se
+        # aseguro que todos los nodos hijos también hayan entrado
+        # a _Scene Tree_, y se volvieron activas.
+        pass
 
     func _exit_tree():
-        # When the node exits the _Scene Tree_, this function is called. 
-        # Children nodes have all exited the _Scene Tree_ at this point 
-        # and all became inactive.
+        # Cuando el nodo sale de _Scene Tree_. esta funcion es
+        # llamada. Los nodos hijos han salido todos de _Scene Tree_
+        # en este punto y todos están activos.
         pass
 
     func _process(delta):
-        # When set_process() is enabled, this function is called every frame.
+        # Cuando set_process() esta habilitado, esta función es
+        # llamada en cada frame.
         pass
 
     func _fixed_process(delta):
-        # When set_fixed_process() is enabled, this is called every physics 
-        # frame.
+        # Cuando set_fixed_process() esta habilitado, esto es
+        # llamado en cada frame de física.
         pass
 
     func _paused():
-        # Called when game is paused. After this call, the node will not receive 
-        # any more process callbacks.
+        # Se llama cuando el juego esta en pausa, Luego de esta
+        # llamada, el nodo no recibirá mas callbacks de proceso.
         pass
 
     func _unpaused():
-        # Called when game is unpaused.
+        # Llamada cuando el juego se reanuda.
         pass
 
-Creating nodes
---------------
+Creando nodos
+-------------
 
-To create a node from code, just call the .new() method, (like for any
-other class based datatype). Example:
+Para crear nodos desde código, solo llama el método .new(), (al igual
+que para cualquier otra clase basada en tipo de dato). Ejemplo:
 
 ::
 
     var s
     func _ready():
-        s = Sprite.new() # create a new sprite!
-        add_child(s) # add it as a child of this node
+        s = Sprite.new() # crear un nuevo sprite!
+        add_child(s) # lo agrega como hijo de este nodo
 
-To delete a node, be it inside or outside the scene, free() must be
-used:
+Para borrar el nodo, sea dentro o fuera de la escena, free() debe
+ser usado:
 
 ::
 
     func _someaction():
-        s.free() # immediately removes the node from the scene and frees it
+        s.free() # inmediatamente remueve el nodo de la escena y
+                 # lo libera
 
-When a node is freed, it also frees all its children nodes. Because of
-this, manually deleting nodes is much simpler than it appears. Just free
-the base node and everything else in the sub-tree goes away with it.
+Cuando un nodo es liberado, también son liberados todos los nodos hijos.
+Por este motivo, borrar nodos manualmente es mucho mas simple de lo que
+parece. Solo libera el nodo base y todo lo demás en el sub árbol se
+ira con el.
 
-However, it might happen very often that we might want to delete a node
-that is currently "blocked" this means, the node is emitting a signal or
-calling a function. This will result in crashing the game. Running Godot
-in the debugger often will catch this case and warn you about it.
+Sin embargo, puede suceder muy seguido que queramos borrar un nodo que
+esta actualmente "blocked"(bloqueado), esto significa, el nodo esta
+emitiendo una señal o llamado a función. Esto resultara en que el juego
+se cuelgue. Correr Godot en el debugger (depurador) a menudo va a
+capturar este caso y advertirte sobre el.
 
-The safest way to delete a node is by using
+La forma mas segura de borrar un nodo es usando
 :ref:`Node.queue_free() <class_Node_queue_free>`
-instead. This erases the node during idle, safely.
+en su lugar. Esto borrara el nodo mientras esta inactivo, de forma
+segura.
 
 ::
 
     func _someaction():
-        s.queue_free() # remove the node and delete it while nothing is happening
+        s.queue_free() # remueve el nodo y lo borra mientras nada esta
+        sucediendo.
 
-Instancing scenes
------------------
+Instanciando escenas
+--------------------
 
-Instancing a scene from code is pretty easy and done in two steps. The
-first one is to load the scene from disk.
-
-::
-
-    var scene = load("res://myscene.scn") # will load when the script is instanced
-
-Preloading it can be more convenient sometimes, as it happens at parse
-time.
+Instancias una escena desde código es bastante fácil y se hace en dos
+pasos. El primero es cargar la escena desde el disco.
 
 ::
 
-    var scene = preload("res://myscene.scn") # will load when parsing the script
+    var scene = load("res://myscene.scn") # cargara cuando el script es
+    instanciado
 
-But 'scene' is still not a node containing subnodes. It's packed in a
-special resource called :ref:`PackedScene <class_PackedScene>`.
-To create the actual node, the function
+Precargar es mas conveniente a veces, ya que sucede en tiempo de
+parse (análisis gramatical).
+
+::
+
+    var scene = preload("res://myscene.scn") # será cargado cuando el
+                                             # script es "parseado"
+
+Pero 'escena' todavía no es un nodo que contiene sub nodos. Esta
+empaquetado en un recurso especial llamado :ref:`PackedScene <class_PackedScene>`.
+Para crear el nodo en si, la función
 :ref:`PackedScene.instance() <class_PackedScene_instance>`
-must be called. This will return the tree of nodes that can be added to
-the active scene:
+debe ser llamada. Esta regresara el árbol de nodos que puede ser
+agregado a la escena activa:
 
 ::
 
     var node = scene.instance()
     add_child(node)
 
-The advantage of this two-step process is that a packed scene may be
-kept loaded and ready to use, so it can be used to create as many
-instances as desired. This is specially useful, for example, to instance
-several enemies, bullets, etc. quickly in the active scene.
+La ventaja de este proceso en dos pasos es que una escena empaquetada
+puede mantenerse cargada y listo para usar, por lo que puede ser usada
+para crear tantas instancias como se quiera. Esto es especialmente
+útil, por ejemplo, para instanciar varios enemigos, armas, etc. de
+forma rápida en la escena activa.
