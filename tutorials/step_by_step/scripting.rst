@@ -9,7 +9,7 @@ Introducción
 Mucho se ha dicho sobre herramientas que permiten a los usuarios crear
 juegos sin programar. Ha sido un sueño para muchos desarrolladores
 independientes el crear juegos sin aprender a escribir código. Esto ha
-sido así por un largo tiempo, aun dentro de compañias, donde los
+sido así por un largo tiempo, aun dentro de compañías, donde los
 desarrolladores de juegos desean tener mas control del flujo del juego
 (game flow).
 
@@ -25,7 +25,7 @@ En ese sentido, Godot ha tomado algunas decisiones de diseño útiles con
 ese objetivo. La primera y mas importante es el sistema de escenas. El
 objetivo del mismo no es obvio al principio, pero trabaja bien mas
 tarde. Esto es, descargar a los programadores de la responsabilidad de
-la arquitectura del codigo.
+la arquitectura del código.
 
 Cuando se diseñan juegos usando el sistema de escenas, el proyecto
 entero esta fragmentado en escenas complementarias (no individuales).
@@ -72,132 +72,135 @@ alterar el resto del juego.
 Scripting de una Escena
 -----------------------
 
-Before continuing, please make sure to read the :ref:`doc_gdscript` reference.
-It's a simple language and the reference is short, should not take more
-than a few minutes to glance.
+Antes de continuar, por favor asegúrate de leer la referencia :ref:`doc_gdscript`
+Es un lenguaje simple y la referencia es corta, no debería llevar mas
+que algunos minutos darle un vistazo.
 
-Scene setup
-~~~~~~~~~~~
+Configuración de la Escena
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This tutorial will begin by scripting a simple GUI scene. Use the add
-node dialog to create the following hierarchy, with the following nodes:
+Este tutorial comenzara programando una simple escena. Usa el botón de
+agregar nodo (+) para crear la siguiente jerarquía, con los siguientes
+nodos:
 
 - Panel
 
   * Label
   * Button
 
-It should look like this in the scene tree:
+Debería verse así en el árbol de la escena:
 
 .. image:: /img/scriptscene.png
 
-And try to make it look like this in the 2D editor, so it makes sense:
+Y trata de que quede así en el editor 2D, para que tenga sentido:
 
 .. image:: /img/scriptsceneimg.png
 
-Finally, save the scene, a fitting name could be "sayhello.scn"
+Finalmente, guarda la escena, un nombre acorde podría ser "dihola.scn"
 
 .. _doc_scripting-adding_a_script:
 
-Adding a script
-~~~~~~~~~~~~~~~
+Agregando un script
+~~~~~~~~~~~~~~~~~~~
 
-Select the Panel node, then press the "Add Script" Icon as follows:
+Selecciona el nodo del Panel, y presiona click derecho en el mouse,
+luego selecciona Agregar Script:
 
 .. image:: /img/addscript.png
 
-The script creation dialog will pop up. This dialog allows to select
-the language, class name, etc. GDScript does not use class names in
-script files, so that field is not editable. The script should inherit
-from "Panel" (as it is meant to extend the node, which is of Panel type,
-this is automatically filled anyway).
+El dialogo de creación de script aparecerá. Este dialogo permite
+seleccionar el lenguaje, nombre de clase, etc. GDScript no usa nombres
+de clase en los archivos de script, por lo que este campo no es
+editable. El script debería heredar de "Panel" (ya que su función es
+extender el nodo, que es de tipo Panel, esto se llena automáticamente
+de todas formas).
 
-Select the filename for the script (if you saved the scene previously,
-one will be automatically generated as sayhello.gd) and push "Create":
+Selecciona el nombre de archivo para el script (si ya salvaste la
+escena previamente, uno se generara automáticamente como dihola.gd)
+y presiona "Crear":
 
 .. image:: /img/scriptcreate.png
 
-Once this is done, the script will be created and added to the node. You
-can see this both as an extra icon in the node, as well as in the script
-property:
+Una vez hecho, el script se creara y se agregara al nodo. Puedes verlo
+tanto como el icono en el nodo, como en la propiedad script:
 
 .. image:: /img/scriptadded.png
 
-To edit the script, pushing the icon above should do it (although, the
-UI will take you directly to the Script editor screen). So, here's the
-template script:
+Para editar el script, presionar arriba del icono debería hacerlo (
+aunque, la UI(interfaz de usuario) te llevara directamente a la
+ventana de edicion de Script). Asique, aquí esta la plantilla del
+script:
 
 .. image:: /img/script_template.png
 
-There is not much in there. The "_ready()" function is called when the
-node (and all its children) entered the active scene. (Remember, it's
-not a constructor, the constructor is "_init()" ).
+No hay mucho allí. La función "_ready()" es llamada cuando el nodo (y
+todos sus hijos) entran en la escena activa. (Recuerda, no es un
+constructor, el constructor es "_init()" ).
 
-The role of the script
-~~~~~~~~~~~~~~~~~~~~~~
+El rol del script
+~~~~~~~~~~~~~~~~~
 
+Un script básicamente agrega un comportamiento al nodo. Es usado para
+controlar las funciones del nodo así como otros nodos (hijos, padres,
+primos, etc).
 A script basically adds a behavior to a node. It is used to control the
-node functions as well as other nodes (children, parent, siblings, etc).
-The local scope of the script is the node (just like in regular
-inheritance) and the virtual functions of the node are captured by the
-script.
+node functions as well as other nodes (children, parent, hermanos, etc).
+El alcance local del script es el nodo (como en cualquier herencia) y
+las funciones virtuales del nodo son capturadas por el script.
 
 .. image:: /img/brainslug.jpg
 
-Handling a signal
-~~~~~~~~~~~~~~~~~
+Manipulando una señal
+~~~~~~~~~~~~~~~~~~~~~
 
-Signals are used mostly in GUI nodes, (although other nodes have them
-too). Signals are "emitted" when some specific kind of action happens,
-and can be connected to any function of any script instance. In this
-step, the "pressed" signal from the button will be connected to a custom
-function.
+Las señales son usadas principalmente en los nodos GUI(interfaz grafica
+de usuario) (aunque otros nodos también las tienen). Las señales se
+emiten cuando una acción especifica sucede, y pueden estar conectadas
+a cualquier otra función en cualquier de cualquier instancia de script.
+En este paso, la señal "pressed" del botón será conectada a una función
+personalizada.
 
-There is a GUI for connecting signals, just select the node and press
-the "Signals" button:
-
-.. image:: /img/signals.png
-
-which will show the list of signals a Button can emit.
+En la pestaña "Nodo" puedes ver las señales disponibles para el nodo
+seleccionado:
 
 .. image:: /img/button_connections.png
 
-But this example will not use it. We don't want to make things *too*
-easy. So please close that screen!
+Pero este ejemplo no lo usara. No queremos hacer las cosas *demasiado*
+fáciles. Asique por favor, cierra esa pantalla!
 
-In any case, at this point it is clear that that we are interested in
-the "pressed" signal, so instead of doing it with the visual
-interface, the connection will be done using code.
+En cualquier caso, a esta altura es claro que estamos interesados en
+la señal "pressed"(presionado), asique en lugar de hacerlo con la
+interfaz visual, la conexión será hecha por código.
 
-For this, there is a function that is probably the one that Godot
-programmers will use the most, this is
-:ref:`Node.get_node() <class_Node_get_node>`.
-This function uses paths to fetch nodes in the current tree or anywhere
-in the scene, relative to the node holding the script.
+Para esto, existe una función que es probablemente la que los
+programadores de Godot usaran mas, esta es :ref:`Node.get_node() <class_Node_get_node>`.
+Esta función usa caminos para traer nodos en el árbol actual o en
+cualquier parte de la escena, relativa al nodo que posee el script.
 
-To fetch the button, the following must be used:
+Para traer el botón, lo siguiente debe ser utilizado:
 
 ::
 
     get_node("Button")
 
-So, next, a callback will be added for when a button is pressed, that
-will change the label's text:
+Entonces, a continuación, un callback(llamada de retorno) será
+agregado cuando el botón sea presionado, que cambiara el texto de la
+etiqueta:
 
 ::
 
     func _on_button_pressed():
         get_node("Label").set_text("HELLO!")
 
-Finally, the button "pressed" signal will be connected to that callback
-in _ready(), by using :ref:`Object.connect() <class_Object_connect>`.
+Finalmente, la señal "pressed" sera conectada al callback en _ready(),
+usando :ref:`Object.connect() <class_Object_connect>`.
 
 ::
 
     func _ready():
         get_node("Button").connect("pressed",self,"_on_button_pressed")
 
-The final script should look like this:
+El script final debería verse así:
 
 ::
 
@@ -209,22 +212,22 @@ The final script should look like this:
     # var b="textvar"
 
     func _on_button_pressed():
-        get_node("Label").set_text("HELLO!")
+        get_node("Label").set_text("HOLA!")
 
     func _ready():
         get_node("Button").connect("pressed",self,"_on_button_pressed")
 
-Running the scene should have the expected result when pressing the
-button:
+Correr la escena debería tener el resultado esperado cuando se presiona
+el botón:
 
 .. image:: /img/scripthello.png
 
-**Note:** As it is a common mistake in this tutorial, let's clarify
-again that get_node(path) works by returning the *immediate* children of
-the node controlled by the script (in this case, *Panel*), so *Button*
-must be a child of *Panel* for the above code to work. To give this
-clarification more context, if *Button* were a child of *Label*, the code
-to obtain it would be:
+**Nota:** Ya que es un error común en este tutorial, clarifiquemos
+nuevamente que get_node(camino) funciona regresando el hijo *inmediato*
+del nodo que es controlado por el script (en este caso, *Panel*), por
+lo que *Button* debe ser un hijo de *Panel* para que el código anterior
+funcione. Para darle mas contexto a esta aclaración, si *Button*
+fuese hijo de *Label*, el código para obtenerlo sería:
 
 ::
 
@@ -232,5 +235,5 @@ to obtain it would be:
     # but just in case
     get_node("Label/Button")
 
-And, also, try to remember that nodes are referenced by name, not by
-type.
+Y, también, trata de recordar que los nodos son referenciados por
+nombre, no por tipo.
