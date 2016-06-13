@@ -3,69 +3,74 @@
 Scripting
 =========
 
-Introduction
+Introducción
 ------------
 
-Much has been said about tools that allow users to create video games
-without programming. It's been a dream for many independent developers
-to create games without learning how to code. This need has been around
-for a long time, even inside companies, where game designers wish to
-have more control of the game flow.
+Mucho se ha dicho sobre herramientas que permiten a los usuarios crear
+juegos sin programar. Ha sido un sueño para muchos desarolladores
+independientes el crear juegos sin aprender a escribir codigo. Esto ha
+sido asi por un largo tiempo, aun dentro de compañias, donde los
+desarolladores de juegos desean tener mas control del flujo del juego
+(game flow).
 
-Many products have been shipped promising a no-programming environment,
-but the result is often incomplete, too complex or inefficient compared
-to traditional code. As a result, programming is here to stay for a long
-time. In fact, the general direction in game engines has been to add
-tools that try to reduce the amount of code that needs to be written for
-specific tasks, to speed up development.
+Muchos productos han sido presentados prometiendo un entorno sin
+programacion, pero el resultado es generalmente incompleto, demasiado
+complejo o ineficiente comparado con el codigo tradicional. Como
+resultado, la programacion esta aqui para quedarse por un largo tiempo.
+De hecho, la direccion general en los motores de jugos ha sido agregar
+herramientas que reducen la cantidad de codigo que necesita ser escrito
+para tareas especificas, para acelerar el desarollo.
 
-In that sense, Godot has taken some useful design decisions towards that
-goal. The first and most important is the scene system. The aim of it is
-not obvious at first, but works well later on. That is, to relieve
-programmers from the responsibility of architecting code.
+En ese sentido, Godot ha tomado algunas decisiones de diseño utiles con
+ese objetivo. La primera y mas importante es el sistema de escenas. El
+objetivo del mismo no es obvio al principio, pero trabaja bien mas
+tarde. Esto es, descargar a los programadores de la responsabilidad de
+la arquitectura del codigo.
 
-When designing games using the scene system, the whole project is
-fragmented into *complementary* scenes (not individual ones). Scenes
-complement each other, instead of being separate. There will be plenty
-of examples about this later on, but it's very important to remember it.
+Cuando se diseñan juegos usando el sistema de escenas, el proyecto
+entero esta fragmentado en escenas complementarias (no individuales).
+Las escenas se complementar entre si, en lugar de estar separadas.
+Habra un monton de ejemplos sobre esto mas tarde, pero es muy
+importante recordarlo.
 
-For those with a good amount of programming expertise, this means a
-different design pattern to MVC. Godot promises efficiency at the
-expense of dropping the MVC habits, which are replaced by the *scenes as
-a complement* pattern.
+Para aquellos con una buena base de programacion, esto significa que
+un patron de diseño diferente a MVC(modelo-vista-controlador). Godot
+promete eficiencia al costo de dejar los habitos MVC, los cuales se
+reemplazan por el patron *escenas como complementos*.
 
-Godot also uses the `extend <http://c2.com/cgi/wiki?EmbedVsExtend>`__
-pattern for scripting, meaning that scripts extend from all the
-available engine classes.
+Godot tambien utiliza el <http://c2.com/cgi/wiki?EmbedVsExtend>`__
+pattern para scripting, por lo que los scripts se extienden desde
+todas las clases disponibles.
 
 GDScript
 --------
 
-:ref:`doc_gdscript` is a dynamically typed scripting language to fit
-inside Godot. It was designed with the following goals:
+:ref:`doc_gdscript` es un lenguaje de scripting dinámicamente tipado
+hecho a medida de Godot. Fue diseñado con los siguientes objetivos:
 
--  First and most importantly, making it simple, familiar and as easy to
-   learn as possible.
--  Making the code readable and error safe. The syntax is mostly
-   borrowed from Python.
+-  El primero y mas importante, hacerlo simple, familiar y facil tan
+   facil de aprender como sea posible.
+-  Hacer el codigo leible y libre de errores. La sintaxis es
+   principalmente extraida de Python.
 
-Programmers generally take a few days to learn it, and within two weeks
-feel comfortable with it.
+A los programadores generalmente les toma unos dias aprenderlo, y
+entre las primeras dos semanas para sentirse comodos con el.
 
-As with most dynamically typed languages though, the higher productivity
-(code is easier to learn, faster to write, no compilation, etc) is
-balanced with a performance penalty, but most critical code is written
-in C++ already in the engine (vector ops, physics, math, indexing, etc),
-making the resulting performance more than enough for most types of
-games.
+Como con la mayoria de los lenguajes dinamicameante tipados, la mayor
+productividad (el codigo es mas facil de aprender, mas rapido de
+escrubur, no hay compilacion, etc) es balanceada con una pena de
+performance, pero el codigo mas critido esta escrito en C++ en primer
+lugar dentro del motor (vector ops, physics, match, indexing, etc),
+haciendo que la performance resultante sea mas que suficiente para
+la mayoria de los juegos.
 
-In any case, if more performance is required, critical sections can be
-rewritten in C++ and exposed transparently to the script. This allows
-for replacing a GDScript class with a C++ class without altering the
-rest of the game.
+En cualquier caso, si se requiere performance, secciones criticas
+pueden ser rescritas en C++ y expuestas transparentementes al script.
+Esto permite reemplazar una clase GDScript con una clase C++ sin
+alterar el resto del juego.
 
-Scripting a scene
------------------
+Scripting de una Escena
+-----------------------
 
 Before continuing, please make sure to read the :ref:`doc_gdscript` reference.
 It's a simple language and the reference is short, should not take more
@@ -181,7 +186,7 @@ will change the label's text:
 
 ::
 
-    func _on_button_pressed():  
+    func _on_button_pressed():
         get_node("Label").set_text("HELLO!")
 
 Finally, the button "pressed" signal will be connected to that callback
@@ -225,7 +230,7 @@ to obtain it would be:
 
     # not for this case
     # but just in case
-    get_node("Label/Button") 
+    get_node("Label/Button")
 
 And, also, try to remember that nodes are referenced by name, not by
 type.
