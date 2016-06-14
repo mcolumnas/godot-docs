@@ -68,9 +68,9 @@ Como cualquier clase que hereda de :ref:`CanvasItem <class_CanvasItem>`
 (Control lo hace), una llamada de retorno :ref:`CanvasItem._draw() <class_CanvasItem__draw>`
 sera recibida al principio y cada vez que el control deba ser
 redibujado (los programadores deben llamar :ref:`CanvasItem.update() <class_CanvasItem_update>`
- para poner en cola el CanvasItem para redibujar). Si el control no
- esta visible (otra propiedad CanvasItem), el control no recibe
- ninguna entrada.
+para poner en cola el CanvasItem para redibujar). Si el control no
+esta visible (otra propiedad CanvasItem), el control no recibe
+ninguna entrada.
 
 En general sin embargo, el programador no necesita lidiar con el
 dibujado y los eventos de entrada directamente cuando se construyen
