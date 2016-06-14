@@ -58,14 +58,14 @@ de teclado/joypad (ve :ref:`Control.set_focus_mode() <class_Control_set_focus_mo
 y  :ref:`Control.grab_focus() <class_Control_grab_focus>`.)
 
 Los eventos de movimiento de mouse son recibidos por el control que
- esta directamente debajo del puntero de mouse. Cuando un control
- recibe el evento de que se presiono un boton de mouse, todas los
- eventos siguientes de movimiento son recibidos por el control
- presionado hasta que el boton se suelta, aun si el puntero se mueve
- fuera de los limites del control.
+esta directamente debajo del puntero de mouse. Cuando un control
+recibe el evento de que se presiono un boton de mouse, todas los
+eventos siguientes de movimiento son recibidos por el control
+presionado hasta que el boton se suelta, aun si el puntero se mueve
+fuera de los limites del control.
 
 Como cualquier clase que hereda de :ref:`CanvasItem <class_CanvasItem>`
-(Control lo hace), una llamada de retorno:ref :`CanvasItem._draw() <class_CanvasItem__draw>`
+(Control lo hace), una llamada de retorno :ref:`CanvasItem._draw() <class_CanvasItem__draw>`
 sera recibida al principio y cada vez que el control deba ser
 redibujado (los programadores deben llamar :ref:`CanvasItem.update() <class_CanvasItem_update>`
  para poner en cola el CanvasItem para redibujar). Si el control no
