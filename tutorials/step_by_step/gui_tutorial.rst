@@ -1,109 +1,114 @@
 .. _doc_gui_tutorial:
 
-GUI tutorial
+Tutorial GUI (Interfaz Grafica de Usuario)
 ============
 
-Introduction
+Introduccion
 ~~~~~~~~~~~~
 
-If there is something that most programmers hate with passion, that is
-programming graphical user interfaces (GUIs). It's boring, tedious and
-unchallenging. Several aspects make matters worse such as:
+Si hay algo que la mayoria de los programadores realmente odian, es
+programar interfaces graficas de usuario (GUIs). Es aburrido, tedioso
+y no ofrece retos. Varios aspectos hacen este problema peor como:
 
--  Pixel alignment of UI elements is difficult (so it looks just like
-   the designer intends).
--  UIs are changed constantly due to design and usability issues that
-   appear during testing.
--  Handling proper screen re-sizing for different display resolutions.
--  Animating several screen components, to make it look less static.
+-  La alineacion de los elementos de la UI (interfaz de usuario) es
+   dificil (para que se vea justo como el diseñador queria).
+-  Las UIs son cambiadas constantemente debido a los problemas de
+   apariencia y usabilidad que aparecen durante el testing(prueba).
+-  Manejar apropiadamente el cambio de tamaño de pantalla para
+   diferentes resoluciones de pantallas.
+-  Animar varios componentes de pantalla, para hacerlo parecer menos
+   estatico.
 
-GUI programming is one of the leading causes of programmer burnout.
-During the development of Godot (and previous engine iterations),
-several techniques and philosophies for UI development were put in
-practice, such as immediate mode, containers, anchors, scripting, etc.
-This was always done with the main goal of reducing the stress
-programmers had to face while putting together user interfaces.
+La programacion GUI es ona de las principales causas de frustracion
+de los programadores. Durante el desarrollo de Godot (y previas
+iteraciones del motor), varias tecnicas y filosoficas para el
+desarrollo UI fueron puestas en practica, como un modo inmediato,
+contenedores, anclas, scripting, etc. Esto fue siempre hecho con el
+objetivo principal de reducir el estres que los programadores tienen
+que enfrentar cuando crear interfaces de usuario
 
-In the end, the resulting UI subsystem in Godot is an efficient solution
-to this problem, and works by mixing together a few different
-approaches. While the learning curve is a little steeper than in other
-toolkits, developers can put together complex user interfaces in very
-little time, by sharing the same set of tools with designers and
-animators.
+Al final, el sistema UI resultante en Godot es una eficiente solucion
+para este problema, y funciona mezclando juntos algunos enfoques.
+Mientras que la curva de aprendizaje es un poco mas pronunciada que
+en otros conjuntos de herramientas, los desarrolladores pueden crear
+interfaces de usuario complejas en muy poco tiempo, al compartir las
+mismas herramientas con diseñadores y animadores.
+
 
 Control
 ~~~~~~~
 
-The basic node for UI elements is :ref:`Control <class_Control>`
-(sometimes called "Widget" or "Box" in other toolkits). Every node that
-provides user interface functionality descends from it.
+El nodo basico para elementos UI es :ref:`Control <class_Control>`
+(a veces llamados "Widget" o "Caja" en otras herramientas). Cada
+nodo que provee funcionalidad de interfaz de usuario desciende de
+el.
 
-When controls are put in a scene tree as a child of another control,
-it's coordinates (position, size) are always relative to the parent.
-This sets the basis for editing complex user interface quickly and
-visually.
+Cuando los controles son puestos en el arbol de escena como hijos
+de otro control, sus coordenadas (posicion, tamaño) son siempre
+relativas a sus padres. Esto aporta la base para editar interfaces
+de usuario complejas rapidamente y de manera visual.
 
-Input and drawing
-~~~~~~~~~~~~~~~~~
+Entrada y dibujado
+~~~~~~~~~~~~~~~~~~
 
-Controls receive input events by means of the
-:ref:`Control._input_event() <class_Control__input_event>`
-callback. Only one control, the one in focus, will receive
-keyboard/joypad events (see
-:ref:`Control.set_focus_mode() <class_Control_set_focus_mode>`
-and :ref:`Control.grab_focus() <class_Control_grab_focus>`.)
+Los controles reciben eventos de entrada a traves de la llamada
+de retorno :ref:`Control._input_event() <class_Control__input_event>`.
+Solo un control, el que tiene el foco, va a recibir los eventos
+de teclado/joypad (ve :ref:`Control.set_focus_mode() <class_Control_set_focus_mode>`
+y  :ref:`Control.grab_focus() <class_Control_grab_focus>`.)
 
-Mouse Motion events are received by the control directly below the mouse
-pointer. When a control receives a mouse button pressed event, all
-subsequent motion events are received by the pressed control until that
-button is released, even if the pointer moves outside the control
-boundary.
+Los eventos de movimiento de mouse son recibidos por el control que
+ esta directamente debajo del puntero de mouse. Cuando un control
+ recibe el evento de que se presiono un boton de mouse, todas los
+ eventos siguientes de movimiento son recibidos por el control
+ presionado hasta que el boton se suelta, aun si el puntero se mueve
+ fuera de los limites del control.
 
-Like any class that inherits from :ref:`CanvasItem <class_CanvasItem>`
-(Control does), a :ref:`CanvasItem._draw() <class_CanvasItem__draw>`
-callback will be received at the beginning and every time the control
-needs to be redrawn (programmer needs to call
-:ref:`CanvasItem.update() <class_CanvasItem_update>`
-to enqueue the CanvasItem for redraw). If the control is not visible
-(yet aother CanvasItem property), the control does not receive any
-input.
+Como cualquier clase que hereda de :ref:`CanvasItem <class_CanvasItem>`
+(Control lo hace), una llamada de retorno:ref :`CanvasItem._draw() <class_CanvasItem__draw>`
+sera recibida al principio y cada vez que el control deba ser
+redibujado (los programadores deben llamar :ref:`CanvasItem.update() <class_CanvasItem_update>`
+ para poner en cola el CanvasItem para redibujar). Si el control no
+ esta visible (otra propiedad CanvasItem), el control no recibe
+ ninguna entrada.
 
-In general though, the programmer does not need to deal with drawing and
-input events directly when building UIs, (that is more useful when
-creating custom controls). Instead, controls emit different kinds of
-signals with contextural information for when action occurs. For
-example, a :ref:`Button <class_Button>` emits
-a "pressed" signal when pressed, a :ref:`Slider <class_Slider>` will
-emit a "value_changed" when dragged, etc.
+En general sin embargo, el programador no necesita lidiar con el
+dibujado y los eventos de entrada directamente cuando se construyen
+UIs, (es mas util cuando se crean controles personalizados). En su
+lugar, los controles emiten diferente tipos de señales con informacion
+contextual para cuando la accion ocurre. Por ejemplo, una :ref:`Button <class_Button>`
+emite una señal "pressed", una :ref:`Slider <class_Slider>`emitiraun
+"value_changed" cuando se arrastra, etc.
 
-Custom control mini tutorial
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mini tutorial de controles personalizados
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before going into more depth, creating a custom control will be a good
-way to get the picture on how controls works, as they are not as
-complex as it might seem.
+Antes de ir mas profundo, crear un control personalizado sera una
+buena forma de entender como funcionan los controles, ya que no son
+tan complejos como pueden parecer.
 
-Additionally, even though Godot comes with dozens of controls for
-different purposes, it happens often that it's just easier to attain a
-specific functionality by creating a new one.
+Adicionalmente, aunque Godot viene con docenas de controles para
+diferentes propositos, sucede a menudo que es simplemente mas
+sencillo obtener la funcionalidad especidica creando uno nuevo.
 
-To begin, create a single-node scene. The node is of type "Control" and
-has a certain area of the screen in the 2D editor, like this:
+Para comenzar, crea una escena con un solo nodo. El nodo es del tipo
+"Control" y tiene cierta area de la pantalla en el editor 2D, como
+esto:
 
 .. image:: /img/singlecontrol.png
 
-Add a script to that node, with the following code:
+Agregale un script a ese nodo, con el siguiente codigo:
 
 ::
 
     extends Control
 
-    var tapped=false
+    var pulsado=false
 
     func _draw():
 
         var r = Rect2( Vector2(), get_size() )
-        if (tapped):
+        if (pulsado):
             draw_rect(r, Color(1,0,0) )
         else:
             draw_rect(r, Color(0,0,1) )
@@ -111,66 +116,72 @@ Add a script to that node, with the following code:
     func _input_event(ev):
 
         if (ev.type==InputEvent.MOUSE_BUTTON and ev.pressed):
-            tapped=true
+            pulsado=true
             update()
 
-Then run the scene. When the rectangle is clicked/taped, it will go from
-blue to red. That synergy between the events and drawing is pretty much
-how most controls work internally.
+Luego corre la escena. Cuando el rectangulo es clickeado/pulsado, ira
+de azul a rojo. Esa sinergia entre los eventos y el dibujo es
+basicamente como funcionan internamente la mayoria de los controles.
 
 .. image:: /img/ctrl_normal.png
 
 .. image:: /img/ctrl_tapped.png
 
-UI complexity
+Complejidad de la UI
 ~~~~~~~~~~~~~
 
-As mentioned before, Godot includes dozens of controls ready for using
-in a user interface. Such controls are divided in two categories. The
-first is a small set of controls that work well for creating most game
-user interfaces. The second (and most controls are of this type) are
-meant for complex user interfaces and uniform skinning through styles. A
-description is presented as follows to help understand which one should
-be used in which case.
+Como mencionamos antes, Godot incluye docenas de controles listos para
+usarse en una interface. Esos controles estan divididos en dos
+categorias. La primera es un pequeño grupo de controles que funcionan
+bien para crear la mayoria de las interfaces de usuario. La segunda
+(y la mayoria de los controles son de este tipo) estan destinadas a
+interfases de usuario complejas y el skinning(aplicar un forro) a
+traves de estilos. Una descripcion es presentada a continuacion para
+ayudar a entender cual debe ser usada en que caso.
 
-Simplified UI controls
-~~~~~~~~~~~~~~~~~~~~~~
+Controles UI simplificados
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This set of controls is enough for most games, where complex
-interactions or ways to present information are not necessary. They can
-be skinned easily with regular textures.
+Este conjunto de controles es suficiente para la mayoria de los
+juegis, donde interacciones complejas o formas de presentar la
+informacion no son necesarios. Pueden ser "skineados" facilmente
+con texturas regulares.
 
--  :ref:`Label <class_Label>`: Node used for showing text.
--  :ref:`TextureFrame <class_TextureFrame>`: Displays a single texture,
-   which can be scaled or kept fixed.
--  :ref:`TextureButton <class_TextureButton>`: Displays a simple texture
-   buttons, states such as pressed, hover, disabled, etc. can be set.
--  :ref:`TextureProgress <class_TextureProgress>`: Displays a single
-   textured progress bar.
+-  :ref:`Label <class_Label>`: Nodo usado para mostrar texto
+-  :ref:`TextureFrame <class_TextureFrame>`: Muestra una sola
+   textura, que puede ser escalada o mantenia fija.
+-  :ref:`TextureButton <class_TextureButton>`: Muestra una
+   simple boton con textura para los estados como pressed, hover,
+   disabled, etc.
+-  :ref:`TextureProgress <class_TextureProgress>`: Muestra una
+   sola barra de progreso con textura.
 
-Additionally, re-positioning of controls is most efficiently done with
-anchors in this case (see the :ref:`doc_size_and_anchors` tutorial for more
-info).
+Adicionalmente, el reposicionado de controles es mas eficientemente
+hecho con anclas en este caso (ve el tutorial :ref:`doc_size_and_anchors`
+para mas informacion)
 
-In any case, it will happen often that even for simple games, more
-complex UI behaviors will be required. An example of this is a scrolling
-list of elements (for a high score table, for example), which needs a
-:ref:`ScrollContainer <class_ScrollContainer>`
-and a :ref:`VBoxContainer <class_VBoxContainer>`.
-These kind of more advanced controls can be mixed with the regular ones
-seamlessly (they are all controls anyway).
+De cualqueir forma, sucedera seguido que aun para juegos simples,
+comportamientos de UI mas complejos son requeridos. Un ejemplo de
+esto una lista de elemenots con scrolling (desplazamiento) (por ejemplo
+para una tabla de puntuaciones altas), la cual necesita un
+:ref:`ScrollContainer <class_ScrollContainer>` y un :ref:`VBoxContainer <class_VBoxContainer>`.
+Este tipo de controles mas avanzados puede ser mezclado con los
+regulares sin problema (son todos controles de todas formas).
 
-Complex UI controls
-~~~~~~~~~~~~~~~~~~~
+Controles de UI complejos
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The rest of the controls (and there are dozens of them!) are meant for
-another set of scenarios, most commonly:
+El resto de los controles (y hay docenas de ellos!) estan destinados
+para otro tipo de escenario, los mas comunes:
 
--  Games that require complex UIs, such as PC RPGs, MMOs, strategy,
-   sims, etc.
--  Creating custom development tools to speed up content creation.
--  Creating Godot Editor Plugins, to extend the engine functionality.
+-  Juegos que requieren UIs complejas, como RPGs (juegos de rol),
+   MMOs (juegos online masivos), strategy (estrategia), sims
+   (simulacion), etc.
+-  Crear herramientas de desarrollo personalizadas para acelerar
+   la creacion de contenido.
+-  Crear Plugins de Editor de Godot, para extender la funcionalidad
+   del motor.
 
-Re-positioning controls for these kind of interfaces is more commonly
-done with containers (see the :ref:`doc_size_and_anchors` tutorial for more
-info).
+Reposicionar controles para este tipo de interfaces es mas comunmente
+hecho con contenedores (ve el tutorial :ref:`doc_size_and_anchors` para
+mas informacion).
