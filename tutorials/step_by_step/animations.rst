@@ -1,95 +1,98 @@
 .. _doc_animations:
 
-Animations
-==========
+Animaciones
+===========
 
-Introduction
+Introducción
 ------------
 
-This tutorial will explain how everything is animated in Godot. Godot's
-animation system is extremely powerful and flexible.
+Este tutorial explicara como todo es animado en Godot. El sistema de
+animación de Godot es extremadamente poderoso y flexible.
 
-To begin, let's just use the scene from the previous tutorial (:ref:`doc_splash_screen`).
-The goal will be to add a simple animation to it. Here's a copy
-just in case: :download:`robisplash.zip </files/robisplash.zip>`.
+Para empezar, vamos a usar la escena del tutorial previo (:ref:`doc_splash_screen`).
+El objetivo es agregarle una animación simple. Aquí hay una copia
+del tutorial por las dudas: :download:`robisplash.zip </files/robisplash.zip>`.
 
-Creating the animation
-----------------------
+Creando la animación
+--------------------
 
-First of all, add an :ref:`AnimationPlayer <class_AnimationPlayer>`
-node to the scene as a child of bg (the root node):
+Primero que nada, agrega un nodo :ref:`AnimationPlayer <class_AnimationPlayer>`
+a la escena como hijo del fondo (en nodo raiz):
 
 .. image:: /img/animplayer.png
 
-When a node of this type is selected, the animation editor panel will
-appear:
+Cuando un nodo de este tipo es seleccionado, el panel de edición de
+animaciones aparecerá:
 
 .. image:: /img/animpanel.png
 
-So, it's time to create a new animation! Press the new animation button
-and name the animation "intro".
+Asique, es tiempo de crear una nueva animación! Presiona el botón Nueva
+Animación y nómbrala "intro".
 
 .. image:: /img/animnew.png
 
-After the animation has been created, then it's time to edit it, by
-pressing the "edit" button:
+Luego de que la animación es creada, es tiempo de editarla.
 
-.. image:: /img/animedit.png
-
-Editing the animation
+Editando la animación
 ---------------------
 
-Now this is when the magic happens! Several things happen when the
-"edit" button is pressed, the first one is that the animation editor
-appears above the animation panel.
+Ahora es cuando la magia sucede! Varias cosas suceden cuando se
+edita una animación, la primera es la aparicion del panel de edición
+de animación.
 
 .. image:: /img/animeditor.png
 
-But the second, and most important, is that the property editor enters
-into "animation editing" mode. In this mode, a key icon appears next to
-every property of the property editor. This means that, in Godot, *any
-property of any object* can be animated:
+Pero la segunda, y mas importante, es que el Inspector entra en modo
+"animación". En este modo, un icono de llave aparece al lado de cada
+propiedad en el Inspector. Esto significa que, en Godot, *cualquier
+propiedad de cualquier objeto* puede ser animada.
 
 .. image:: /img/propertykeys.png
 
-Making the logo appear
-----------------------
+Haciendo que el logo aparezca
+-----------------------------
 
-Next, the logo will appear from the top of the screen. After selecting
-the animation player, the editor panel will stay visible until
-manually hidden (or the animation node is erased). Taking advantage of
-this, select the "logo" node and go to the "pos" property, move it up,
-to position: 114,-400.
+A continuación, haremos aparecer el logo desde la parte superior de
+la pantalla. Luego de seleccionar el reproductor de animaciones, el
+panel de edición se mantendrá visible hasta que sea manualmente
+escondido. Para tomar ventaja de esto, seleccióna el nodo "logo" y
+ve a la propiedad "pos" en el Inspector, muévela arriba, a la
+posición: 114, -400.
 
-Once in this position, press the key button next to the property:
+Una vez en esta posición, presiona el botón de llave al lado de la
+propiedad:
 
 .. image:: /img/keypress.png
 
-As the track is new, a dialog will appear asking to create it. Confirm
-it!
+Como es un nuevo track (pista), un dialogo aparecerá preguntando
+para crearla. Confirma!
 
 .. image:: /img/addtrack.png
 
-And the keyframe will be added in the animation player editor:
+Asi el keyframe(fotograma clave) sera agregado en el editor
+de animación:
 
 .. image:: /img/keyadded.png
 
-Second, move the editor cursor to the end, by clicking here:
+En segundo lugar, mueve el cursor del editor hasta el final, haciendo
+click aquí:
 
 .. image:: /img/move_cursor.png
 
-Change the logo position to 114,0 and add a keyframe again. With two
-keyframes, the animation happens.
+Cambia la posición del logo a 114,0 en el Inspector y agrega otro
+keyframe (haciendo click en la llave). Con dos keyframes, la animación
+sucede.
 
 .. image:: /img/animation.png
 
-Pressing Play on the animation panel will make the logo descend. To test
-it by running the scene, the autoplay button can tag the animation to
-start automatically when the scene starts:
+Pulsando Play en el panel de animación hará que el logo descienda.
+Para probarlo al correr la escena, el botón autoplay puede marcar
+la animación para que empiece automáticamente cuando la escena
+comienza:
 
 .. image:: /img/autoplay.png
 
-And finally, when running the scene, the animation should look like
-this:
+Y finalmente, cuando corras la escena, la animación debería verse
+de esta forma:
 
 .. image:: /img/out.gif
