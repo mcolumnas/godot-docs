@@ -1,43 +1,47 @@
 .. _doc_splash_screen:
 
-Splash screen
+Pantalla de bienvenida (Splash Screen)
 =============
 
 Tutorial
 --------
 
-This will be a simple tutorial to cement the basic idea of how the GUI
-subsystem works. The goal will be to create a really simple, static
-splash screen.
+Este será un tutorial simple para cementar la idea básica de como el
+subsistema GUI funciona. El objetivo será crear una pantalla de
+bienvenida realmente simple y estática.
 
-Following is a file with the assets that will be used. These can be added directly to your project folder—no need to import them:
+A continuación hay un archivo con los assets que serán usados. Estos
+pueden ser agregados directamente a tu carpeta de proyecto, no hay
+necesidad de importarlos.
 
 :download:`robisplash_assets.zip </files/robisplash_assets.zip>`.
 
-Setting up
-----------
+Configurando
+------------
 
-Set the display resolution to 800x450 in Project Settings, and set up a new scene like this:
+Fija la resolución de pantalla en 800x450 en la configuración de
+proyecto, y prepara una nueva escena como esta:
 
 .. image:: /img/robisplashscene.png
 
 .. image:: /img/robisplashpreview.png
 
-The nodes 'background" and "logo" are of :ref:`TextureFrame <class_TextureFrame>`
-type. These have a special property for setting the texture to be
-displayed, just load the corresponding file.
+Los nodos "fondo" y "logo" son del tipo :ref:`TextureFrame <class_TextureFrame>`.
+Estos tienen una propiedad especial para configurar la textura a
+ser mostrada, solo carga el archivo correspondiente.
 
 .. image:: /img/texframe.png
 
-The node "start" is a :ref:`TextureButton <class_TextureButton>`,
-it takes several images for different states, but only the normal and
-pressed will be supplied in this example:
+El nodo "start" es un :ref:`TextureButton <class_TextureButton>`,
+que toma varias imágenes para diferentes estados, pero solo normal
+y pressed (presionado) serán proporcionados en este ejemplo:
 
 .. image:: /img/texbutton.png
 
-Finally, the node "copyright" is a :ref:`Label <class_Label>`.
-Labels can be set a custom font by editing the following property:
+Finalmente, el nodo "copyright" es una :ref:`Label <class_Label>`.
+Las etiquetas (Labels) pueden ser configuradas con una fuente
+personalizada editando la siguiente propiedad:
 
 .. image:: /img/label.png
 
-As a side note, the font was imported from a TTF, see :ref:`doc_importing_fonts`.
+Como una nota aparte, la fuente fue importada de un TTF, ve :ref:`doc_importing_fonts`.
