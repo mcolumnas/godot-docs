@@ -1,25 +1,24 @@
 .. _doc_resources:
 
-Resources
-=========
+Recursos
+========
 
-Nodes and resources
--------------------
+Nodos y recursos
+----------------
 
-So far, :ref:`Nodes <class_Node>`
-have been the most important datatype in Godot, as most of the behaviors
-and features of the engine are implemented through them. There is,
-though, another datatype that is equally as important. That is
-:ref:`Resource <class_Resource>`.
+Hasta ahora, los Nodos (:ref:`Nodes <class_Node>`) han sido el tipo
+de datos mas importante en Godot, ya que la mayoria de los
+comportamientos y caracteristicas del motor estan implementadas a
+traves de estos. Hay, sin embargo, otro tipo de datos que es igual
+de importante. Son los recursos (:ref:`Resource <class_Resource>`).
 
-Where *Nodes* focus on behaviors, such as drawing a sprite, drawing a
-3D model, physics, GUI controls, etc,
+Mientras que los *Nodos* se enfocan en comportamiento, como dibujar
+un sprite, dibujar un modelo 3d, fisica, controles GUI, etc,
+los **Recursos** con meros **contenedores de datos**. Esto implica
+que no realizan ninguna accion ni procesan informacion. Los recursos
+solo contienen datos.
 
-**Resources** are mere **data containers**. This means that they don't
-do any action nor process any information. Resources just contain
-data.
-
-Examples of resources are
+Ejemplos de recursos:
 :ref:`Texture <class_Texture>`,
 :ref:`Script <class_Script>`,
 :ref:`Mesh <class_Mesh>`,
@@ -30,38 +29,40 @@ Examples of resources are
 :ref:`Translation <class_Translation>`,
 etc.
 
-When Godot saves or loads (from disk) a scene (.scn or .xml), an image
-(png, jpg), a script (.gd) or pretty much anything, that file is
-considered a resource.
+Cuando Godot guarda o carga (desde disco) una escena (.scn o .xml),
+una imagen (png, jpg), un script (.gd) o basicamente cualquier cosa,
+ese archivo es considerado un recurso.
 
-When a resource is loaded from disk, **it is always loaded once**. That
-means, if there is a copy of that resource already loaded in memory,
-trying to load the resource again will just return the same copy again
-and again. This corresponds with the fact that resources are just data
-containers, so there is no need to have them duplicated.
+Cuando un recurso es cargado desde disco, **siempre es cargado una
+sola vez**.  Esto significa, que si hay una copia del recurso ya
+cargada en memoria, tratar de leer el recurso nuevamente va a
+devolver la misma copia una y otra vez. Esto debido al hecho de que
+los recursos son solo contenedores de datos, por lo que no hay
+necesidad de tenerlos duplicados.
 
-Typically, every object in Godot (Node, Resource, or anything else) can
-export properties, properties can be of many types (like a string,
-integer, Vector2, etc) and one of those types can be a resource. This
-means that both nodes and resources can contain resources as properties.
-To make it a little more visual:
+Tipicamente, cada objeto en Godot (Nodo, Recurso, o cualquier cosa)
+puede exportar propiedades, las cuales pueden ser de muchos tipos
+(como un string o cadena, integer o numero entero, Vector2 o vector
+de 2 dimensiones, etc). y uno de esos tipos puede ser un recurso.
+Esto implica que ambos nodos y recursos pueden contener recursos
+como propiedades. Para hacerlo un poco mas visual:
 
 .. image:: /img/nodes_resources.png
 
-External vs built-in
---------------------
+Externo vs incorporado
+---------------------
 
-The resource properties can reference resources in two ways,
-*external* (on disk) or **built-in**.
+Las propiedades de los recursos pueden referencias recursos de dos
+maneras, *externos* (en disco) o **incorporados**.
 
-To be more specific, here's a :ref:`Texture <class_Texture>`
-in a :ref:`Sprite <class_Sprite>` node:
+Para ser mas especifico, aqui hay una :ref:`Texture <class_Texture>`
+en un nodo :ref:`Sprite <class_Sprite>`:
 
 .. image:: /img/spriteprop.png
 
-Pressing the the ">" button the right side of the preview, allows to
-view and edit the resources properties. One of the properties (path)
-shows where it came from. In this case, it came from a png image.
+Presionando el boton ">" a la derecha de la vista previa, permite ver
+y editar las propiedades del recurso. Una de las propiedades (path)
+muestra de donde vino. En este caso, desde una imagen png.
 
 .. image:: /img/resourcerobi.png
 
@@ -113,7 +114,7 @@ must be used.
 
     func _on_shoot():
             var bullet = preload("res://bullet.scn").instance()
-            add_child(bullet)                  
+            add_child(bullet)
 
 This method creates the nodes in hierarchy, configures them (sets all
 the properties) and returns the root node of the scene, which can be
