@@ -1,9 +1,9 @@
 .. _doc_filesystem:
 
-File system
+Sistema de archivos (Filesystem)
 ==========
 
-Introduction
+Introduccion
 ------------
 
 File systems are yet another hot topic in engine development. The
@@ -41,7 +41,7 @@ Example of a file system contents:
     /enemy/enemy.gd
     /enemy/enemysprite.png
     /player/player.gd
-    
+
 engine.cfg
 ----------
 
