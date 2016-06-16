@@ -102,7 +102,8 @@ Cuando un nodo es conectado, directa o indirectamente, a la raiz del
 viewport, se vuelve parte del *Scene Tree*.
 
 Esto significa que, como se explico en tutoriales previos, obtendra
-los llamados de retorno _enter_tree() y _ready() (as como _exit_tree())
+los llamados de retorno _enter_tree() y _ready() (asi como
+_exit_tree())
 
 .. image:: /img/activescene.png
 
