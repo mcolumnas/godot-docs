@@ -3,36 +3,42 @@
 Sistema de archivos (Filesystem)
 ==========
 
-Introduccion
+Introducción
 ------------
 
-File systems are yet another hot topic in engine development. The
-file system manages how the assets are stored, and how they are accessed.
-A well designed file system also allows multiple developers to edit the
-same source files and assets while collaborating together.
+Los sistemas de archivos son otro tema importante en el desarrollo de
+un motor. El sistema de archivos gestiona como los assets son
+guardados, y como son accedidos. Un sistema de archivos bien diseñado
+también permite a múltiples desarrolladores editar los mismos archivos
+de código y assets mientras colaboran juntos.
 
-Initial versions of the Godot engine (and previous iterations before it was
-named Godot) used a database. Assets were stored in it and assigned an
-ID. Other approaches were tried as well, such as local databases, files with
-metadata, etc. In the end the simple approach won and now Godot stores
-all assets as files in the file system.
+Las versiones iniciales del motor Godot (y previas iteraciones antes
+de que se llamase Godot) usaban una base de datos. Los assets eran
+guardados en ella y se le asignaba un ID. Otros enfoques fuero
+intentados también, como base de datos local, archivos con metadatos,
+etc. Al final el enfoque mas simple gano y ahora Godot guarda todos
+los assets como archivos en el sistema de archivos.
 
-Implementation
+Implementación
 --------------
 
-The file system stores resources on disk. Anything, from a script, to a scene or a
-PNG image is a resource to the engine. If a resource contains properties
-that reference other resources on disk, the paths to those resources are also
-included. If a resource has sub-resources that are built-in, the resource is
-saved in a single file together with all the bundled sub-resources. For
-example, a font resource is often bundled together with the font textures.
+El sistema de archivos almacena los recursos en disco. Cualquier cosa,
+desde un script, hasta una escena o una imagen PNG es un recurso para
+el motor. Si un recurso contiene propiedades que referencian otros
+recursos en disco, los caminos (paths) a esos recursos con incluidos
+también. Si un recurso tiene sub-recursos que están incorporados, el
+recurso es guardado en un solo archivo junto a todos los demás
+sub-recursos. Por ejemplo, un recurso de fuente es a menudo incluido
+junto a las texturas de las fuentes.
 
-In general the the Godot file system avoids using metadata files. The reason for
-this is simple, existing asset managers and VCSs are just much better than
-anything we can implement, so Godot tries the best to play along with SVN,
-Git, Mercurial, Perforce, etc.
+En general el sistema de archivos de Godot evita usar archivos de
+metadatos. La razón para esto es es simple, los gestores de assets y
+sistemas de control de versión (VCSs) son simplemente mucho mejores
+que cualquier cosa que nosotros podamos implementar, entonces Godot
+hace su mejor esfuerzo para llevarse bien con SVN, Git, Mercurial,
+Preforce, etc.
 
-Example of a file system contents:
+Ejemplo del contenido de un sistema de archivos:
 
 ::
 
@@ -45,67 +51,77 @@ Example of a file system contents:
 engine.cfg
 ----------
 
-The engine.cfg file is the project description file, and it is always found at
-the root of the project, in fact it's location defines where the root is. This
-is the first file that Godot looks for when opening a project.
+El archivo engine.cfg es la descripción del proyecto, y siempre se
+encuentra en la raíz del proyecto, de hecho su locación define donde
+esta la raiz. Este es el primer archivo que Godot busca cuando se abre
+un proyecto.
 
-This file contains the project configuration in plain text, using the win.ini
-format. Even an empty engine.cfg can function as a basic definition of a blank
-project.
+Este archivo contiene la configuración del proyecto en texto plano,
+usando el formato win.ini. Aun un engine.cfg vacío puede funcionar
+como una definición básica de un proyecto en blanco.
 
-Path delimiter
--------------------
+Delimitador de camino (path)
+----------------------------
 
-Godot only supports ``/`` as a path delimiter. This is done for
-portability reasons. All operating systems support this, even Windows,
-so a path such as ``c:\project\engine.cfg`` needs to be typed as
+Godot solo soporta ``/`` como delimitador de ruta o camino. Esto es
+hecho por razones de portabilidad. Todos los sistemas operativos
+soportan esto, aun Windows, por lo que un camino como
+``c:\project\engine.cfg`` debe ser tipiado como
 ``c:/project/engine.cfg``.
 
-Resource path
--------------
+Camino de recursos
+------------------
 
-When accessing resources, using the host OS file system layout can be
-cumbersome and non-portable. To solve this problem, the special path
-``res://`` was created.
+Cuando se accede a recursos, usar el sistema de archivos del sistema
+operativo huésped puede ser complejo y no portable. Para resolver este
+problema, el camino especial ``res://`` fue creado.
 
-The path ``res://`` will always point at the project root (where
-engine.cfg is located, so in fact ``res://engine.cfg`` is always
-valid).
+El camino ``res://`` siempre apuntara a la raíz del proyecto (donde
+se encuentra engine.cfg, por lo que es un hecho que
+``res://engine.cfg`` siempre es valido)
 
-This file system is read-write only when running the project locally from
-the editor. When exported or when running on different devices (such as
-phones or consoles, or running from DVD), the file system will become
-read-only and writing will no longer be permitted.
+El sistema de archivos es de lectura-escritura solo cuando se corre
+el proyecto localmente desde el editor. Cuando se exporta o cuando se
+ejecuta en diferentes dispositivos (como teléfonos o consolas, o corre
+desde DVD), el sistema de archivos se vuelve de solo lectura, y la
+escritura no esta permitida.
 
-User path
+Camino de usuario
 ---------
 
-Writing to disk is still often needed for various tasks such as saving game
-state or downloading content packs. To this end, the engine ensures that there is a
-special path ``user://`` that is always writable.
+Escribir a disco es de todas formas necesario para varias tareas como
+guardar el estado del juego o descargar paquetes de contenido. Para
+este fin existe un camino especial ``user://``que siempre se puede
+escribir.
 
-Host file system
----------------
+Sistema de archivos de huésped
+------------------------------
 
-Alternatively host file system paths can also be used, but this is not recommended
-for a released product as these paths are not guaranteed to work on all platforms.
-However, using host file system paths can be very useful when writing development
-tools in Godot!
+De forma alternativa se puede utilizar también caminos del sistema de
+archivos huésped, pero esto no es recomendado para un producto
+publicado ya que estos caminos no tienen garantía de funcionar en todas
+las plataformas. Sin embargo, usar caminos de sistema de archivos
+huésped puede ser muy útil cuando se escriben herramientas de
+desarrollo en Godot!
 
-Drawbacks
----------
+Inconvenientes
+--------------
 
-There are some drawbacks to this simple file system design. The first issue is that
-moving assets around (renaming them or moving them from one path to another inside
-the project) will break existing references to these assets. These references will
-have to be re-defined to point at the new asset location.
+Hay algunos inconvenientes con este simple diseño de sistema de
+archivos. El primer tema es que mover assets (renombrarlos o
+moverlos de un camino a otro dentro del proyecto) va a romper las
+referencias a estos assets. Estas referencias deberán ser re-definidas
+para apuntar a la nueva locación del asset.
 
-The second is that under Windows and OSX file and path names are case insensitive.
-If a developer working in a case insensitive host file system saves an asset as "myfile.PNG",
-but then references it as "myfile.png", it will work just fine on their platorm, but not
-on other platforms, such as Linux, Android, etc. This may also apply to exported binaries,
-which use a compressed package to store all files.
+El segundo es que bajo Windows y OSX los nombres de archivos y caminos
+no toman en cuenta si son mayúsculas o minúsculas. Si un desarrollador
+trabajando en un sistema de archivos huésped guarda un asset como
+"myfile.PNG", pero lo referencia como "myfile.png", funcionara bien
+en su plataforma, pero no en otras, como Linux, Android, etc. Esto
+también puede aplicarse a archivos binarios exportados, que usan un
+paquete comprimido para guardar todos los archivos.
 
-It is recommend that your team clearly defines a naming convention for files when
-working with Godot! One simple fool-proof convention is to only allow lowercase
-file and path names.
+Es recomendado que tu equipo defina con claridad una nomenclatura
+para archivos que serán trabajados con Godot! Una forma simple y
+a prueba de errores es solo permitir nombres de archivos y caminos
+en minúsculas.
