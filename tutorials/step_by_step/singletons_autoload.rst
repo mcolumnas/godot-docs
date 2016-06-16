@@ -182,7 +182,7 @@ y
     func _on_goto_scene_pressed():
             get_node("/root/global").ir_escena("res://scene_a.scn")
 
-Finalmente, al correr el proyecto es posible conmutar entre ambas
+Ahora, al correr el proyecto es posible conmutar entre ambas
 escenas al presionar el botón!
 
 (Para cargar escenas con una barra de progreso, chequea el próximo
