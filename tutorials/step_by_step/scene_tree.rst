@@ -13,7 +13,7 @@ En los tutoriales previos, todo gira al rededor del concepto de Nodos,
 las escenas estan hechas de ellos, y se vuelven activas cuando entran
 a el *arbol de escena*.
 
-Esto merece ir u poco mas profundo. De hecho, el sistema de escenas no
+Esto merece ir un poco mas profundo. De hecho, el sistema de escenas no
 es siquiera un componente de nucleo de Godot, ya que es posible
 ignorarlo y hacer un script (o codigo C++) que habla directamente con
 los servidores. Pero hacer un juego de esa forma seria un monton de
@@ -75,23 +75,25 @@ llamando :ref:`Node.get_tree() <class_Node_get_tree>`.
 Viewport Raiz
 -------------
 
-The root :ref:`Viewport <class_Viewport>`
-is always a top of the scene. From a node, it can be obtained in two
-different ways:
+La raiz :ref:`Viewport <class_Viewport>`
+siempre esta en lo mas alto de la escena. Desde un nodo, puede ser
+obtenia de dos formas diferentes:
 
 ::
 
-        get_tree().get_root() # access via scenemainloop
-        get_node("/root") # access via absolute path
+        get_tree().get_root() # acceso via scenemainloop
+        get_node("/root") # acceso via camino absoluto
 
-This node contains the main viewport, anything that is a child of a
-:ref:`Viewport <class_Viewport>`
-is drawn inside of it by default, so it makes sense that the top of all
-nodes is always a node of this type, otherwise nothing would be seen!
+Este nodo contiene el viewport principa, cualquier cosa que sea hijo
+de un :ref:`Viewport <class_Viewport>`
+es dibujado dentro de el por defecto, por lo que tiene sentido que por
+encima de todos los nodos siempre haya un nodo de este tipo, de otra
+forma no se veria nada!
 
-While other viewports can be created in the scene (for split-screen
-effects and such), this one is the only one that is never created by the
-user. It's created automatically inside SceneTree.
+Mientras que otros viewports pueden ser creados en la escena (para
+efectos de pantalla dividida o similar), este es el unico que nunca
+es creado por el usuario. Es creado automaticamente dentro de
+SceneTree.
 
 Scene Tree (Arbol de Escena)
 ----------------------------
