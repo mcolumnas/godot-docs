@@ -49,10 +49,10 @@ como propiedades. Para hacerlo un poco mas visual:
 
 .. image:: /img/nodes_resources.png
 
-Externo vs incorporado
+Externo vs Incorporado (Built-in)
 ---------------------
 
-Las propiedades de los recursos pueden referencias recursos de dos
+Las propiedades de los recursos pueden referenciar recursos de dos
 maneras, *externos* (en disco) o **incorporados**.
 
 Para ser mas especifico, aqui hay una :ref:`Texture <class_Texture>`
@@ -66,49 +66,49 @@ muestra de donde vino. En este caso, desde una imagen png.
 
 .. image:: /img/resourcerobi.png
 
-When the resource comes from a file, it is considered an *external*
-resource. If the path property is erased (or never had a path to begin
-with), it is then considered a built-in resource.
+Cuando el recurso proviene de un archivo, es considerado un recurso
+*externo*. Si el la propiedad camino es borrada (o nunca tuvo), es
+considerado un recurso incorporado.
 
-For example, if the path \`"res://robi.png"\` is erased from the "path"
-property in the above example, and then the scene is saved, the resource
-will be saved inside the .scn scene file, no longer referencing the
-external "robi.png". However, even if saved as built-in, and even though
-the scene can be instanced multiple times, the resource will still
-always be loaded once. That means, different Robi robot scenes instanced
-at the same time will still share the same image.
+Por ejemplo, si el camino \`"res://robi.png"\` es borrado de la
+propiedad path en el ejemplo superior, y la escena es guardada, el
+recurso sera guardado dentro del archivo de escena .scn, ya no
+referenciando externamente a "robi.png". Sin embargo, aun si esta
+guardado de forma incorporada, y aunque la escena puede ser
+instanciada muchas veces, el recurso se seguira leyendo siempre una
+vez. Eso significa que diferentes escenas del robot Robi que sean
+instanciadas al mismo tiempo conservaran la misma imagen.
 
-Loading resources from code
----------------------------
+Cargando recursos desde codigo
+------------------------------
 
-Loading resources from code is easy, there are two ways to do it. The
-first is to use load(), like this:
-
-::
-
-    func _ready():
-            var res = load("res://robi.png") # resource is loaded when line is executed
-            get_node("sprite").set_texture(res)
-
-The second way is more optimal, but only works with a string constant
-parameter, because it loads the resource at compile-time.
+Cargar recursos desde codigo es facil, hay dos maneras de hacerlo. La
+primera es usar load(), asi:
 
 ::
 
     func _ready():
-            var res = preload("res://robi.png") # resource is loaded at compile time
+            var res = load("res://robi.png") # el recurso es cargado cuando esta linea se ejecuta
             get_node("sprite").set_texture(res)
 
-Loading scenes
+La segunda forma es mas optima, pero solo funciona con un parametro
+de cadena constante, porque carga el recurso en tiempo de compilacion.
+
+::
+
+    func _ready():
+            var res = preload("res://robi.png") # el recurso se carga en tiempo de compilacion
+            get_node("sprite").set_texture(res)
+
+Cargar escenas
 --------------
 
-Scenes are also resources, but there is a catch. Scenes saved to disk
-are resources of type :ref:`PackedScene <class_PackedScene>`,
-this means that the scene is packed inside a resource.
+Las escenas son recursos, pero hay una excepcion. Las escenas
+guardadas a disco son del tipo :ref:`PackedScene <class_PackedScene>`,
+esto implica que la escena esta empacada dentro de un recurso.
 
-To obtain an instance of the scene, the method
-:ref:`PackedScene.instance() <class_PackedScene_instance>`
-must be used.
+Para obtener una instancia de la escena, el metodo
+:ref:`PackedScene.instance() <class_PackedScene_instance>` debe ser usado.
 
 ::
 
@@ -116,30 +116,31 @@ must be used.
             var bullet = preload("res://bullet.scn").instance()
             add_child(bullet)
 
-This method creates the nodes in hierarchy, configures them (sets all
-the properties) and returns the root node of the scene, which can be
-added to any other node.
+Este metoo crea los nodos en jerarquia, los configura (ajusta todas
+las propiedades) y regresa el nodo raiz de la escena, el que puede
+ser agregado a cualquier nodo.
 
-The approach has several advantages. As the
-:ref:`PackedScene.instance() <class_PackedScene_instance>`
-function is pretty fast, adding extra content to the scene can be done
-efficiently. New enemies, bullets, effects, etc can be added or
-removed quickly, without having to load them again from disk each
-time. It is important to remember that, as always, images, meshes, etc
-are all shared between the scene instances.
+Este enfoque tiene varia ventajas. Como la funcion :ref:`PackedScene.instance() <class_PackedScene_instance>`
+es bastante rapida, agregar contenido extra a la escena puede ser
+hecho de forma eficiente. Nuevos enemigos, balas, efectos, etc pueden
+se aregados o quitados rapidamente, sin tener que cargarlos
+nuevamente de disco cada vez. Es importante recordar que, como siempre,
+las imagenes, meshes (mallas), etc son todas compartidas entre las
+instancias de escena.
 
-Freeing resources
------------------
+Liberando recursos
+------------------
 
-Resource extends from :ref:`Reference <class_Reference>`.
-As such, when a resource is no longer in use, it will automatically free
-itelf. Since, in most cases, Resources are contained in Nodes, scripts
-or other resources, when a node is removed or freed, all the children
-resources are freed too.
+Los recursos se extienden de :ref:`Reference <class_Reference>`.
+Como tales, cuando un recurso ya no esta en  uso, se liberara a si
+mismo de forma automatica. Debido a que, en la mayoria de los casos,
+los Recursos estan contenidos en Nodos, los scripts y otros
+recursos, cuando el nodo es quitado o liberado, todos los recursos
+hijos son liberados tambien.
 
 Scripting
 ---------
 
-Like any object in Godot, not just nodes, resources can be scripted too.
-However, there isn't generally much of a win, as resources are just data
-containers.
+Como muchos objetos en Godot, no solo nodos, los recursos pueden ser
+scripts tambien. Sin embargo, no hay mucha ganancia, ya que los
+recursos son solo contenedores de datos.
