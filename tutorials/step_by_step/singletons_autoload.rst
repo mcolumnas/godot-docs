@@ -1,181 +1,191 @@
 .. _doc_singletons_autoload:
 
-Singletons (AutoLoad)
+Singletons (AutoCarga)
 =====================
 
-Introduction
+Introduccion
 ------------
 
-Scene Singletons are very useful things, as they represent a very common
-use case, but it's not clear at the beginning where their value is.
+Los Singletons de escena son muy utiles, ya que representan un caso
+ de uso muy comun, pero no es claro al principio de donde viene su
+ valor.
 
-The scene system is very useful, but by itself it has a few drawbacks:
+El sistema de escenas es muy util, aunque propiamente tiene algunas
+desventajas:
 
--  There is no "common" place to store information (such as core, items
-   obtained, etc) between two scenes.
--  It is possible to make a scene that loads other scenes as children
-   and frees them, while keeping that information, but then if that is
-   done, it's not possible to run a scene alone by itself and expect it
-   to work
--  It is also possible to store persistent information to disk in
-   \`user://\` and have scenes always load it, but saving/loading that
-   while changing scenes is cumbersome.
+-  No hay lugar comun donde almacenar informacion (como nucleo, items
+   obtenidos, etc) entre dos escenas.
+-  Es posible hacer una escena que carga otras escenas como hijos y
+   las libera, mientras mantiene la informacion, pero si esto es hecho,
+   no es posible correr una escena sola por si misma y esperar que
+   funcione.
+-  Tambien es posible almacenar informacion persistente a disco en
+   \`user://\` y hacer que las escenas siempre lo carguen, pero guardar
+   y cargar eso mientras cambiamos de escenas es incomodo.
 
-So, after using Godot for a while, it becomes clear that it is necessary
-to have parts of a scene that:
+Por lo tanto, luego de usar Godot por un tiempo, se vuelve claro que
+es necesario tener partes de una escena que:
 
--  Are always loaded, no matter which scene is opened from the editor.
--  Can keep global variables, such as player information, items, money,
-   etc.
--  Can handle switching of scenes and transitions.
--  Just have something that acts like a singleton, since GDScript does
-   not support global variables by design.
+-  Estan siempre cargadas, no importa que escena es abierta desde el
+   editor.
+-  Puede mantener variables globales, como informacion de jugador,
+   items, dinero, etc.
+-  Puede manejar cambios de escenas y transiciones.
+-  Solo ten algo que actue como singleton, ya que GDScript no soporta
+   variables globales por diseño.
 
-For this, the option for auto-loading nodes and scripts exists.
+Por eso, la opcion para auto-cargar nodos y scripts existe.
 
-AutoLoad
+So, after using Godot for a while, it becomes clear that it
+
+AutoLoad (AutoCarga)
 --------
 
-AutoLoad can be a scene, or a script that inherits from Node (a Node
-will be created and the script will be set to it). They are added to the
-project in the Scene > Project Settings > AutoLoad tab.
+AutoLoad puede ser una escena, o un script que hereda desde Nodo (un
+Nodo sera creado y el script ajustado para el). Son agregados a el
+proyecto en Escena > Configuracion de Proyecto > pestaña AutoLoad.
 
-Each autoload needs a name, this name will be the node name, and the
-node will be always added to the root viewport before any scene is
-loaded.
+Cada autoload necesita un nombre, este nombre sera el nombre del nodo,
+y el nodo siempre sera agregado al viewport root (raiz) antes de que
+alguna escena sea cargada.
+
 
 .. image:: /img/singleton.png
 
-This means, that for a singleton named "playervariables", any node can
-access it by requesting:
+Esto significa, que para un singleton llamado "jugadorvariables",
+cualquier nodo puede accederlo al requerirlo:
 
 ::
 
-    var player_vars = get_node("/root/playervariables")
+    var jugador_vars = get_node("/root/jugadorvariables")
 
-Custom scene switcher
----------------------
+Conmutador(Switcher) personalizado de escena
+------------------------------
 
-This short tutorial will explain how to make a scene switcher by using
-autoload. For simple scene switching, the
-:ref:`SceneTree.change_scene() <class_SceneTree_change_scene>`
-method suffices (described in :ref:`doc_scene_tree`), so this method is for
-more complex behaviors when switching scenes.
+Este corto tutorial explicara como hacer para lograr un conmutador
+usando autoload. Para conmutar una escena de forma simple, el metodo
+:ref:`SceneTree.change_scene() <class_SceneTree_change_scene>` basta
+(descrito en :ref:`doc_scene_tree`), por lo que este metodo es para
+comportamientos mas complejos de conmutacion de escenas.
 
-First download the template from here:
-:download:`autoload.zip </files/autoload.zip>`, then open it.
+Primero descarga la plantilla desde aqui:
+:download:`autoload.zip </files/autoload.zip>`, y abrela.
 
-Two scenes are present, scene_a.scn and scene_b.scn on an otherwise
-empty project. Each are identical and contain a button connected to a
-callback for going to the opposite scene. When the project runs, it
-starts in scene_a.scn. However, this does nothing and pressing the
-button does not work.
+Dos escenas estan presentes, scene_a.scn y scene_b.scn en un proyecto
+que salvo por estas escenas esta vacio. Cada una es identica y contiene
+un boton conectado a la llamada de retorno para ir a la escena opuesta.
+Cuando el proyecto corre, comienza en scene_a.scn. Sin embargo, esto
+no hace nada y tocar el boton no funciona.
 
 global.gd
 ---------
 
-First of all, create a global.gd script. The easier way to create a
-resource from scratch is from the resources tab:
+Primero que nada, crea un script global.gd. La forma mas facil de
+crear un recurso desde cero es desde la pestaña del Inspector:
 
 .. image:: /img/newscript.png
 
-Save the script to a file global.gd:
+Guarda el script con el nombre global.gd:
 
 .. image:: /img/saveasscript.png
 
-The script should be opened in the script editor. Next step will be
-adding it to autoload, for this, go to: Scene [STRIKEOUT:> Project
-Settings]> AutoLoad and add a new autoload with name "global" that
-points to this file:
+El script deberia estar abierto en el editor de scripts. El siguiente
+paso sera agregarlo a autoload, para esto, ve a: Escena, Configuracion
+de Proyecto, Autoload y agrega un nuevo autoload con el nombre
+"global" que apunta a ester archivo:
 
 .. image:: /img/addglobal.png
 
-Now, when any scene is run, the script will be always loaded.
+Ahora, cuando la escena corre, el script siempre sera cargado.
 
-So, going back to it, In the _ready() function, the current scene
-will be fetched. Both the current scene and global.gd are children of
-root, but the autoloaded nodes are always first. This means that the
-last child of root is always the loaded scene.
+Asique, yendo un poco atras, en la funcion _ready(), la escena actual
+sera traida. Tanto la escena actual como global.gd son hijos de root,
+pero los nodos autocargados siempre estan primeros. Esto implica
+que el ultimo hijo de de root es siempre la escena cargada.
 
-Also, make sure that global.gd extends from Node, otherwise it won't be
-loaded.
+Tambien, asegurate que global.gd se extienda desde Nodo, de otra forma
+no sera cargada.
 
 ::
 
     extends Node
 
-    var current_scene = null
+    var escena_actual = null
 
     func _ready():
-            var root = get_tree().get_root()
-            current_scene = root.get_child( root.get_child_count() -1 )
+            var raiz = get_tree().get_root()
+            escena_actual = raiz.get_child( raiz.get_child_count() - 1 )
 
-Next, is the function for changing scene. This function will erase the
-current scene and replace it by the requested one.
+Como siguiente paso, es necesaria la funcion para cambiar de escena.
+Esta funcion va a borrar la escena actual y reemplazarla por la que se
+pidio.
 
 ::
 
-    func goto_scene(path):
+    func ir_escena(camino):
 
-        # This function will usually be called from a signal callback,
-        # or some other function from the running scene.
-        # Deleting the current scene at this point might be
-        # a bad idea, because it may be inside of a callback or function of it.
-        # The worst case will be a crash or unexpected behavior.
+        # Esta funcion usualmente sera llamada de una señal de
+        # llamada de retorno, o alguna otra funcion de la escena
+        # que esta corriendo borrar la escena actual en este punto
+        # puede ser una mala idea, porque puede estar dentro de una
+        # llamada de retorno o funcion de ella. El peor caso va a
+        # ser que se cuelgue o comportamiento no esperado.
 
-        # The way around this is deferring the load to a later time, when
-        # it is ensured that no code from the current scene is running:
+        # La forma de evitar esto es difiriendo la carga para mas
+        # tarde, cuando es seguro que ningun codigo de la escena
+        # actual esta corriendo:
 
-        call_deferred("_deferred_goto_scene",path)
+        call_deferred("_ir_escena_diferida",camino)
 
 
-    func _deferred_goto_scene(path):
+    func _ir_escena_diferida(camino):
 
-        # Immediately free the current scene,
-        # there is no risk here.    
-        current_scene.free()
+        # Inmediatamente libera la escena actual,
+        # no hay riesgo aqui.
+        escena_actual.free()
 
-        # Load new scene
-        var s = ResourceLoader.load(path)
+        # Carga la nueva escena
+        var s = ResourceLoader.load(camino)
 
-        # Instance the new scene
-        current_scene = s.instance()
+        # Instancia la nueva escena
+        escena_actual = s.instance()
 
         # Add it to the active scene, as child of root
-        get_tree().get_root().add_child(current_scene)
+        get_tree().get_root().add_child(escena_actual)
 
         # optional, to make it compatible with the SceneTree.change_scene() API
-        get_tree().set_current_scene( current_scene )
+        get_tree().set_current_scene( escena_actual )
 
-As mentioned in the comments above, we really want to avoid the
-situation of having the current scene being deleted while being used
-(code from functions of it being run), so using
-:ref:`Object.call_deferred() <class_Object_call_deferred>`
-is desired at this point. The result is that execution of the commands
-in the second function will happen at an immediate later time when no
-code from the current scene is running.
+Como mencionamos en los comentarios de arriba, realmente queremos evitar
+la situacion de tener la escena actual siendo borrada mientras esta
+siendo usada (el codigo de sus funciones aun corriendo), por lo que
+usando :ref:`Object.call_deferred() <class_Object_call_deferred>`
+es recomendado en este punto. El resultado es que la ejecucion de los
+comandos en la segunda funcion van a suceder en un momento
+inmediatamente posterior inmediato cuando no hay codigo de la escena
+actual corriendo.
 
-Finally, all that is left is to fill the empty functions in scene_a.gd
-and scene_b.gd:
-
-::
-
-    #add to scene_a.gd
-
-    func _on_goto_scene_pressed():
-            get_node("/root/global").goto_scene("res://scene_b.scn")
-
-and
+Finalmente, todo lo que queda es llenar las funciones vacias en
+scene_a.gd y scene_b.gd:
 
 ::
 
-    #add to scene_b.gd
+    #agrega a scene_a.gd
 
     func _on_goto_scene_pressed():
-            get_node("/root/global").goto_scene("res://scene_a.scn")
+            get_node("/root/global").ir_escena("res://scene_b.scn")
 
-Finally, by running the project it's possible to switch between both
-scenes by pressing the button!
+y
 
-(To load scenes with a progress bar, check out the next tutorial,
-:ref:`doc_background_loading`)
+::
+
+    #agrega a scene_b.gd
+
+    func _on_goto_scene_pressed():
+            get_node("/root/global").ir_escena("res://scene_a.scn")
+
+Finalmente, al correr el proyecto es posible conmutar entre ambas
+escenas al presionar el boton!
+
+(Para cargar escenas con una barra de progreso, chequea el proximo
+tutorial, :ref:`doc_background_loading`)
