@@ -6,11 +6,11 @@ Coordenadas de mouse y entrada
 Acerca
 ------
 
-La razon de este pequeño tutorial es aclarar muchos errores comunes
-sobre las coordenadas de entrada, obtener la posicion del mouse y
-resolucion de pantalla, etc.
+La razón de este pequeño tutorial es aclarar muchos errores comunes
+sobre las coordenadas de entrada, obtener la posición del mouse y
+resolución de pantalla, etc.
 
-Coordanadas de pantalla de hardware
+Coordenadas de pantalla de hardware
 -----------------------------------
 
 Usar coordenadas de hardware tiene sentido en el caso de escribir UIs
@@ -38,12 +38,12 @@ ejemplo:
 
        # Imprime el tamaño del viewport
 
-       print("La resolucion del viewport es: ",get_viewport_rect().size)
+       print("La resolución del viewport es: ",get_viewport_rect().size)
 
     func _ready():
         set_process_input(true)
 
-Alternativamente es posible pedir al viewport la posicion del mouse:
+Alternativamente es posible pedir al viewport la posición del mouse:
 
 ::
 
