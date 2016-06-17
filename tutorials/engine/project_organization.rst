@@ -1,42 +1,44 @@
 .. _doc_project_organization:
 
-Project organization
-====================
+Organización de proyectos
+=========================
 
-Introduction
+Introducción
 ------------
 
-This tutorial is aimed to propose a simple workflow on how to organize
-projects. Since Godot allows the programmer to use the file-system as he
-or she pleases, figuring out a way to organize the projects when
-starting to use the engine can be a little challenging. Because of this,
-a simple workflow will be described, which can be used or not, but
-should work as a starting point.
+Este tutorial esta dirigido a proponer un workflow simple sobre como
+organizar proyectos. Debido a que Godot permite que el programador
+use el sistema de archivos como el o ella quieren, encontrar una forma
+de organizar los proyectos cuando empiezas a usar el motor puede ser
+algo difícil. Por esto, un workflow simple sera descrito, el cual
+puede ser usado o no, pero deberia servir como un punto inicial.
 
-Additionally, using version control can be challenging so this
-proposition will include that too.
+Ademas, usar control de versiones puede ser un rato, por lo que este
+documento también lo incluirá.
 
-Organization
+Organización
 ------------
 
-Other game engines often work by having an asset database, were you can
-browse images, models, sounds, etc. Godot is more scene-based in nature
-so most of the time the assets are bundled inside the scenes or just
-exist as files but are referenced from scenes.
+Otros motores de juegos a menudo trabajan teniendo una base de datos,
+donde puedes navegar imágenes, modelos, sonidos, etc. Godot es mas
+basado en escenas por naturaleza así que la mayor parte del tiempo
+los assets están empacados dentro de las escenas o simplemente existen
+como archivos pero no referenciados desde escenas.
 
-Importing & game folder
------------------------
+Importación & directorio del juego
+----------------------------------
 
-It is very often necessary to use asset importing in Godot. As the
-source assets for importing are also recognized as resources by the
-engine, this can become a problem if both are inside the project folder,
-because at the time of export the exporter will recognize them and
-export both.
+Es muy a menudo necesario usar la importación de assets en Godot. Como
+los assets de origen para importar también son reconocidos como recursos
+por el motor, esto puede volverse un problema si ambos están dentro de
+la carpeta de proyecto, porque al momento de exportar el exportador va a
+reconocerlos y exportar ambos.
 
-To solve this, it is a good practice to have your game folder inside
-another folder (the actual project folder). This allows to have the game
-assets separated from the source assets, and also allows to use version
-control (such as svn or git) for both. Here is an example:
+Para resolver esto, es una buena practica  tener tu carpeta de juego
+dentro de otra carpeta (la verdadera carpeta del proyecto). Esto
+permite tener los assets del juego separados de los assets de origen,
+y también permite el uso de control de versiones (como svn o git) para
+ambos. Aquí hay un ejemplo:
 
 ::
 
@@ -46,7 +48,7 @@ control (such as svn or git) for both. Here is an example:
     myproject/sound/door_close.wav
     myproject/translations/sheet.csv
 
-Then also, the game itself is, in this case, inside a game/ folder:
+Luego también, el juego en si, en este caso, dentro de la carpeta game/:
 
 ::
 
@@ -58,28 +60,29 @@ Then also, the game itself is, in this case, inside a game/ folder:
     myproject/game/translations/sheet.en.xl
     myproject/game/translations/sheet.es.xl
 
-Following this layout, many things can be done:
+Siguiendo este diseño, muchas cosas pueden ser hechas:
 
--  The whole project is still inside a folder (myproject/).
--  Exporting the project will not export the .wav and .png files which
-   were imported.
--  myproject/ can be put directly inside a VCS (like svn or git) for
-   version control, both game and source assets are kept track of.
--  If a team is working on the project, assets can be re-imported by
-   other project members, because Godot keeps track of source assets
-   using relative paths.
+-  El proyecto entero sigue estando dentro de una carpeta (myproject/).
+-  Exportar el proyecto no exportara los archivos .wav y .png que
+   fueron importados.
+-  myproject/ puede ser puesta directamente dentro de un VCS (como svn
+   o git) para control de versión, tanto los assets de origen como del
+   juego serán seguidos.
+-  Si un equipo esta trabajando en el proyecto, los assets pueden ser
+   re-importados por otros miembros del proyecto, porque Godot sigue a
+   los assets de origen usando paths relativos.
 
-Scene organization
-------------------
+Organización de escena
+----------------------
 
-Inside the game folder, a question that often arises is how to organize
-the scenes in the filesystem. Many developers try asset-type based
-organization and end up having a mess after a while, so the best answer
-is probably to organize them based on how the game works and not based
-on asset type. Here are some examples.
+Dentro de la carpeta del juego, una pregunta que a menudo aparece es
+como organizar las escenas en el sistema de archivos. Muchos
+desarrolladores intentan la organización  de assets por tipo y terminan
+con un desorden luego de un tiempo, por lo que la mejor respuesta
+probablemente es organizarlos basados en como funciona el juego y no
+en el tipo de asset. Aquí algunos ejemplos.
 
-If you were organizing your project based on asset type, it would look
-like this:
+Si organizas tu proyecto basado en tipo de asset, luciría como esto:
 
 ::
 
@@ -92,12 +95,12 @@ like this:
     game/sounds/sound2.wav
     game/music/music1.ogg
 
-Which is generally a bad idea. When a project starts growing beyond a
-certain point, this becomes unmanageable. It's really difficult to tell
-what belongs to what.
+Lo cual en general es una mala idea. Cuando un proyecto comienza a
+crecer mas allá de cierto punto, esto se vuelve inmanejable. Es
+realmente difícil decir que pertenece donde.
 
-It's generally a better idea to use game-context based organization,
-something like this:
+En general es una mejor idea usar organización basada en contexto del
+juego, algo como esto:
 
 ::
 
@@ -116,18 +119,19 @@ something like this:
     game/gui/main_screen/main_sceen.scn
     game/gui/options/options.scn
 
-This model or similar models allows projects to grow to really large
-sizes and still be completely manageable. Notice that everything is
-based on parts of the game that can be named or described, like the
-settings screen or the valley. Since everything in Godot is done with
-scenes, and everything that can be named or described can be a scene,
-this workflow is very smooth and easygoing.
+Este modelo o modelos similares permiten que los proyectos crezcan hasta
+tamaños realmente grandes y aun ser completamente administrable. Nota
+que todo esta basado en partes del jugo que pueden ser nombradas o
+descritas, como la pantalla de ajustes (settings screen) o el valle
+(valley). Debido a que todo en Godot es hecho con escenas, y todo lo
+que puede ser nombrado o descrito puede ser una escena, este workflow
+es muy suave y llevadero.
 
-Cache files
+Archivos de Cache
 -----------
 
-Godot uses a hidden file called ".fscache" at the root of the project.
-On it, it caches project files and is used to quickly know when one is
-modified. Make sure to **not commit this file** to git or svn, as it
-contains local information and might confuse another editor instance in
-another computer.
+Godot usa un archivo oculto llamado ".fscache" en la raíz del proyecto.
+En el, se cachean los archivos de proyecto y es usado para rápidamente
+saber cuando uno es modificado. Asegúrate de **no enviar este archivo**
+a git o svn, ya que contiene información local y puede confundir otra
+instancia del editor en otra computadora.
