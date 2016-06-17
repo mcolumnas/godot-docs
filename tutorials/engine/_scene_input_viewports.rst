@@ -1,5 +1,5 @@
-Scene, input & viewports
-========================
+Escena, entrada y viewports
+===========================
 
 .. toctree::
    :maxdepth: 1
