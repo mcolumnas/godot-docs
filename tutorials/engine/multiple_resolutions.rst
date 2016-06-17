@@ -1,90 +1,94 @@
 .. _doc_multiple_resolutions:
 
-Multiple resolutions
-====================
+Resoluciones múltiples
+======================
 
-Base resolution
+Resolución base
 ---------------
 
-A base screen resolution for the project can be specified in the project
-settings.
+Una resolución de pantalla base para el proyecto puede ser especificada
+en configuración de proyecto.
 
 .. image:: /img/screenres.png
 
-However, what it does is not completely obvious. When running on PC, the
-engine will attempt to set this resolution (or use something smaller if
-it fails). On mobile, consoles or devices with a fixed resolution or
-full screen rendering, this resolution will be ignored and the native
-resolution will be used instead. To compensate for this, Godot offers
-many ways to control how the screen will resize and stretch to different
-screen sizes.
+Sin embargo, lo que hace no es completamente obvio. Cuando corre en PC,
+el motor intentara ajustara esta resolución (o usar algo mas chico si
+falla). En equipos móviles, consolas u otros dispositivos con una
+resolución fija o renderizacion de pantalla completa, esta resolución
+será ignorada y la resolución nativa se usara en su lugar. Para
+compensar esto, Godot ofrece muchas formas de controlar como la pantalla
+va a cambiar de tamaño y estirarse a diferentes tamaños de pantalla.
 
-Resizing
---------
+Resizing (Cambiar de tamaño)
+-----------------
 
-There are several types of devices, with several types of screens, which
-in turn have different pixel density and resolutions. Handling all of
-them can be a lot of work, so Godot tries to make the developer's life a
-little easier. The :ref:`Viewport <class_Viewport>`
-node has several functions to handle resizing, and the root node of the
-scene tree is always a viewport (scenes loaded are instanced as a child
-of it, and it can always be accessed by calling
-``get_tree().get_root()`` or ``get_node("/root")``).
+Hay varios tipos de dispositivos, con varios tipos de pantalla, los
+cuales a su vez tienen diferente densidad de pixels y resolución.
+Manejarlos todos puede ser un montón de trabajo, asique Godot trata
+de hacer la vida del desarrollador un poco mas fácil. El nodo
+:ref:`Viewport <class_Viewport>` tiene varias funciones para manejar
+el cambio de tamaño, y el nodo root de la escena es siempre un viewport
+(las escenas cargadas son instanciadas como hijos de el, y siempre se
+pueden acceder llamando ``get_tree().get_root()`` o ``get_node("/root")``).
 
-In any case, while changing the root Viewport params is probably the
-most flexible way to deal with the problem, it can be a lot of work,
-code and guessing, so Godot provides a simple set of parameters in the
-project settings to handle multiple resolutions.
+En cualquier caso, mientras cambiar los parámetros del viewport root es
+probablemente la forma mas flexible de atender este problema, puede ser
+un montón de trabajo, código y adivinanza, por lo que Godot provee un
+rango de parámetros simple en la configuración de proyecto para manejar
+múltiples resoluciones.
 
-Stretch settings
-----------------
+Configuraciones de estiramiento
+-------------------------------
 
-Stretch settings are located in the project settings, it's just a bunch
-of configuration variables that provide several options:
+Las configuraciones de estiramiento están localizadas en la
+configuración de proyecto, es solo un montón de variables de
+configuración que proveen varias opciones:
 
 .. image:: /img/stretchsettings.png
 
-Stretch mode
-------------
+Modo de estiramiento
+--------------------
 
--  **Disabled**: The first is the stretch mode. By default this is
-   disabled, which means no stretching happens (the bigger the screen or
-   window, the bigger the resolution, always matching pixels 1:1).
--  **2D**: In this mode, the resolution specified in display/width and
-   display/height in the project settings will be stretched to cover the
-   whole screen. This means that 3D will be unaffected (will just render
-   to higher-res) and 2D will also be rendered at higher-res, just
-   enlarged.
--  **Viewport**: Viewport scaling is different, the root
-   :ref:`Viewport <class_Viewport>`
-   is set as a render target, and still renders precisely to the
-   resolution specified in the ``display/`` section of the project
-   settings. Finally, this viewport is copied and scaled to fit the
-   screen. This mode is useful when working with pixel-precise games, or
-   just for the sake of rendering to a lower resolution for improving
-   performance.
+-  **Disabled**: Lo primero es el modo de estiramiento. Por defecto
+   esta deshabilitado, lo que significa que no hay estiramiento (cuanto
+   mas grande la pantalla o ventana, mas grande la resolución, siempre
+   igualando pixeles 1:1).
+-  **2D**: En este modo, la resolución especificada en display/width y
+   display/height en la configuración del proyecto será estirada para
+   cubrir la pantalla entera. Esto implica que 3D no sera afectado (
+   solo va a renderizar a una resolución mas alta) y 2D también será
+   renderizado a una resolución mayor, solo que agrandada.
+-  **Viewport**: El escalado de viewport es diferente, el :ref:`Viewport <class_Viewport>`
+   root se ajusta como un render target, y aun renderiza precisamente
+   a la resolución especificada en la sección ``display/`` de la
+   configuración de proyecto. Finalmente, este viewport es copiado y
+   escalado para entrar a la pantalla. Este modo es útil cuando trabajas
+   con juegos que requieren precisión de pixeles, o solo con el motivo
+   de renderizar a una resolución mas baja para mejorar la performance.
 
 .. image:: /img/stretch.png
 
-Stretch aspect
---------------
+Aspecto de estiramiento
+-----------------------
 
--  **Ignore**: Ignore the aspect ratio when stretching the screen. This
-   means that the original resolution will be stretched to fit the new
-   one, even if it's wider or narrower.
--  **Keep**: Keep aspect ratio when stretching the screen. This means
-   that the original resolution will be kept when fitting the new one,
-   and black bars will be added to the sides or the top/bottom of the
-   screen.
--  **Keep Width**: Keep aspect ratio when stretching the screen, but if
-   the resulting screen is taller than the specified resolution, it will
-   be stretched vertically (and more vertical resolution will be
-   reported in the viewport, proportionally). This is usually the best
-   option for creating GUIs or HUDs that scale, so some controls can be
-   anchored to the bottom (:ref:`doc_size_and_anchors`).
--  **Keep Height**: Keep aspect ratio when stretching the screen, but if
-   the resulting screen is wider than the specified resolution, it will
-   be stretched horizontally (and more horizontal resolution will be
-   reported in the viewport, proportionally). This is usually the best
-   option for 2D games that scroll horizontally (like runners or
-   platformers).
+-  **Ignore**: Ignorar la relación de aspecto cuando se estire la
+   pantalla. Esto significa que la resolución original será estirada
+   para entrar en la nueva, aun cuando sea mas ancha o mas angosta.
+-  **Keep**: Mantener la relación de aspecto cuando se estire la
+   pantalla. Esto implica que la resolución original será mantenida
+   cuando se ajuste a una nueva, y barras negras serán agregadas a los
+   costados o borde superior e inferior de la pantalla.
+-  **Keep Width**: Mantener la relación de aspecto cuando se estira
+   la pantalla, pero si la resolución de pantalla es mas alta que la
+   resolución especificada, será estirada verticalmente (y una mayor
+   resolución vertical será reportada en el viewport, proporcionalmente)
+   Esta es usualmente la mejor opción para crear GUIs o HUDs que
+   se escalan, asi algunos controles pueden ser anclados hacia abajo
+   (:ref:`doc_size_and_anchors`).
+-  **Keep Height**: Mantener la relación de aspecto cuando se estira
+   la pantalla, pero si la pantalla resultante es mas ancha que la
+   resolución especificada, será estirada horizontalmente (y mas
+   resoluciones horizontales serán reportadas en el viewport,
+   proporcionalmente). Esta es usualmente la mejor opción para juegos
+   2D que tienen scroll(desplazamiento) horizontal (como juegos de
+   plataforma)
