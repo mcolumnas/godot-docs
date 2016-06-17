@@ -1,48 +1,49 @@
 .. _doc_mouse_and_input_coordinates:
 
-Mouse and input coordinates
+Coordenadas de mouse y entrada
 ===========================
 
-About
------
+Acerca
+------
 
-The reason for this small tutorial is to clear up many common mistakes
-about input coordinates, obtaining mouse position and screen resolution,
-etc.
+La razon de este pequeño tutorial es aclarar muchos errores comunes
+sobre las coordenadas de entrada, obtener la posicion del mouse y
+resolucion de pantalla, etc.
 
-Hardware display coordinates
-----------------------------
+Coordanadas de pantalla de hardware
+-----------------------------------
 
-Using hardware coordinates makes sense in the case of writing complex
-UIs meant to run on PC, such as editors, MMOs, tools, etc. Yet, it does
-not make as much sense outside of that scope.
+Usar coordenadas de hardware tiene sentido en el caso de escribir UIs
+complejas destinada a correr en PC, como editores, MMOs, herramientas,
+etc. De todas formas, no tiene mucho sentido fuera de ese alcance.
 
-Viewport display coordinates
-----------------------------
+Coordenadas de pantalla de viewport
+-----------------------------------
 
-Godot uses viewports to display content, and viewports can be scaled by
-several options (see :ref:`doc_multiple_resolutions` tutorial). Use, then, the
-functions in nodes to obtain the mouse coordinates and viewport size,
-for example:
+Godot usa viewports para mostrar contenido, los cuales puede ser
+escalados de varias maneras (vee el tutorial
+:ref:`doc_multiple_resolutions`). Usa, pues, las funciones de los nodos
+para obtener las coordenadas de mouse y tamaño del viewport, por
+ejemplo:
 
 ::
 
     func _input(ev):
-       # Mouse in viewport coordinates
+       # Mouse en coordenadas viewport
 
        if (ev.type==InputEvent.MOUSE_BUTTON):
-           print("Mouse Click/Unclick at: ",ev.pos)
+           print("El mouse fue Click/Unclick en: ",ev.pos)
        elif (ev.type==InputEvent.MOUSE_MOTION):
-           print("Mouse Motion at: ",ev.pos)
+           print("Movimiento de mouse en: ",ev.pos)
 
-       # Print the size of the viewport
+       # Imprime el tamaño del viewport
 
-       print("Viewport Resolution is: ",get_viewport_rect().size)
+       print("La resolucion del viewport es: ",get_viewport_rect().size)
 
     func _ready():
         set_process_input(true)
 
-Alternatively it's possible to ask the viewport for the mouse position:
+Alternativamente es posible pedir al viewport la posicion del mouse:
 
 ::
 
