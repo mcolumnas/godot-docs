@@ -1,39 +1,40 @@
 .. _doc_data_paths:
 
-Data paths
-==========
+Paths(Caminos) de Datos
+========================
 
-Path separators
----------------
+Separadores de caminos
+----------------------
 
-For the sake of supporting as many platforms as possible, Godot only
-accepts unix style path separators (``/``). These work everywhere,
-including Windows.
+Con el motivo de soportar tantas plataformas como es posible, Godot
+solo acepta separadores de camino de estilo unix (``/``). Estos funcionan
+en cualquier lado, incluyendo Windows.
 
-A path like: ``C:\Projects`` will become ``C:/Projects``.
+Un camino como ``C:\Projects`` se transforma en ``C:/Projects``.
 
-Resource path
--------------
+Path de recursos
+----------------
 
-As mentioned before. Godot considers that a project exists at any
-given folder that contains an "engine.cfg" text file, even if such
-file is empty.
+Como se menciono antes, Godot considera que un proyecto existe en
+cualquier carpeta que contenga un archivo de texto "engine.cfg",
+aun si el mismo esta vacío.
 
-Accessing project files can be done by opening any path with ``res://``
-as a base. For example, a texture located in the root of the project
-folder may be opened from the following path: ``res://sometexture.png``.
+Acceder a archivos de proyectos puede ser hecho abriendo cualquier
+camino con ``res://`` como base. Por ejemplo, una textura localizada
+en la raíz de la carpeta del proyecto puede ser abierta con el
+siguiente camino: ``res://algunatextura.png``.
 
-Userdata path (persistent data)
--------------------------------
+Camino de datos de usuario (datos persistentes)
+-----------------------------------------------
 
-While the project is running, it is a very common scenario that the
-resource path will be read-only, due to it being inside a package,
-self contained executable, or system wide install location.
+Mientras el proyecto esta corriendo, es un escenario muy común que el
+camino de recursos sea de solo lectura, debido a que esta dentro de
+un paquete, ejecutable autónomo, o lugar de instalación de sistema.
 
-Storing persistent files in such scenarios should be done by using the
-``user://`` prefix, for example: ``user://gamesave.txt``.
+Guardar archivos persistentes en esos escenarios debería ser hecho
+usando el prefijo ``user://``, por ejemplo: ``user://gamesave.txt``.
 
-In some devices (for example, mobile ad consoles) this path is unique
-for the app. Under desktop operating systems, the engine uses the
-typical ~/.Name (check the project name under the settings) in OSX and
-Linux, and APPDATA/Name for Windows.
+En algunos dispositivos (por ejemplo, móvil y consola) este camino es
+único para la applicacion. Bajo sistemas operativos de escritorio, el
+motor usa el nombre tipico ~/.Name (chequea el nombre de proyecto bajo
+los ajustes) en OSX y Linux, y APPDATA/Name para Windows.
