@@ -1,39 +1,40 @@
 .. _doc_background_loading:
 
-Background loading
-==================
+Carga en segundo plano
+======================
 
-When switching the main scene of your game (for example going to a new
-level), you might want to show a loading screen with some indication
-that progress is being made. The main load method
-(``ResourceLoader::load`` or just ``load`` from gdscript) blocks your
-thread while the resource is being loaded, so It's not good. This
-document discusses the ``ResourceInteractiveLoader`` class for smoother
-load screens.
+Cuando cambias la escena principal de tu juego (por ejemplo yendo a un
+nuevo nivel), puedes querer mostrar una pantalla de carga con alguna
+indicacion del progreso. El metodo principal de carga
+(``ResourceLoader::load`` or just ``load`` from gdscript) bloquea tu
+thread (hilo) mientras los recursos estan siendo cargados, por lo que
+no es bueno. Este documento discute la clase
+``ResourceInteractiveLoader`` para pantallas de carga mas suaves.
 
 ResourceInteractiveLoader
 -------------------------
 
-The ``ResourceInteractiveLoader`` class allows you to load a resource in
-stages. Every time the method ``poll`` is called, a new stage is loaded,
-and control is returned to the caller. Each stage is generally a
-sub-resource that is loaded by the main resource. For example, if you're
-loading a scene that loads 10 images, each image will be one stage.
+La clase ``ResourceInteractiveLoader`` te permite cargar el recurso en
+etapas. Cada vez que el metodo ``poll`` es llamado, una nueva etapa es
+cargada, y el control se devuelve al que llamo. Cada etapa es
+generalmente un sub-recurso que es cargado por el recurso principal. Por
+ejemplo, si vas a cargar una escena que tiene 10 imagenes, cada imagen
+sera una etapa.
 
-Usage
------
+Uso
+---
 
-Usage is generally as follows
+La forma de usarlo es generalmente la siguiente:
 
-Obtaining a ResourceInteractiveLoader
+Obteniendo un ResourceInteractiveLoader
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
     Ref<ResourceInteractiveLoader> ResourceLoader::load_interactive(String p_path);
 
-This method will give you a ResourceInteractiveLoader that you will use
-to manage the load operation.
+Este metodo te dara un ResourceInteractiveLoader que usaras para
+gestionar la operacion de carga.
 
 Polling
 ~~~~~~~
@@ -42,127 +43,133 @@ Polling
 
     Error ResourceInteractiveLoader::poll();
 
-Use this method to advance the progress of the load. Each call to
-``poll`` will load the next stage of your resource. Keep in mind that
-each stage is one entire "atomic" resource, such as an image, or a mesh,
-so it will take several frames to load.
+Usa este metodo para avanzar el progreso de la carga. Cada llamada a
+``poll`` cargara la siguiente etapa de tu recurso. Ten en cuenta que
+cada etapa es un recurso "atomico" completo, como una imagen, una malla,
+por lo que llevara varios frames para cargarlo.
 
-Returns ``OK`` on no errors, ``ERR_FILE_EOF`` when loading is finished.
-Any other return value means there was an error and loading has stopped.
+Devuleve ``OK`` si no hay errores, ``ERR_FILE_EOF`` cuando la carga
+termina. Cualquier otro valor implicar que hubo un error y la carga
+se detuvo.
 
-Load progress (optional)
-~~~~~~~~~~~~~~~~~~~~~~~~
+Progreso de carga (opcional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To query the progress of the load, use the following methods:
+Para consultar el progreso de la carga, usa los siguientes metodos:
 
 ::
 
     int ResourceInteractiveLoader::get_stage_count() const;
     int ResourceInteractiveLoader::get_stage() const;
 
-``get_stage_count`` returns the total number of stages to load.
-``get_stage`` returns the current stage being loaded.
+``get_stage_count`` devuelve el numero total de etapas a cargar.
+``get_stage`` devuelve la etapa actual siendo cargada.
 
-Forcing completion (optional)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Forzar que complete (opcional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
     Error ResourceInteractiveLoader::wait();
 
-Use this method if you need to load the entire resource in the current
-frame, without any more steps.
+Usa este metodo si necesitas cargar el recurso entero en el frame
+actual, sin pasos adicionales.
 
-Obtaining the resource
+Obtener el recurso
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
     Ref<Resource> ResourceInteractiveLoader::get_resource();
 
-If everything goes well, use this method to retrieve your loaded
-resource.
+Si todo va bien, usa este metodo para traer tu recurso cargado.
 
-Example
+Ejemplo
 -------
 
-This example demostrates how to load a new scene. Consider it in the
-context of the :ref:`doc_singletons_autoload` example.
+Este ejemplo demuestra como cargar una nueva escena. Consideralo en el
+contexto del ejemplo :ref:`doc_singletons_autoload`.
 
-First we setup some variables and initialize the ``current_scene``
-with the main scene of the game:
+Primero debemos declarar algunas variables e inicializar
+``current_scene'' con la escena principal del juego:
 
 ::
 
     var loader
     var wait_frames
-    var time_max = 100 # msec
+    var time_max = 100 # milisegundos
     var current_scene
 
     func _ready():
         var root = get_tree().get_root()
         current_scene = root.get_child(root.get_child_count() -1)
 
-The function ``goto_scene`` is called from the game when the scene
-needs to be switched. It requests an interactive loader, and calls
-``set_progress(true)`` to start polling the loader in the ``_progress``
-callback. It also starts a "loading" animation, which can show a
-progress bar or loading screen, etc.
+La funcion ``goto_scene`` es llamada desde el juego cuando la escena
+necesita ser conmutada. Pide una carga interactiva, y llama
+``set_progress(true)`` para empezar a hacer polling de la carga en la
+llamada de retorno ``_progress``. Tambien inicia una animacion de
+"carga", que puede mostrar una barra de progreso o pantalla de carga,
+ etc.
 
 ::
 
-    func goto_scene(path): # game requests to switch to this scene
+    func goto_scene(path): # el juego pide cambiar a este escena
         loader = ResourceLoader.load_interactive(path)
-        if loader == null: # check for errors
+        if loader == null: # chequear errores
             show_error()
             return
         set_process(true)
 
-        current_scene.queue_free() # get rid of the old scene
+        current_scene.queue_free() # dejar de lado la escena vieja
 
-        # start your "loading..." animation
+        # Empieza tu animacion "loading..."("cargando"...)
         get_node("animation").play("loading")
 
-        wait_frames = 1 
+        wait_frames = 1
 
-``_process`` is where the loader is polled. ``poll`` is called, and then
-we deal with the return value from that call. ``OK`` means keep polling,
-``ERR_FILE_EOF`` means load is done, anything else means there was an
-error. Also note we skip one frame (via ``wait_frames``, set on the
-``goto_scene`` function) to allow the loading screen to show up.
+``_process`` es donde se le hace polling a la carga. ``poll`` es
+llamado, y luego nos encargamos del valor de retorno de esa llamada.
+``OK`` significa mantente haciendo polling, ``ERR_FILE_EOF`` que la
+carga esta completa, cualquier otra cosa que hubo un error. Tambien
+fijate que salteamos un frame (via ``wait_frames``, ajustada en la
+funcion ´´goto_scene´´) para permitir que la pantalla de carga se
+muestre.
 
-Note how use use ``OS.get_ticks_msec`` to control how long we block the
-thread. Some stages might load really fast, which means we might be able
-to cram more than one call to ``poll`` in one frame, some might take way
-more than your value for ``time_max``, so keep in mind we won't have
-precise control over the timings.
+Fijate como usar ``OS.get_ticks_msec`` para controlar cuanto tiempo
+bloqueamos el thread. Algunas etapas podran cargarse realmente
+rapido, lo que significa que podriamos sumar mas de una llamada a
+``poll`` en un frame, algunas pueden tomar mucho mas que el valor de
+``time_max``, por lo que ten en cuenta que no tenemos control
+preciso sobre estos timing.
+
 
 ::
 
     func _process(time):
         if loader == null:
-            # no need to process anymore
+            #  no hace falta procesar mas
             set_process(false)
             return
 
-        if wait_frames > 0: # wait for frames to let the "loading" animation to show up
+        if wait_frames > 0: # espera por frames para permitir que la animacion "loading" se muestre
             wait_frames -= 1
             return
 
         var t = OS.get_ticks_msec()
-        while OS.get_ticks_msec() < t + time_max: # use "time_max" to control how much time we block this thread
+        while OS.get_ticks_msec() < t + time_max: # usa "time_max" para controlar durante cuanto tiempo bloqueamos este thread
 
-            # poll your loader
+
+            # haciendole poll al loader
             var err = loader.poll()
 
-            if err == ERR_FILE_EOF: # load finished
+            if err == ERR_FILE_EOF: # la carga termino
                 var resource = loader.get_resource()
                 loader = null
                 set_new_scene(resource)
                 break
             elif err == OK:
                 update_progress()
-            else: # error during loading
+            else: # error durante la carga
                 show_error()
                 loader = null
                 break
