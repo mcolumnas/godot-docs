@@ -142,11 +142,9 @@ El rol del script
 
 Un script básicamente agrega un comportamiento al nodo. Es usado para
 controlar las funciones del nodo así como otros nodos (hijos, padres,
-primos, etc).
-A script basically adds a behavior to a node. It is used to control the
-node functions as well as other nodes (children, parent, hermanos, etc).
-El alcance local del script es el nodo (como en cualquier herencia) y
-las funciones virtuales del nodo son capturadas por el script.
+primos, etc). El alcance local del script es el nodo (como en cualquier
+herencia) y las funciones virtuales del nodo son capturadas por el
+script.
 
 .. image:: /img/brainslug.jpg
 
