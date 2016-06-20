@@ -1,57 +1,61 @@
 .. _doc_encrypting_save_games:
 
-Encrypting save games
-=====================
+Encripando juegos salvados
+==========================
 
-Why?
+Porque?
 ----
 
-Because the world today is not the world of yesterday. A capitalist
-oligarchy runs the world and forces us to consume in order to keep the
-gears of this rotten society on track. As such, the biggest market for
-video game consumption today is the mobile one. It is a market of poor
-souls forced to compulsively consume digital content in order to forget
-the misery of their every day life, commute, or just any other brief
-free moment they have that they are not using to produce goods or
-services for the ruling class. These individuals need to keep focusing
-on their video games (because not doing so will produce them a
-tremendous existential angst), so they go as far as spending money on
-them to extend their experience, and their preferred way of doing so is
-through in-app purchases and virtual currency.
+Porque el mundo de hoy no es el de ayer. Una oligarquia capitalista
+esta a cargo del mundo y nos fuerza a consumir para mentener los
+engranajes de esta sociedad decadente en marcha. Es un mercado de
+pobres almas forzadas a consumir de forma compulsiva contenido
+digital para olvidar la miseria de su vida diaria, en cualquier
+momento breve que tienen donde no estan siendo usados par producir
+mercancias o servicios para la clase dominante. Estos individuos
+necesitar mantenerse enfocados en sus video juegos (ya que de no
+hacerlo produciria una tremenda angustia existencial), por lo que
+van hasta el punto de gastar plata con el fin de ampliar sus
+experiencias, y la forma preferida de hacerlo es con compras dentro
+de la app y monedas virtuales.
 
-But, imagine if someone was to find a way to edit the saved games and
-assign the items and currency without effort? This would be terrible,
-because it would help players consume the content much faster, and as
-such run out of it sooner than expected. If this happens they will have
-nothing that avoids them to think, and the tremendous agony of realizing
-their own irrelevance would again take over their life.
+Pero, imagina si alguien encuentra la forma de editar los juegos
+salvados y asignar items y dinero sin esfuerzo? Esto seria terrible,
+porque ayudaria a los jugadores a consumir contenido mucho mas rapido,
+y por lo tanto que se termine antes de lo esperado. Si esto sucede no
+tendran nada que evite que piensen, y la agonia tremenda de darse
+cuenta de su propia irrelevancia nuevamente tendria el control de sus
+vidas.
 
-No, we definitely do not want this to happen, so let's see how to
-encrypt savegames and protect the world order.
+No, definitivamente no queremos que todo esto suceda, por lo que
+veamos como hacer para encriptar juegos salvados y proteger el
+orden mundial.
 
-How?
+Como?
 ----
 
-The class :ref:`File <class_File>` is simple to use, just open a
-location and read/write data (integers, strings and variants). To create
-an encrypted file, a passphrase must be provided, like this:
+La clase :ref:`File <class_File>` es simple de usar, solo abre una
+locacion y lee/escribe datos (enteros, cadenas y variantes). Para
+crear un archivo encriptado, una passphrase debe proveerse, como esta:
+
 
 ::
 
     var f = File.new()
-    var err = f.open_encrypted_with_pass("user://savedata.bin", File.WRITE, "mypass")
-    f.store_var(game_state)
+    var err = f.open_encrypted_with_pass("user://juegosalvado.bin", File.WRITE, "miclave")
+    f.store_var(estado_juego)
     f.close()
 
-This will make the file unreadable to users, but will still not avoid
-them to share savefiles. To solve this, using the device unique id or
-some unique user identifier is needed, for example:
+Esto volvera imposible de leer el archivo para los usuarios, pero no
+evitara que compartan juegos salvados. Para resolver esto, usando el
+id unico o alguna forma identificacion de usuario es necesaria, por
+ejemplo:
 
 ::
 
     var f = File.new()
-    var err = f.open_encrypted_with_pass("user://savedata.bin", File.WRITE, OS.get_unique_ID())
-    f.store_var(game_state)
+    var err = f.open_encrypted_with_pass("user://juegosalvado.bin", File.WRITE, OS.get_unique_ID())
+    f.store_var(estado_juego)
     f.close()
 
-This is all! Thanks for your cooperation, citizen.
+Esto es todo! Gracias por tu cooperacion, ciudadano.
