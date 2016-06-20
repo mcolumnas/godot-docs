@@ -1,82 +1,84 @@
 .. _doc_pausing_games:
 
-Pausing games
-=============
+Pausando juegos
+===============
 
-Pause?
+Pausa?
 ------
 
-In most games it is desirable to, at some point, interrupt the
-game to do something else, such as taking a break or changing options.
-However this is not as simple as it seems. The game might be stopped,
-but it might be desirable that some menus and animations continue
-working.
+En la mayoría de los juegos es deseable, en algún punto, interrumpir el
+juego para hacer algo mas, como descansar o cambiar opciones. Sin
+embargo esto no es tan simple como parece. El juego podría estar
+detenido, pero puede quererse que algunos menús y animaciones continúen
+trabajando.
 
-Implementing a fine-grained control for what can be paused (and what can
-not) is a lot of work, so a simple framework for pausing is provided in
-Godot.
+Implementar un control fino de lo que puede ser pausado (y lo que no) es
+un montón de trabajo, por lo que un framework simple para pausar es
+incluido en Godot.
 
-How pausing works
------------------
+Como funciona la pausa
+----------------------
 
-To set pause mode, the pause state must be set. This is done by calling
-:ref:`SceneTree.set_pause() <class_SceneTree_set_pause>`
-with a "true" argument:
+Para poner el modo pausa, el estado de pausa debe ser ajustado. Esto
+es hecho llamando :ref:`SceneTree.set_pause() <class_SceneTree_set_pause>` con
+el argumento "true":
+
 
 ::
 
     get_tree().set_pause(true)
 
-Doing so will have the following behavior:
+Hacerlo tendrá el siguiente comportamiento:
 
--  2D and 3D physics will be stopped.
--  _process and _fixed_process will not be called anymore in nodes.
--  _input and _input_event will not be called anymore either.
+-  La física 2D y 3D será detenida.
+-  _process y _fixed_process no serán mas llamados en los nodos.
+-  _input y _input_event no serán mas llamados tampoco.
 
-This effectively stops the whole game. Calling this function from a
-script, by default, will result in an unrecoverable state (nothing will
-work anymore!).
+Esto efectivamente detiene del juego por completo. Llamar esta función
+desde un script, por defecto, resultara en un estado no recuperable
+(nada seguirá funcionando!).
 
-White-listing nodes
+Lista blanca de nodos
 -------------------
 
-Before enabling pause, make sure that nodes that must keep working
-during pause are white-listed. This is done by editing the "Pause Mode"
-property in a node:
+Antes de habilitar la pausa, asegúrate que los nodos que deben seguir
+trabajando durante la pausa están en la lista blanca. Esto es hecho
+editando la propiedad "Pause Mode" en el nodo:
 
 .. image:: /img/pausemode.png
 
-By default all nodes have this property in the "Inherit" state. This
-means, that they will only process (or not) depending on what this same
-property is set on the parent node. If the parent is set to "Inherit" ,
-then the grandparent will be checked and so on. Ultimately, if a state
-can't be found in any of the grandparents, the pause state in SceneTree
-is used. This means that, by default, when the game is paused every node
-will be paused.
+Por defecto todos los nodos tienen esta propiedad en el estado "Inherit"
+(Heredar). Esto significa, que solo van a procesar (o no) dependiendo
+en que esta ajustada esta propiedad en el nodo padre. Si el padre esta en
+"Inherit", entonces se chequeara el abuelo, y así sigue. Al final, si
+un estado no puede ser encontrado en ninguno de los abuelos, el estado
+de pausa de SceneTree es usado. Esto implica que, por defecto, cuando el
+juegos es pausado todo nodo será pausado.
 
-So the three possible states for a node are:
+Asique los tres estados posibles para nodos son:
 
--  **Inherit**: Process depending on the state of the parent,
-   grandparent, etc. The first parent that has a non-Inherit state.
--  **Stop**: Stop the node no matter what (and children in Inherit
-   mode). When paused this node will not process.
--  **Process**: Process the node no matter what (and children in Inherit
-   mode). Paused or not this node will process.
 
-Example
+-  **Inherit**: Procesar dependiendo en el estado del padre, abuelo,
+   etc. El primer padre que tenga un estado no heredado.
+-  **Stop**: Detiene el nodo no importa que (e hijos en el modo
+   Inherit). Cuando en pausa, este nodo no procesa.
+-  **Process**: Procesar el nodo no importa que (y los hijos en modo
+   Inherit). Pausado o no, este nodo procesara.
+
+Ejemplo
 -------
 
-An example of this is creating a popup or panel with controls inside,
-and set it's pause mode to "Process" then just hide it:
+Un ejemplo de esto es crear una ventana emergente o panel con controles
+dentro, y ajustar su modo pausa a "Process" luego solo esconderlo:
 
 .. image:: /img/pause_popup.png
 
-Just by setting the root of the pause popup to "Process", all children
-and grandchildren will inherit that state. This way, this branch of the
-scene tree will continue working when paused.
+Solo con ajustar la raíz de la ventana emergente de pausa a "Process",
+todos los hijos y nietos heredaran el estado. De esta forma, esta rama
+del árbol de escena continuara trabajando cuando este en pausa.
 
-Finally, make it so when a pause button is pressed (any button will do),
-enable the pause and show the pause screen.
+Finalmente, haz que cuando el botón de pausa es presionado (cualquier
+botón servirá), se habilite la pausa y muestre la pantalla de pausa.
 
 ::
 
@@ -84,8 +86,9 @@ enable the pause and show the pause screen.
         get_tree().set_pause(true)
         get_node("pause_popup").show()
 
-To remove the pause, just do the opposite when the pause screen is
-closed:
+Para quitar la pausa, solo has lo opuesto cuando la ventana de pausa
+es cerrada:
+
 
 ::
 
@@ -93,4 +96,4 @@ closed:
         get_node("pause_popup").hide()
         get_tree().set_pause(false)
 
-And that should be all!
+Y eso debería ser todo!
