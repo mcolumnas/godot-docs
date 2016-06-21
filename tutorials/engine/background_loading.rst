@@ -174,133 +174,142 @@ preciso sobre estos timing.
                 loader = null
                 break
 
-Some extra helper functions. ``update_progress`` updates a progress bar,
-or can also update a paused animation (the animation represents the
-entire load process from beginning to end). ``set_new_scene`` puts the
-newly loaded scene on the tree. Because it's a scene being loaded,
-``instance()`` needs to be called on the resource obtained from the
-loader.
+Algunas funciones extra ayudantes. ``update_progress`` actualiza la
+barra de progreso o puede tambien actualizar una animacion en pausa
+(la animacion representa la carga completa de principio a fin).
+``set_new_scene`` pone la escena recientemente cargada en el arbol.
+Como es una escena que se esta cargando, ``instance()`` necesita
+ser llamado en el recurso obtenido desde el que carga (loader).
 
 ::
 
     func update_progress():
         var progress = float(loader.get_stage()) / loader.get_stage_count()
-        # update your progress bar?
+        # actualizamos tu barra de progreso?
         get_node("progress").set_progress(progress)
 
-        # or update a progress animation?
+        # o actualizamos una animacion de progreso?
         var len = get_node("animation").get_current_animation_length()
 
-        # call this on a paused animation. use "true" as the second parameter to force the animation to update
+        # llama esto en una animacion en pausa
+        # Usa "true" como el segundo parametro para forzar la animacion a actualizarse
         get_node("animation").seek(progress * len, true)
 
     func set_new_scene(scene_resource):
         current_scene = scene_resource.instance()
         get_node("/root").add_child(current_scene)
 
-Using multiple threads
-----------------------
+Usando multiples threads
+------------------------
 
-ResourceInteractiveLoader can be used from multiple threads. A couple of
-things to keep in mind if you attempt it:
+ResourceInteractiveLoader puede ser usando desde multiples threads.
+Un par de cosas a tener en cuenta si lo intentas:
 
-Use a Semaphore
+Usa un semaforo
 ~~~~~~~~~~~~~~~
 
-While your thread waits for the main thread to request a new resource,
-use a Semaphore to sleep (instead of a busy loop or anything similar).
+Mientras tu thread espera por el pedido de un nuevo recurso a el thread
+principal, usa un semaforo para dormir (en lugar de un bucle ocupado o
+algo similar).
 
-Not blocking main thread during the polling
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+No bloquear el thread principal durante el polling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have a mutex to allow calls from the main thread to your loader
-class, don't lock it while you call ``poll`` on the loader. When a
-resource is finished loading, it might require some resources from the
-low level APIs (VisualServer, etc), which might need to lock the main
-thread to acquire them. This might cause a deadlock if the main thread
-is waiting for your mutex while your thread is waiting to load a
-resource.
+Si tenes un mutex para permitir llamados desde el thread principal a
+tu clase de carga, no le hagas lock mientras llamas a ``pol`` en el
+que carga. Cuando un recurso termina de cargarse, puede requerir algunos
+recursos desde las APIs de bajo nivel (VisualServer, etc), lo cual puede
+necesitar hacer lock al thread principal para adquirirlos. Esto puede
+causar un deadlock (punto muerto) si el thread principal esta esperando
+por tu mutex mientras tu thread esta esperamdo cargar un recurso.
 
-Example class
+Clase ejemplo
 -------------
 
-You can find an example class for loading resources in threads here:
-:download:`resource_queue.gd </files/resource_queue.gd>`. Usage is as follows:
+Tu puedes encontrar una clase de ejemplo para cargar recursos en threads
+aqui: :download:`resource_queue.gd </files/resource_queue.gd>`. El uso
+es el siguiente:
 
 ::
 
     func start()
 
-Call after you instance the class to start the thread.
+Llamar luego que instancias la clase para empezar el thread.
 
 ::
 
     func queue_resource(path, p_in_front = false)
 
-Queue a resource. Use optional parameter "p_in_front" to put it in
-front of the queue.
+Encola un recurso. Usa los parametros opcionales "p_in_front" para
+ponerlo al frente de la cola.
 
 ::
 
     func cancel_resource(path)
 
-Remove a resource from the queue, discarding any loading done.
+Remueve un recurso desde la cola, descartando cualquier carga hecha.
 
 ::
 
     func is_ready(path)
 
-Returns true if a resource is done loading and ready to be retrieved.
+Retorna true si el recurso termino de cargar y esta listo para ser
+recuperado.
 
 ::
 
     func get_progress(path)
 
-Get the progress of a resource. Returns -1 on error (for example if the
-resource is not on the queue), or a number between 0.0 and 1.0 with the
-progress of the load. Use mostly for cosmetic purposes (updating
-progress bars, etc), use ``is_ready`` to find out if a resource is
-actually ready.
+Obten el progreso de un recurso. Retorna -1 para error (por ejemplo si
+el recurso no esta en la cola), o un numero entre 0.0 y 1.0 con el
+progreso de la carga. Usar principalmente con propositos cosmeticos
+(actualizar barras de progreso, etc), usa ``is_ready`` para encontrar
+si un recurso esta realmente listo.
+
 
 ::
 
     func get_resource(path)
 
-Returns the fully loaded resource, or null on error. If the resource is
-not done loading (``is_ready`` returns false), it will block your thread
-and finish the load. If the resource is not on the queue, it will call
-``ResourceLoader::load`` to load it normally and return it.
+Retorna el recurso completamente cargado, o null para error. Si el
+recurso no termino de cargar (``is_ready`` regresa falso), bloqueara
+tu thread y terminara la carga. Si el recurso no esta en la misma cola,
+llamara ``ResourceLoader::load`` para cargarla con normalidad y
+retornarla.
 
-Example:
+Ejemplo:
 ~~~~~~~~
 
 ::
 
-    # initialize
+    # inicializar
     queue = preload("res://resource_queue.gd").new()
     queue.start()
 
-    # suppose your game starts with a 10 second custscene, during which the user can't interact with the game.
-    # For that time we know they won't use the pause menu, so we can queue it to load during the cutscene:
+    # supone que tu juego empieza con una presentacion de 10 segundos, durante los cuales el usuario no puede
+    # interactuar con el juego. Durante ese tiempo sabemos que no usaran el menu pausa, por lo que podemos
+    # encolarlo para que cargue durante la presentacion:
     queue.queue_resource("res://pause_menu.xml")
     start_curscene()
 
-    # later when the user presses the pause button for the first time:
+    # mas tarde cuando el usuario presiona el boton pausa por primer vez:
     pause_menu = queue.get_resource("res://pause_menu.xml").instance()
     pause_menu.show()
 
-    # when you need a new scene:
-    queue.queue_resource("res://level_1.xml", true) # use "true" as the second parameter to put it at the front
-                                                    # of the queue, pausing the load of any other resource
+    # cuando se necesita una escena nueva:
+    queue.queue_resource("res://level_1.xml", true) # usa "true" como segundo parametro para ponerlo al frente
+                                                    # de la cola, pausando la carga de cualqueir otro
+                                                    # recurso
 
-    # to check progress
+    # para chequear el progreso
     if queue.is_ready("res://level_1.xml"):
         show_new_level(queue.get_resource("res://level_1.xml"))
     else:
         update_progress(queue.get_process("res://level_1.xml"))
 
-    # when the user walks away from the trigger zone in your Metroidvania game:
+    #   cuando el usuario sale fuera de la zona trigger en tu juego Metroidvania:
     queue.cancel_resource("res://zone_2.xml")
 
-**Note**: this code in its current form is not tested in real world
-scenarios. Ask punto on IRC (#godotengine on irc.freenode.net) for help.
+**Nota**: este codigo en su forma actual no ha sido testeado en
+escenarios reales. Preguntale a punto en IRC (#godotengine en
+irc.freenode.net) por ayuda.
