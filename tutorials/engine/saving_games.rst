@@ -1,113 +1,121 @@
 .. _doc_saving_games:
 
-Saving games
-============
+Salvando juegos
+================
 
-Introduction
+Introduccion
 ------------
 
-Save games can be complicated. It can be desired to store more
-information than the current level or number of stars earned on a level.
-More advanced save games may need to store additional information about
-an arbitrary number of objects. This will allow the save function to
-scale as the game grows more complex.
+Salvar juegos puede ser complicado. Puede desearse guardar mas
+informacion que la que el nivel actual o numero de estrellas
+ganadas en un nivel. Juegos salvados mas avanzados pueden necesitar
+guardar informacion adicional sobre un numero arbitrario de objetos.
+Esto permitira que la funcion de salvar sea escalada en la medida
+que el juego crece en complejidad.
 
-Identify persistent objects
----------------------------
+Identificar objetos persistentes
+--------------------------------
 
-First we should identify what objects we want to keep between game
-sessions and what information we want to keep from those objects. For
-this tutorial, we will use groups to mark and handle objects to be saved
-but other methods are certainly possible.
+Primeor deberiamos identificar que objetos queremos mantener entre
+sesiones y que informacion queremos mantener de esos objetos. Para
+este tutorial, vamos a usar grupos para marcar y manipular objetos
+para ser salvadospero otros metodos son ciertamente posibles.
 
-We will start by adding objects we wish to save to the "Persist" group.
-As in the :ref:`doc_scripting_continued` tutorial, we can do this through
-the GUI or through script. Let's add the relevant nodes using the GUI:
+Vamos a empezar agregando objetos que queremos salvar al grupo
+"Persist". Como en el tutorial :ref:`doc_scripting_continued`,
+podemos hacer esto a traves de GUI o de script. Agreguemos los nodos
+relevantes usando la GUI:
 
 .. image:: /img/groups.png
 
-Once this is done when we need to save the game we can get all objects
-to save them and then tell them all to save with this script:
+Una vez que esto esta hecho vamos a necesitar salvar el juego, podemos
+obtener todos los objetos para salvarlos y luego decirle a todos ellos
+que salven con este script:
 
 ::
 
-    var savenodes = get_tree().get_nodes_in_group("Persist")
-        for i in savenodes:
-        # Now we can call our save function on each node.
+    var nodossalvados = get_tree().get_nodes_in_group("Persist")
+        for i in nodossalvados:
+        # Ahora podemos llamar nuestra funcion de salvar en cada nodo.
 
-Serializing
+Serializando
 -----------
 
-The next step is to serialize the data. This makes it much easier to
-read and store to disk. In this case, we're assuming each member of
-group Persist is an instanced node and thus has a path. GDScript
-has helper functions for this, such as :ref:`Dictionary.to_json()
-<class_Dictionary_to_json>` and :ref:`Dictionary.parse_json()
-<class_Dictionary_parse_json>`, so we will use a dictionary. Our node needs to
-contain a save function that returns this data. The save function will look
-like this:
+El siguiente paso es serializar los datos. Esto vuelve mucho mas
+sencillo leer y guardar en disco. En este caso, estamos asumiendo que
+cada miembro del grupo Persist es un nodo instanciado y por lo tanto
+tiene path. GDScript tiene funciones de ayuda para esto, como
+:ref:`Dictionary.to_json() <class_Dictionary_to_json>` y
+:ref:`Dictionary.parse_json() <class_Dictionary_parse_json>`,
+asi que usaremos este diccionario. Nuestro nodo necesita contener una
+funcion de salvar para que regresas estos datos. La funcion de salvar
+sera similar a esto:
 
 ::
 
-    func save():
-        var savedict = {
-            filename=get_filename(),
-            parent=get_parent().get_path(),
+    func salvar():
+        var salvardicc = {
+            nombrearchivo=get_filename(),
+            padre=get_parent().get_path(),
             posx=get_pos().x, #Vector2 is not supported by json
             posy=get_pos().y,
-            attack=attack,
-            defense=defense,
-            currenthealth=currenthealth,
-            maxhealth=maxhealth,
-            damage=damage,
+            ataque=ataque,
+            defensa=defensa,
+            saludactual=saludactual,
+            saludmaxima=saludmaxima,
+            daño=daño,
             regen=regen,
-            experience=experience,
+            experiencia=experiencia,
             TNL=TNL,
-            level=level,
-            AttackGrowth=AttackGrowth,
-            DefenseGrowth=DefenseGrowth,
-            HealthGrowth=HealthGrowth,
-            isalive=isalive,
-            last_attack=last_attack
-        }
-        return savedict
+            nivel=nivel,
+            ataquecrece=ataquecrece,
+            defensacrece=defensacrece,
+            saludcrece=saludcrece,
+            estavivo=estavivo,
+            ultimo_ataque=ultimo=ataque
+            }
+        return salvardicc
 
-This gives us a dictionary with the style
-``{ "variable_name":that_variables_value }`` which will be useful when
-loading.
+Esto nos da un diccionario con el estilo ``{ "nombre_variable":valor_esa_variable }``
+el cual puede ser util para cargar.
 
-Saving and reading data
------------------------
+Salvar y leer datos
+-------------------
 
-As covered in the :ref:`doc_filesystem` tutorial, we'll need to open a file
-and write to it and then later read from it. Now that we have a way to
-call our groups and get their relevant data, let's use to_json() to
-convert it into an easily stored string and store them in a file. Doing
-it this way ensures that each line is its own object so we have an easy
-way to pull the data out of the file as well.
-
-::
-
-    # Note: This can be called from anywhere inside the tree.  This function is path independent.
-    # Go through everything in the persist category and ask them to return a dict of relevant variables
-    func save_game():
-        var savegame = File.new()
-        savegame.open("user://savegame.save", File.WRITE)
-        var savenodes = get_tree().get_nodes_in_group("Persist")
-        for i in savenodes:
-            var nodedata = i.save()
-            savegame.store_line(nodedata.to_json())
-        savegame.close()
-
-Game saved! Loading is fairly simple as well. For that we'll read each
-line, use parse_json() to read it back to a dict, and then iterate over
-the dict to read our values. But we'll need to first create the object
-and we can use the filename and parent values to achieve that. Here is our
-load function:
+Como cubrimos en el tutorial :ref:`doc_filesystem`, necesitaremos abrir
+un archivo y escribirlo y luego leer de el. Ahora que tenemos una forma
+de llamar nuestros grupos y obtener los datos relevantes, vamos a usar
+to_json() para convertirlos en un string que sea facilmente guardado y
+lo grabaremos en un archivo. Haciendo esto asegura que cada linea es su
+propio objeto de forma que tenemos una forma facil de obtener los datos
+desde el archivo tambien.
 
 ::
 
-    # Note: This can be called from anywhere inside the tree.  This function is path independent.
+    # Nota: Esto puede ser llamado desde cualquier parte dentro del arbol. Esta funcion es independiente del camino.
+    # Ve a traves de todo en la categoria persistente y pideles el regreso de un diccionario de variables relevantes
+
+    func salvar_juego():
+        var juegosalvado = File.new()
+        juegosalvado.open("user://juegosalvado.save", File.WRITE)
+        var salvanodos = get_tree().get_nodes_in_group("Persist")
+        for i in salvanodos:
+            var datodenodo = i.save()
+            juegosalvado.store_line(nodedata.to_json())
+        juegosalvado.close()
+
+Juego salvado! Cargarlo es bastante simple tambien. Para eso
+vamos a leer cada linea, usar parse_json() para leerlo de nuevo a un
+diccionario, y luego iterar sobre el diccionario para leer los valores.
+Pero primero necesitaremos crear el objeto y podemos usar el nombre de
+archivo y valores del padre para lograrlo. Aqui esta nuestra funcion de
+carga:
+
+::
+
+    # Nota: Esto puede ser llamado desde cualqueir lugar dentro del
+    # arbol. Esta funcion es independiente del camino.
+
     func load_game():
         var savegame = File.new()
         if !savegame.file_exists("user://savegame.save"):
