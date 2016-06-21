@@ -57,7 +57,7 @@ sera similar a esto:
         var salvardicc = {
             nombrearchivo=get_filename(),
             padre=get_parent().get_path(),
-            posx=get_pos().x, #Vector2 is not supported by json
+            posx=get_pos().x, #Vector2 no es soportado por json
             posy=get_pos().y,
             ataque=ataque,
             defensa=defensa,
@@ -117,47 +117,50 @@ carga:
     # arbol. Esta funcion es independiente del camino.
 
     func load_game():
-        var savegame = File.new()
-        if !savegame.file_exists("user://savegame.save"):
-            return #Error!  We don't have a save to load
+        var juegosalvado = File.new()
+        if !juegosalvado.file_exists("user://juegosalvado.save"):
+            return #Error!  No tenemos un juego salvado para cargar
 
-        # We need to revert the game state so we're not cloning objects during loading.  This will vary wildly depending on the needs of a project, so take care with this step.
-        # For our example, we will accomplish this by deleting savable objects.
+        # Necesitamos revertir el estado del juego asi no clonamos objetos durante la carga.
+        # Esto variara mucho dependiendo de las necesidades del proyecto, asi que ten cuidado con este paso.
+        # Para nuestro ejemplo, vamos a lograr esto borrando los objetos que se pueden salvar.
         var savenodes = get_tree().get_nodes_in_group("Persist")
         for i in savenodes:
             i.queue_free()
 
-        # Load the file line by line and process that dictionary to restore the object it represents
-        var currentline = {} # dict.parse_json() requires a declared dict.
-        savegame.open("user://savegame.save", File.READ)
-        while (!savegame.eof_reached()):
-            currentline.parse_json(savegame.get_line())
-            # First we need to create the object and add it to the tree and set its position.
+        # Carga el archivo linea por linea y procesa ese diccionario para restaurar los objetos que representan
+        var currentline = {} # dict.parse_json() requiere un diccionario declarado
+        juegosalvado.open("user://juegosalvado.save", File.READ)
+        while (!juegosalvado.eof_reached()):
+            currentline.parse_json(juegosalvado.get_line())
+            # Primero necesitamos crear el objeto y agregarlo al arbol ademas de ajustar su posicion
             var newobject = load(currentline["filename"]).instance()
             get_node(currentline["parent"]).add_child(newobject)
             newobject.set_pos(Vector2(currentline["posx"],currentline["posy"]))
-            # Now we set the remaining variables.
+            # Ahora ajustamos las variables restantes
             for i in currentline.keys():
                 if (i == "filename" or i == "parent" or i == "posx" or i == "posy"):
                     continue
                 newobject.set(i, currentline[i])
-        savegame.close()
+        juegosalvado.close()
 
-And now we can save and load an arbitrary number of objects laid out
-almost anywhere across the scene tree! Each object can store different
-data depending on what it needs to save.
+Y ahora podemos salvar y cargar un numero arbitrario de objetos
+distribuidos practicamente en cualquier lado a traves del arbol de
+escena! Cada objeto puede guardar diferentes datos dependiendo en que
+necesita salvar.
 
-Some notes
-----------
+Algunas notas
+-------------
 
-We may have glossed over a step, but setting the game state to one fit
-to start loading data can be very complicated. This step will need to be
-heavily customized based on the needs of an individual project.
+Podemos haber pasado por alto un paso, pero ajustar el estado del juego
+a uno acondicionado para empezar a cargar datos puede ser muy
+complicado. Este paso va a necesitar ser fuertemente personalizado
+basado en las necesidades de un proyecto individual.
 
-This implementation assumes no Persist objects are children of other
-Persist objects. Doing so would create invalid paths. If this is one of
-the needs of a project this needs to be considered. Saving objects in
-stages (parent objects first) so they are available when child objects
-are loaded will make sure they're available for the add_child() call.
-There will also need to be some way to link children to parents as the
-nodepath will likely be invalid.
+Esta implementacion asume que ningun objeto persistente es hijo de otro
+objeto persistente. Ello crearia paths invalidos. Si esta es una de las
+necesidades del proyecto esto tiene que ser considerado. Salvar
+objetos en etapas (objetos padre primero) de forma que esten disponibles
+cuando los objetos hijos son cargados asegurara que estan disponibles
+para la llamada add_child(). Tambien se necesitara algun forma de
+vincular hijos a padres ya que el nodepath probablemente sera invalido.
