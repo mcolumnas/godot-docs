@@ -1,36 +1,39 @@
 .. _doc_handling_quit_requests:
 
-Handling quit requests
-======================
+Manejando requerimientos de quit (abandono)
+============================================
 
-Quitting
---------
+Abandonando
+-----------
 
-Most platforms have the option to request the application to quit. On
-desktops, this is usually done with the "x" icon on the window titlebar.
-On Android, the back button is used to quit when on the main screen (and
-to go back otherwise).
+La mayoria de las plataformas tienen la opcion de pedir que la
+aplicacion abandone. En escritorios, esto es usualmente hecho con el
+icono "x" en la barra de titulo de la ventana. En Android, el boton
+back (atras) es usado para abandonar cuando estas en la ventana
+principal (o para ir atras si no es la ventana principal).
 
-Handling the notification
+Manejando la notificacion
 -------------------------
 
-The :ref:`MainLoop <class_MainLoop>`
-has a special notification that is sent to all nodes when quit is
-requested: MainLoop.NOTIFICATION_WM_QUIT.
+El :ref:`MainLoop <class_MainLoop>` tiene una notificacion especial
+que es enviada a todos los nodos cuando se requiere abandonar:
+MainLopp.NOTIFICATION_WM_QUIT.
 
-Handling it is done as follows (on any node):
+Se maneja de la siguiente forma (en cualquier nodo):
 
 ::
 
     func _notification(what):
         if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
-            get_tree().quit() # default behavior
+            get_tree().quit() # comportamiento por defecto
 
-When developing mobile apps, quitting is not desired unless the user is
-on the main screen, so the behavior can be changed.
+Cuando desarrollas aplicaciones moviles, abandonar no es deseado a no
+ser que el usuario este en la pantalla principal, por lo que el
+comportamiento puede cambiar.
 
-It is important to note that by default, Godot apps have the built-in
-behavior to quit when quit is requested, this can be changed:
+Es importante notar que por defecto, las aplicaciones de Godot tienen
+comportamiento incorporado para abandonar cuando se les pide quit,
+esto puede ser cambiado:
 
 ::
 
