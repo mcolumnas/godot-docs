@@ -1,67 +1,73 @@
 .. _doc_viewport_and_canvas_transforms:
 
-Viewport and canvas transforms
-==============================
+Viewport y transformaciones canvas
+==================================
 
-Introduction
+Introducción
 ------------
 
-This tutorial is created after a topic that is a little dark for most
-users, and explains all the 2D transforms going on for nodes from the
-moment they draw their content locally to the time they are drawn into
-the screen.
+Este tutorial esta creado por un tema que es algo oscuro para la mayoría
+de los usuarios, y explica todas las transformaciones 2D que suceden en
+los nodos desde el momento que dibujan su contenido localmente a el
+tiempo que son dibujados en la pantalla.
 
-Canvas transform
-----------------
-
-As mentioned in the previous tutorial, :ref:`doc_canvas_layers`, every
-CanvasItem node (remember that Node2D and Control based nodes use
-CanvasItem as their common root) will reside in a *Canvas Layer*. Every
-canvas layer has a transform (translation, rotation, scale, etc.) that
-can be accessed as a :ref:`Matrix32 <class_Matrix32>`.
-
-Also covered in the previous tutorial, nodes are drawn by default in Layer 0,
-in the built-in canvas. To put nodes in a different layer, a :ref:`CanvasLayer
-<class_CanvasLayer>` node can be used.
-
-Global canvas transform
+Transformaciones Canvas
 -----------------------
 
-Viewports also have a Global Canvas transform (also a
-:ref:`Matrix32 <class_Matrix32>`). This is the master transform and
-affects all individual *Canvas Layer* transforms. Generally this
-transform is not of much use, but is used in the CanvasItem Editor
-in Godot's editor.
+Como mencionamos en el tutorial previo, :ref:`doc_canvas_layers`, todos
+los nodos CanvasItem (recuerda que los nodos basados en Node2D y Control
+usan CanvasItem como su raíz común) van a residir en una *Capa Canvas*.
+Toda capa canvas tiene transformación (traslación, rotación, escala,
+etc.) que puede ser accedida como una :ref:`Matrix32 <class_Matrix32>`.
 
-Stretch transform
------------------
+También cubierto en el tutorial previo, los nodos son dibujados por
+defecto en el Layer 0, en el canvas incorporado. Para poner nodos en
+diferentes capas, un nodo :ref:`CanvasLayer <class_CanvasLayer>
+puede ser usado.
 
-Finally, viewports have a *Stretch Transform*, which is used when
-resizing or stretching the screen. This transform is used internally (as
-described in :ref:`doc_multiple_resolutions`), but can also be manually set
-on each viewport.
 
-Input events received in the :ref:`MainLoop._input_event() <class_MainLoop__input_event>`
-callback are multiplied by this transform, but lack the ones above. To
-convert InputEvent coordinates to local CanvasItem coordinates, the
-:ref:`CanvasItem.make_input_local() <class_CanvasItem_make_input_local>`
-function was added for convenience.
+Transformaciones globales de canvas
+-----------------------------------
 
-Transform order
----------------
+Los Viewports también tienen una transformación Global Canvas (que
+también es una :ref:`Matrix32 <class_Matrix32>`). Esta es la
+transformación maestra y afecta todas las transformaciones individuales
+*Canvas Layer*. Generalmente esta transformación no es de mucha utilidad,
+pero es usada en el CanvasItem Editor en el editor Godot.
 
-For a coordinate in CanvasItem local properties to become an actual
-screen coordinate, the following chain of transforms must be applied:
+Transformación de estiramiento
+------------------------------
+
+Finalmente, los viewports tienen *Stretch Transform*, la cual es
+usada cuando se cambia de tamaño o se estira la pantalla. Esta
+transformación es usada internamente (como se describe en
+:ref:`doc_multiple_resolutions`), pero puede también ser ajustada
+manualmente en cada viewport.
+
+Los eventos de entrada recibidos en la llamada de retorno
+:ref:`MainLoop._input_event() <class_MainLoop__input_event>`
+son multiplicados por esta transformación, pero carece de las
+superiores. Para convertir coordenadas InputEvent a coordenadas
+locales CanvasItem, la funcion :ref:`CanvasItem.make_input_local() <class_CanvasItem_make_input_local>`
+fue agregada para comodidad.
+
+Orden de transformación
+-----------------------
+
+Para que una coordenada en las propiedades locales CanvasItem se vuelva
+una coordenada de pantalla, la siguiente cadena de transformaciones
+debe ser aplicada:
 
 .. image:: /img/viewport_transforms2.png
 
-Transform functions
--------------------
+Funciones de transformación
+---------------------------
 
-Obtaining each transform can be achieved with the following functions:
+Obtener cada transformación puede ser logrado con las siguientes
+funciones:
 
 +----------------------------------+--------------------------------------------------------------------------------------+
-| Type                             | Transform                                                                            |
+| Tipo                             | Transformacion                                                                       |
 +==================================+======================================================================================+
 | CanvasItem                       | :ref:`CanvasItem.get_global_transform() <class_CanvasItem_get_global_transform>`     |
 +----------------------------------+--------------------------------------------------------------------------------------+
@@ -70,30 +76,33 @@ Obtaining each transform can be achieved with the following functions:
 | CanvasLayer+GlobalCanvas+Stretch | :ref:`CanvasItem.get_viewport_transform() <class_CanvasItem_get_viewport_transform>` |
 +----------------------------------+--------------------------------------------------------------------------------------+
 
-Finally then, to convert a CanvasItem local coordinates to screen
-coordinates, just multiply in the following order:
+Finalmente pues, para convertir coordenadas CanvasItem locales a
+coordenadas de pantalla, solo multiplica en el siguiente orden:
 
 ::
 
-    var screen_coord = get_viewport_transform() + ( get_global_transform() + local_pos )
+    var coord_pant = get_viewport_transform() + ( get_global_transform() + pos_local )
 
-Keep in mind, however, that it is generally not desired to work with
-screen coordinates. The recommended approach is to simply work in Canvas
-coordinates (``CanvasItem.get_global_transform()``), to allow automatic
-screen resolution resizing to work properly.
+Ten en mente, sin embargo, que en general no es deseable trabajar con
+coordenadas de pantalla. El enfoque recomendado es simplemente trabajar
+con coordenadas Canvas (``CanvasItem.get_global_transform()``), para
+permitir que el cambio de tamaño automático de resolución de pantalla
+funcione adecuadamente.
 
-Feeding custom input events
----------------------------
 
-It is often desired to feed custom input events to the scene tree. With
-the above knowledge, to correctly do this, it must be done the following
-way:
+Alimentando eventos de entrada personalizados
+---------------------------------------------
+
+Es a menudo deseable alimentar eventos de entrada personalizados al
+árbol de escena. Con el conocimiento anterior, para lograr esto
+correctamente, debe ser hecho de la siguiente manera:
+
 
 ::
 
-    var local_pos = Vector2(10,20) # local to Control/Node2D
+    var pos_local = Vector2(10,20) # local a Control/Node2D
     var ie = InputEvent()
     ie.type = InputEvent.MOUSE_BUTTON
     ie.button_index = BUTTON_LEFT
-    ie.pos = get_viewport_transform() + (get_global_transform() + local_pos)
+    ie.pos = get_viewport_transform() + (get_global_transform() + pos_local)
     get_tree().input_event(ie)
