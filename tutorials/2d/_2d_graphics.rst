@@ -1,4 +1,4 @@
-Graphics
+Gráficos
 ========
 
 .. toctree::
