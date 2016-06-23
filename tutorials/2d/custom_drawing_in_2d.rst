@@ -1,68 +1,70 @@
 .. _doc_custom_drawing_in_2d:
 
-Custom drawing in 2D
-====================
+Dibujo personalizado en 2D
+==========================
 
-Why?
+Porque?
 ----
 
-Godot has nodes to draw sprites, polygons, particles, and all sort of
-stuff. For most cases this is enough, but not always. If something
-desired is not supported, and before crying in fear, angst and range
-because a node to draw that-specific-something does not exist... it would
-be good to know that it is possible to easily make any 2D node (be it
-:ref:`Control <class_Control>` or :ref:`Node2D <class_Node2D>`
-based) draw custom commands. It is *really* easy to do it too.
+Godot ofrece nodos para dibujar sprites, polígonos, partículas y todo
+tipo de cosas. Para la mayoría de los casos esto es suficiente, pero
+no siempre. Si se desea algo que no esta soportado, y antes de llorar
+de miedo y angustia porque un nodo para dibujar ese-algo-especifico no
+existe... seria bueno saber que es posible hacer que cualquier nodo 2D
+(sea basado en :ref:`Control <class_Control>` o :ref:`Node2D <class_Node2D>`)
+dibuje comandos personalizados. Es *realmente* fácil de hacer.
 
-But...
-------
+Pero...
+-------
 
-Custom drawing manually in a node is *really* useful. Here are some
-examples why:
+Dibujar personalizadamente de forma manual en un nodo es *realmente*
+útil. Aquí algunos ejemplos de porque:
 
--  Drawing shapes or logic that is not handled by nodes (example: making
-   a node that draws a circle, an image with trails, a special kind of
-   animated polygon, etc).
--  Visualizations that are not that compatible with nodes: (example: a
-   tetris board). The tetris example uses a custom draw function to draw
-   the blocks.
--  Managing drawing logic of a large amount of simple objects (in the
-   hundreds of thousands). Using a thousand nodes is probably not nearly
-   as efficient as drawing, but a thousand of draw calls are cheap.
-   Check the "Shower of Bullets" demo as example.
--  Making a custom UI control. There are plenty of controls available,
-   but it's easy to run into the need to make a new, custom one.
+-  Dibujar formas o lógica que no esta manejada por nodos (ejemplos:
+   hacer un nodo que dibuje un circulo, una imagen con estelas, un tipo
+   especial de polígono animado, etc).
+-  Las visualizaciones que no son tan compatibles con nodos: (ejemplo:
+   una tabla de tetris). El ejemplo de tetris usa una función de dibujo
+   personalizada para dibujar los bloques.
+-  Gestionar la lógica de dibujo de una gran cantidad de objetos simples
+   (en los cientos de miles). Usar mil nodos probablemente ni cerca tan
+   eficiente como dibujar, pero mil llamadas de dibujo son baratas.
+   Chequea el demo "Shower of Bullets" como ejemplo.
+-  Hacer un control de UI personalizado. Hay muchos controles
+   disponibles, pero es fácil llegar a la necesidad de hacer uno nuevo,
+   personalizado.
 
-OK, how?
+OK, como?
 --------
 
-Add a script to any :ref:`CanvasItem <class_CanvasItem>`
-derived node, like :ref:`Control <class_Control>` or
-:ref:`Node2D <class_Node2D>`. Override the _draw() function.
+Agrega un script a cualquier nodo derivado de :ref:`CanvasItem <class_CanvasItem>`,
+como :ref:`Control <class_Control>` o :ref:`Node2D <class_Node2D>`.
+Sobrescribe la función _draw().
 
 ::
 
     extends Node2D
 
     func _draw():
-        #your draw commands here
+        #Tus comandos de dibujo aquí
         pass
 
-Draw commands are described in the :ref:`CanvasItem <class_CanvasItem>`
-class reference. There are plenty of them.
+Los comandos de dibujo son descritos en la referencia de clase
+:ref:`CanvasItem <class_CanvasItem>`. Hay muchos de ellos.
 
-Updating
---------
+Actualizando
+------------
 
-The _draw() function is only called once, and then the draw commands
-are cached and remembered, so further calls are unnecessary.
+La función _draw() es solo llamada una vez, y luego los comandos de
+dibujo son cacheados y recordados, por lo que llamadas siguientes no
+son necesarias.
 
-If re-drawing is required because a state or something else changed,
-simply call :ref:`CanvasItem.update() <class_CanvasItem_update>`
-in that same node and a new _draw() call will happen.
+Si se necesita redibujar porque un estado o algo cambio, solo llama
+:ref:`CanvasItem.update() <class_CanvasItem_update>` en ese mismo nodo
+y una nueva llamada a _draw() se realizara.
 
-Here is a little more complex example. A texture variable that will be
-redrawn if modified:
+Aquí hay un ejemplo algo mas complejo. Una variable de textura que
+será redibujada si cambia:
 
 ::
 
@@ -71,23 +73,23 @@ redrawn if modified:
     var texture setget _set_texture
 
     func _set_texture(value):
-        #if the texture variable is modified externally,
-        #this callback is called.
-        texture=value #texture was changed
-        update() #update the node
+        #si la variable textura es modificada externamente,
+        #esta llamada de retorno es realizada.
+        texture=value #La textura ha cambiado
+        update() #actualiza el nodo
 
     func _draw():
         draw_texture(texture,Vector2())
 
-In some cases, it may be desired to draw every frame. For this, just
-call update() from the _process() callback, like this:
+En algunos casos, puede deseare dibujar cada frame. Para esto, solo
+llama a update() desde la llamada de retorno _process(), asi:
 
 ::
 
     extends Node2D
 
     func _draw():
-        #your draw commands here
+        #Tus comandos aquí
         pass
 
     func _process(delta):
@@ -96,46 +98,96 @@ call update() from the _process() callback, like this:
     func _ready():
         set_process(true)
 
-An example: drawing circular arcs
-----------------------------------
+Un ejemplo: dibujar arcos circulares
+------------------------------------
 
-We will now use the custom drawing functionality of Godot Engine to draw something Godot doesn't provide functions for. As an example, Godot provides a draw_circle() function that draws a whole circle. However, what about drawing a portion of a circle? You will have to code a function to perform this, and draw it yourself.
+Ahora usaremos la funcionalidad personalizada de dibujo del Motor Godot
+para dibujar algo que Godot no provee como funciones. Como un ejemplo,
+Godot provee una función draw_circle() que dibuja un circulo completo.
+Sin embargo, que hay sobre dibujar una porción de un circulo? Vas a
+necesitar programar una función para hacer esto, y dibujarla tu mismo.
 
-Arc function
-^^^^^^^^^^^^
+Función Arc (Arco)
+^^^^^^^^^^^^^^^^^^
 
+Un arco se define por sus parámetros soporte del circulo, esto es: la
+posición del centro, y el radio. El arco en si mismo se define por
+el ángulo donde empieza, y el ángulo donde termina. Estos son los 4
+parámetros que tenemos que proveer a nuestro dibujo. También proveeremos
+el valor de color asi podemos dibujar el arco en diferentes colores si
+lo deseamos.
 
-An arc is defined by its support circle parameters, that is: the center position, and the radius. And the arc itself is then defined by the angle it starts from, and the angle it stops at. These are the 4 parameters we have to provide to our drawing. We'll also provide the color value so we can draw the arc in different colors if we wish.
-
-Basically, drawing a shape on screen requires it to be decomposed into a certain number of points linked one to the following one. As you can imagine, the more points your shape is made of, the smoother it will appear, but the heavier it will be in terms of processing cost. In general, if your shape is huge (or in 3D, close to the camera), it will require more points to be drawn without showing angular-looking. On the contrary, if you shape is small (or in 3D, far from the camera), you may reduce its number of points to save processing costs. This is called *Level of Detail (LoD)*. In our example, we will simply use a fixed number of points, no matter the radius.
+Básicamente, dibujar una forma en la pantalla requiere que sea
+descompuesta en un cierto numero de puntos unidos uno a uno con el
+siguiente. Como puedes imaginar, cuanto mayor cantidad de puntos tenga
+tu forma, mas suave aparecerá, pero mas pesada será en términos de costo
+de procesador. En general, si tu forma es enorme (o en 3D, cercana a la
+cámara), requerirá mas puntos para ser dibujado sin verse angular. Por
+el contrario, si tu forma es pequeña (o en 3D, lejana de la cámara),
+tu puedes reducir su numero de puntos y ahorrar costo de procesamiento.
+Esto se llama *Level of Detail (LoD)*. En nuestro ejemplo, vamos
+simplemente a usar un numero fijo de puntos, no importando el radio.
 
 ::
 
     func draw_circle_arc( center, radius, angle_from, angle_to, color ):
         var nb_points = 32
         var points_arc = Vector2Array()
-    
+
         for i in range(nb_points+1):
             var angle_point = angle_from + i*(angle_to-angle_from)/nb_points - 90
             var point = center + Vector2( cos(deg2rad(angle_point)), sin(deg2rad(angle_point)) ) * radius
             points_arc.push_back( point )
-    
+
         for indexPoint in range(nb_points):
             draw_line(points_arc[indexPoint], points_arc[indexPoint+1], color)
 
-Remember the number of points our shape has to be decomposed into? We fixed this number in the nb_points variable to a value of 32. Then, we initialize an empty Vector2Array, which is simply an array of Vector2.
+Recuerdas el numero de puntos en que nuestra forma tiene que ser
+descompuesta? Fijamos este numero en la variable nb_points al valor
+de 32. Luego, inicializamos un Vector2Array vacío, el cual es
+simplemente un arreglo de tipo Vector2.
 
-Next step consists in computing the actual positions of these 32 points that compose arc. This is done in the first for-loop: we iterate over the number of points we want to compute the positions, plus one to include the last point. We first determine the angle of each point, between the starting and ending angles. 
+El siguiente paso consiste en computar las posiciones actuales de estos
+32 puntos que componen el arco. Esto es hecho en el primer for-loop:
+iteramos sobre el numero de puntos con los que queremos computar las
+posiciones, mas uno para incluir el ultimo punto. Primero determinamos
+el ángulo de cada punto, entre los ángulos de comienzo y fin.
 
-The reason why each angle is reduced of 90° is that we will compute 2D positions out of each angle using trigonometry (you know, cosine and sine stuff...). However, to be simple, cos() and sin() use radians, not degrees. The angle of 0° (0 radian) starts at 3 o'clock, although we want to start counting at 0 o'clock. So, we just reduce each angle of 90° in order to start counting from 0'clock.
+La razón por la cual cada ángulo es reducido 90º es que vamos a computar
+posiciones 2D a partir de cada ángulo usando trigonometría (ya sabes,
+cosas de coseno y seno...). Sin embargo, para ser simple, cos() y sin()
+usan radianes, no grados. El ángulo de 0º (0 radian) empieza a las 3 en
+punto, aunque queremos empezar a contar a las 0 en punto. Entonces, vamos
+a reducir cada ángulo 90º para poder empezar a contar desde las 0 en
+punto.
 
-The actual position of a point located on a circle at angle 'angle' (in radians) is given by Vector2(cos(angle), sin(angle)). Since cos() and sin() return values between -1 and 1, the position is located on a circle of radius 1. To have this position on our support circle, which has a radius of 'radius', we simply need to multiply the position by 'radius'. Finally, we need to position our support circle at the 'center' position, which is performed by adding it to our Vector2 value. Finally, we insert the point in the Vector2Array which was previously defined.
+La posición actual de un punto localizado en un circulo a un ángulo
+'angle' (en radianes) es dada por Vector2(cos(angle), sen(angle)). Ya
+que cos() y sin() regresa valores entre -1 y 1, la posición esta
+localizada en un circulo de radio 1. Para tener esta posición en nuestro
+circulo de soporte, el cual tiene radio 'radius', debemos simplemente
+multiplicar la posición por 'radius'. Finalmente, necesitamos posicionar
+nuestro circulo de soporte en la posición 'center', lo cual es hecho
+al agregarlo a nuestro valor Vector2. Finalmente, insertamos el punto
+en el Vector2Array que fue previamente definido.
 
-Now, we need to actually draw our points. As you can imagine, we will not simply draw our 32 points: we need to draw everything that is between each of them. We could have computed every point ourselves using the previous method, and draw it one by one, but this it too complicated and inefficient (except if explicitly needed). So, we simply draw lines between each pair of points. Unless the radius of our support circle is very big, the length of each line between a pair of points will never be long enough to see them. If this happens, we simply would need to increase the number of points.
+Ahora, necesitamos dibujar los puntos. Como puedes imaginar, no vamos
+simplemente a dibujar nuestros 32 puntos: necesitamos dibujar todo lo
+que esta entre medio de ellos. Podríamos haber computado cada punto
+nosotros mismos usando el método previo, y dibujarlos uno por uno, pero
+es muy complicado e ineficiente (a no ser que sea realmente necesario).
+Así que, vamos simplemente a dibujar líneas entre cada par de puntos.
+A no ser que el radio de nuestro circulo de soporte sea muy grande, el
+largo de cada línea entre un par de puntos nunca será suficientemente
+largo para verlos todos. Si esto sucede, solo tendríamos que incrementar
+el numero de puntos.
 
-Draw the arc on screen
-^^^^^^^^^^^^^^^^^^^^^^
-We now have a function that draws stuff on screen: it is time to call it in the _draw() function.
+
+Dibujar el arco en la pantalla
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ahora tenemos una función que dibuja cosas en la pantalla, es tiempo de
+llamarla en la función _draw().
 
 ::
 
@@ -151,11 +203,13 @@ Result:
 
 .. image:: /img/result_drawarc.png
 
+Función arco polígono
+^^^^^^^^^^^^^^^^^^^^^
 
-
-Arc polygon function
-^^^^^^^^^^^^^^^^^^^^
-We can take this a step further and write a function that draws the plain portion of the disc defined by the arc, not only its shape. The method is exactly the same a previously, except that we draw a polygon instead of lines:
+Podemos llevar esto un paso mas y escribir una función que dibuja la
+porción llana del disco definido por el arco, no solo la forma. Este
+método es exactamente el mismo que el previo, excepto que dibujamos
+un polígono en lugar de líneas:
 
 ::
 
@@ -164,20 +218,29 @@ We can take this a step further and write a function that draws the plain portio
         var points_arc = Vector2Array()
         points_arc.push_back(center)
         var colors = ColorArray([color])
-    
+
         for i in range(nb_points+1):
             var angle_point = angle_from + i*(angle_to-angle_from)/nb_points - 90
             points_arc.push_back(center + Vector2( cos( deg2rad(angle_point) ), sin( deg2rad(angle_point) ) ) * radius)
         draw_polygon(points_arc, colors)
-        
-        
+
+
 .. image:: /img/result_drawarc_poly.png
 
-Dynamic custom drawing
-^^^^^^^^^^^^^^^^^^^^^^
-Alright, we are now able to draw custom stuff on screen. However, it is very static: let's make this shape turn around the center. The solution to do this is simply to change the angle_from and angle_to values over time. For our example, we will simply increment them by 50. This increment value has to remain constant, else the rotation speed will change accordingly.
+Dibujo personalizado dinámico
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First, we have to make both angle_from and angle_to variables global at the top of our script. Also note that you can store them in other nodes and access them using get_node().
+Bien, ahora somos capaces de dibujar cosas personalizadas en la pantalla.
+Sin embargo, es muy estático: hagamos que esta forma gire alrededor
+de su centro. La solución para hacer esto es simplemente cambiar los
+valores angle_from y angle_to a lo largo del tiempo. Para nuestro
+ejemplo, vamos a incrementarlos en 50. Este valor de incremento tiene
+que permanecer constante, de lo contrario la velocidad de rotación
+cambiara de forma acorde.
+
+Primero, tenemos que hacer ambos angle_from y angle_to variables
+globales al comienzo del script. También toma nota que puedes guardarlos
+en otros nodos y accederlo con get_node().
 
 ::
 
@@ -187,19 +250,29 @@ First, we have to make both angle_from and angle_to variables global at the top 
  var angle_from = 75
  var angle_to = 195
 
+Hacemos que estos valores cambien en la función _process(delta). Para
+activar esta función, necesitamos llamar set_process(true) en la función
+_ready().
 
+También incrementamos aquí nuestros valores angle_from y angle_to. Sin
+embargo, no debemos olvidar hacer wrap() a los valores resultantes
+entre 0º y 360º! Esto es, si el ángulo es 361º, entonces en realidad
+es 1º. Si no haces wrap de estos valores, el script funcionara
+correctamente pero los valores de ángulo crecerán mas y mas en el
+tiempo, hasta llegar al máximo valor entero que Godot puede manejar
+(2^31 - 1). Cuando esto sucede, Godot puede colgarse o producir
+comportamiento no esperado. Como Godot no provee una función wrap(),
+vamos a crearla aqui, ya que es relativamente simple.
 
-We make these values change in the _process(delta) function. To activate this function, we need to call set_process(true) in the _ready() function. 
-
-We also increment our angle_from and angle_to values here. However, we must not forget to wrap() the resulting values between 0 and 360°! That is, if the angle is 361°, then it is actually 1°. If you don't wrap these values, the script will work correctly but angles values will grow bigger and bigger over time, until they reach the maximum integer value Godot can manage (2^31 - 1). When this happens, Godot may crash or produce unexpected behavior. Since Godot doesn't provide a wrap() function, we'll create it here, as it is relatively simple.
-
-Finally, we must not forget to call the update() function, which automatically calls _draw(). This way, you can control when you want to refresh the frame.
+Finalmente, no debemos olvidar llamar la función update(), que de forma
+automática llama a _draw(). De esta forma, puedes controlar cuando
+quieres refrescar el frame.
 
 ::
 
  func _ready():
      set_process(true)
- 
+
  func wrap(value, min_val, max_val):
      var f1 = value - min_val
      var f2 = max_val - min_val
@@ -208,15 +281,15 @@ Finally, we must not forget to call the update() function, which automatically c
  func _process(delta):
      angle_from += rotation_ang
      angle_to += rotation_ang
-     
-     # we only wrap angles if both of them are bigger than 360
+
+     # solo hacemos wrap si los angulos son mayores que 360
      if (angle_from > 360 && angle_to > 360):
          angle_from = wrap(angle_from, 0, 360)
          angle_to = wrap(angle_to, 0, 360)
      update()
 
-Also, don't forget to modify the _draw() function to make use of these variables:
-::
+También, no olvides modificar la función _draw() para hacer uso de estas
+variables:
 
  func _draw():
 	var center = Vector2(200,200)
@@ -225,33 +298,44 @@ Also, don't forget to modify the _draw() function to make use of these variables
 
 	draw_circle_arc( center, radius, angle_from, angle_to, color )
 
-Let's run!
-It works, but the arc is rotating insanely fast! What's wrong?
+Corrámoslo!
+Funciona, pero el arco gira extremadamente rápido! Que salió mal?
 
-The reason is that your GPU is actually displaying the frames as fast as he can. We need to "normalize" the drawing by this speed. To achieve, we have to make use of the 'delta' parameter of the _process() function. 'delta' contains the time elapsed between the two last rendered frames. It is generally small (about 0.0003 seconds, but this depends on your hardware). So, using 'delta' to control your drawing ensures your program to run at the same speed on every hardware.
+La razón es que tu GPU esta mostrando frames tan rápido como puede.
+Necesitamos "normalizar" el dibujo por esta velocidad. Para lograrlo,
+tenemos que hacer uso del parámetro 'delta' en la función _process().
+'delta' contiene el tiempo transcurrido entre los dos últimos frames
+mostrados. En general es pequeño (unos 0.0003 segundos, pero esto depende
+de tu hardware). Por lo que, usar 'delta' para controlar tu dibujado
+asegura a tu programa correr a la misma velocidad en todo hardware.
 
-In our case, we simply need to multiply our 'rotation_ang' variable by 'delta' in the _process() function. This way, our 2 angles will be increased by a much smaller value, which directly depends on the rendering speed.
+En nuestro caso, vamos a necesitar multiplicar nuestra variable
+'rotation_angle' por 'delta' en la funcion _process(). De esta forma,
+nuestros 2 ángulos se incrementaran por un valor mucho menor, el
+cual depende directamente de la velocidad de renderizado.
+
 
 ::
 
  func _process(delta):
      angle_from += rotation_ang * delta
      angle_to += rotation_ang * delta
-     
-     # we only wrap angles if both of them are bigger than 360
+
+     # solo hacemos wrap en los ángulos si ambos son mayores de 360
      if (angle_from > 360 && angle_to > 360):
          angle_from = wrap(angle_from, 0, 360)
          angle_to = wrap(angle_to, 0, 360)
      update()
 
-Let's run again! This time, the rotation displays fine!
+Corrámoslo nuevamente! Esta vez, la rotación se muestra bien!
 
-Tools
------
+Herramientas
+------------
 
-Drawing your own nodes might also be desired while running them in the
-editor, to use as preview or visualization of some feature or
-behavior.
+Dibujar tus propios nodos puede también ser deseable mientras los corres
+dentro del editor, para usar como pre visualización o visualización de
+alguna característica o comportamiento.
 
-Remember to just use the "tool" keyword at the top of the script
-(check the :ref:`doc_gdscript` reference if you forgot what this does).
+Recuerda solo usar la palabra clave "tool" en la parte superior del
+script (chequea la referencia :ref:`doc_gdscript` si olvidaste que logra
+esto)
