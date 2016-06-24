@@ -1,50 +1,51 @@
 .. _doc_screen-reading_shaders:
 
-Screen-reading shaders
-======================
+Shaders que leen la pantalla
+============================
 
-Introduction
+Introducción
 ~~~~~~~~~~~~
 
-Very often it is desired to make a shader that reads from the same
-screen it's writing to. 3D APIs such as OpenGL or DirectX make this very
-difficult because of internal hardware limitations. GPUs are extremely
-parallel, so reading and writing causes all sort of cache and coherency
-problems. As a result, not even the most modern hardware supports this
-properly.
+A menudo es deseable hacer un shader que lee de la misma pantalla en
+la que esta escribiendo. Las APIs 3D como OpenGL o DirectX hacen esto
+bastante difícil por limitaciones internas de hardware. Las GPUs son
+extremadamente paralelas, por lo que leer y escribir causa todo tipo
+de problemas de orden y coherencia de cache. Como resultado, ni el
+hardware mas moderno soporta esto adecuadamente.
 
-The workaround is to make a copy of the screen, or a part of the screen,
-to a back-buffer and then read from it while drawing. Godot provides a
-few tools that makes this process easy!
+La solución es hacer una copia de la pantalla, o de una parte de la
+pantalla, a un back-buffer y luego leer desde el mientras se dibuja.
+Godot provee algunas herramientas para hacer este proceso fácil!
 
-TexScreen shader instruction
+Instrucción shader TexScreen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Godot :ref:`doc_shading_language` has a special instruction, "texscreen", it takes as
-parameter the UV of the screen and returns a vec3 RGB with the color. A
-special built-in varying: SCREEN_UV can be used to obtain the UV for
-the current fragment. As a result, this simple 2D fragment shader:
+El lenguaje :ref:`doc_shading_language` tiene una instrucción especial,
+"texscreen", toma como parámetros el UV de la pantalla y retorna un
+vec3 RGB con el color. Una variable especial incorporada: SCREEN_UV
+puede ser usada para obtener el UV del fragmento actual. Como resultado,
+este simple shader de fragmento 2D:
 
 ::
 
     COLOR=vec4( texscreen(SCREEN_UV), 1.0 );
 
-results in an invisible object, because it just shows what lies behind.
-The same shader using the visual editor looks like this:
+termina en un objeto invisible, porque solo muestra lo que esta atrás.
+El mismo shader usando el editor visual luce así:
 
 .. image:: /img/texscreen_visual_shader.png
 
-TexScreen example
+Ejemplo TexScreen
 ~~~~~~~~~~~~~~~~~
 
-Texscreen instruction can be used for a lot of things. There is a
-special demo for *Screen Space Shaders*, that you can download to see
-and learn. One example is a simple shader to adjust brightness, contrast
-and saturation:
+La instrucción TexScreen puede ser usada para muchas cosas. Hay una demo
+especial para *Screen Space Shaders*, que puedes descargar para verla
+y aprender. Un ejemplo es un shader simple para ajustar brillo, contraste
+y saturación:
 
 ::
 
-    uniform float brightness = 1.0; 
+    uniform float brightness = 1.0;
     uniform float contrast = 1.0;
     uniform float saturation = 1.0;
 
@@ -56,54 +57,55 @@ and saturation:
 
     COLOR.rgb = c;
 
-Behind the scenes
-~~~~~~~~~~~~~~~~~
+Detrás de escena
+~~~~~~~~~~~~~~~~
 
-While this seems magical, it's not. The Texscreen instruction, when
-first found in a node that is about to be drawn, does a full-screen
-copy to a back-buffer. Subsequent nodes that use texscreen() in
-shaders will not have the screen copied for them, because this ends up
-being very inefficient.
+Mientras esto puede parecer mágico, no lo es. La instrucción Texscreen,
+cuando se encuentra por primera vez en un nodo que esta por ser dibujado,
+hace una copia de pantalla completa al back-buffer. Los nodos siguientes
+que usen texscreen() dentro de shaders no tendrán la pantalla copiada
+para ellos, porque esto seria muy ineficiente.
 
-As a result, if shaders that use texscreen() overlap, the second one
-will not use the result of the first one, resulting in unexpected
-visuals:
+Como resultado, si se superponen shaders que usan texscreen(), el segundo
+no usara el resultado del primero, resultando en imágenes no esperadas:
 
 .. image:: /img/texscreen_demo1.png
 
-In the above image, the second sphere (top right) is using the same
-source for texscreen() as the first one below, so the first one
-"disappears", or is not visible.
+En la imagen de arriba, la segunda esfera (arriba derecha) esta usando
+el mismo origen para texscreen() que la primera debajo, por lo que la
+primera "desaparece", o no es visible.
 
-To correct this, a
-:ref:`BackBufferCopy <class_BackBufferCopy>`
-node can be instanced between both spheres. BackBufferCopy can work by
-either specifying a screen region or the whole screen:
+Para corregir esto, un nodo :ref:`BackBufferCopy <class_BackBufferCopy>`
+puede ser instanciado entre ambas esferas. BackBufferCopy puede funcionar
+tanto especificando una región de pantalla o la pantalla entera:
 
 .. image:: /img/texscreen_bbc.png
 
-With correct back-buffer copying, the two spheres blend correctly:
+Copiando adecuadamente el back-buffer, las dos esferas se mezclan
+correctamente:
 
 .. image:: /img/texscreen_demo2.png
 
-Back-buffer logic
-~~~~~~~~~~~~~~~~~
+Lógica de Back-buffer
+~~~~~~~~~~~~~~~~~~~~~
 
-So, to make it clearer, here's how the backbuffer copying logic works in
-Godot:
+Entonces, para dejarlo claro, aquí esta como la Lógica de copia de
+backbuffer funciona en Godot:
 
--  If a node uses the texscreen(), the entire screen is copied to the
-   back buffer before drawing that node. This only happens the first
-   time, subsequent nodes do not trigger this.
--  If a BackBufferCopy node was processed before the situation in the
-   point above (even if texscreen() was not used), this behavior
-   described in the point above does not happen. In other words,
-   automatic copying of the entire screen only happens if texscreen() is
-   used in a node for the first time and no BackBufferCopy node (not
-   disabled) was found before in tree-order.
--  BackBufferCopy can copy either the entire screen or a region. If set
-   to only a region (not the whole screen) and your shader uses pixels
-   not in the region copied, the result of that read is undefined
-   (most likely garbage from previous frames). In other words, it's
-   possible to use BackBufferCopy to copy back a region of the screen
-   and then use texscreen() on a different region. Avoid this behavior!
+-  Si un nodo usa texscreen(), la pantalla entera es copiada al back
+   buffer antes de dibujar ese nodo. Esto solo sucede la primera vez,
+   los siguientes nodos no lo dispararan.
+-  Si un nodo BackBufferCopy fue procesado antes de la situación en el
+   punto de arriba (aun si texscreen() no ha sido usado), el
+   comportamiento descrito en el punto de arriba no sucede. En otras
+   palabras, la copia automática de la pantalla entera solo sucede si
+   texscreen() es usado en un nodo por primera vez y ningún nodo
+   BackBufferCopy (no deshabilitado) fue encontrado en el orden del
+   árbol.
+-  BackBufferCopy puede copiar tanto la pantalla entera o una región.
+   Si se ajusta solo a una región (no la pantalla entera) y tu shader
+   usa pixels que no están en la región copiada, el resultado de esa
+   lectura no esta definido (lo mas probable que sea basura de frames
+   previos). En otras palabras, es posible usar BackBufferCopy para
+   copiar de regreso una región de la pantalla y luego usar texscreen()
+   en una región diferente. Evita este comportamiento!
