@@ -7,7 +7,7 @@ Intro
 -----
 
 Un sistema simple (aunque suficientemente flexible para la mayoría de
-los usos) sistema de partículas se provee. Los sistemas de partícula son
+los usos) de partículas se provee. Los sistemas de partícula son
 usados para simular efectos fisicos complejos como chispas, fuego,
 partículas de magia, humo, niebla, magia, etc.
 
