@@ -1,355 +1,372 @@
 .. _doc_cutout_animation:
 
-Cutout animation
+Animación Cutout
 ================
 
-What is it?
+Que es?
 ~~~~~~~~~~~
 
-Cut-out is a technique of animating in 2D where pieces of paper (or
-similar material) are cut in special shapes and laid one over the other.
-The papers are animated and photographed, frame by frame using a stop
-motion technique (more info
-`here <http://en.wikipedia.org/wiki/Cutout_animation)>`__).
+Cut-out es una técnica de animación en 2D donde las piezas de papel (u
+otro material similar) son cortadas en formas especiales y acomodadas
+una sobre la otra. Los papeles son animados y fotografiados, frame por
+frame usando técnica stop-motion (mas info
+`aqui <http://en.wikipedia.org/wiki/Cutout_animation)>`__).
 
-With the advent of the digital age, this technique became possible using
-computers, which resulted in an increased amount of animation TV shows
-using digital Cut-out. Notable examples are `South
+Con el advenimiento de la era digital, esta técnica se hizo posible
+usando computadores, lo que resulto en un incremento de la cantidad de
+shows de TV animados usando Cut-out digital. Ejemplos notables son `South
 Park <http://en.wikipedia.org/wiki/South_Park>`__ or `Jake and the Never
-Land
-Pirates <http://en.wikipedia.org/wiki/Jake_and_the_Never_Land_Pirates>`__
-.
+Land Pirates <http://en.wikipedia.org/wiki/Jake_and_the_Never_Land_Pirates>`__.
 
-In video games, this technique also become very popular. Examples of
-this are `Paper
-Mario <http://en.wikipedia.org/wiki/Super_Paper_Mario>`__ or `Rayman
-Origins <http://en.wikipedia.org/wiki/Rayman_Origins>`__ .
+En juegos de video, esta técnica también se volvió muy popular. Ejemplos
+de esto son `Paper Mario <http://en.wikipedia.org/wiki/Super_Paper_Mario>`__
+o `Rayman Origins <http://en.wikipedia.org/wiki/Rayman_Origins>`__ .
 
-Cutout in Godot
+Cutout en Godot
 ~~~~~~~~~~~~~~~
 
-Godot provides a few tools for working with these kind of assets, but
-it's overall design makes it ideal for the workflow. The reason is that,
-unlike other tools meant for this, Godot has the following advantages:
+Godot provee algunas herramientas para trabajar con este tipo de assets,
+pero su diseño en conjunto lo hace ideal para el workflow. La razón es
+que, a diferencia de otras herramientas hechas para esto, Godot tiene
+las siguiente ventajas:
 
--  **The animation system is fully integrated with the engine**: This
-   means, animations can control much more than just motion of objects,
-   such as textures, sprite sizes, pivots, opacity, color modulation,
-   etc. Everything can be animated and blended.
--  **Mix with Traditional**: AnimatedSprite allows traditional animation
-   to be mixed, very useful for complex objects, such as shape of hands
-   and foot, changing facial expression, etc.
--  **Custom Shaped Elements**: Can be created with
-   :ref:`Polygon2D <class_Polygon2D>`
-   allowing the mixing of UV animation, deformations, etc.
--  **Particle Systems**: Can also be mixed with the traditional
-   animation hierarchy, useful for magic effects, jetpacks, etc.
--  **Custom Colliders**: Set colliders and influence areas in different
-   parts of the skeletons, great for bosses, fighting games, etc.
--  **Animation Tree**: Allows complex combinations and blendings of
-   several animations, the same way it works in 3D.
+-  ** El sistema de animación esta completamente integrado con el motor**:
+   Esto significa, las animaciones pueden controlar mucho mas que solo el
+   movimiento de los objetos, como texturas, tamaño de sprites, pivots,
+   opacidad, modulación de color, etc. Todo puede ser animado y mezclado.
+-  **Mezcla con tradicional**: AnimatedSprite permite mezclar animación
+   tradicional, muy util para objetos complejos, como la forma de las
+   manos y pies, cambiar la expresión facial, etc.
+-  **Elementos con Formas Personalizadas**: Pueden ser creados con
+   :ref:`Polygon2D <class_Polygon2D>` permitiendo la mezcla de animación
+   UV, deformaciones, etc.
+-  **Sistema de partículas**: Puede ser mezclado con la jerarquía de
+   animación tradicional, útil para efectos de magia, jetpacks, etc.
+-  **Colisionadores personalizados**: Ajusta los colisionadores e
+   influencia áreas en diferentes partes del esqueleto, excelente para
+   jefes, juegos de pelea, etc.
+-  **Árbol de animación**: Permite combinaciones complejas y mezclas de
+   varias animaciones, de la misma forma que funciona en 3D.
 
-And much more!
+Y mucho mas!
 
-Making of GBot!
+Haciendo el GBot!
 ~~~~~~~~~~~~~~~
 
-For this tutorial, we will use as demo content the pieces of the
-`GBot <https://www.youtube.com/watch?v=S13FrWuBMx4&list=UUckpus81gNin1aV8WSffRKw>`__
-character, created by Andreas Esau.
+Para este tutorial, vamos a usar como contenido del demo las piezas de
+el personaje `GBot <https://www.youtube.com/watch?v=S13FrWuBMx4&list=UUckpus81gNin1aV8WSffRKw>`,
+creado por Andreas Esau.
 
 .. image:: /img/tuto_cutout_walk.gif
 
-Get your assets: :download:`gbot_resources.zip </files/gbot_resources.zip>`.
+Obtén tus assets: :download:`gbot_resources.zip </files/gbot_resources.zip>`.
 
-Setting up the rig
-~~~~~~~~~~~~~~~~~~
+Construyendo el rig
+~~~~~~~~~~~~~~~~~~~
 
-Create an empty Node2D as root of the scene, we will work under it:
+Crea un Node2D vacío como raíz de la escena, trabajaremos bajo el:
 
 .. image:: /img/tuto_cutout1.png
 
-OK, the first node of the model that we will create will be the hip.
-Generally, both in 2D and 3D, the hip is the root of the skeleton. This
-makes it easier to animate:
+OK, el primer nodo del modelo que vamos a crear será la cadera(hip).
+Generalmente, tanto en 2D como 3D, la cadera es la raíz del esqueleto.
+Esto hace mas sencillo animarlo:
 
 .. image:: /img/tuto_cutout2.png
 
-Next will be the torso. The torso needs to be a child of the hip, so
-create a child sprite and load the torso, later accommodate it properly:
+Luego será el torso. El torso necesita ser un hijo de la cadera, así
+que crea un sprite hijo y carga el torso, luego acomódalo adecuadamente:
 
 .. image:: /img/tuto_cutout3.png
 
-This looks good. Let's see if our hierarchy works as a skeleton by
-rotating the torso:
+Esto luce bien. Veamos si nuestra jerarquía trabaja como un esqueleto
+al rotar el torso:
 
 .. image:: /img/tutovec_torso1.gif
 
-Ouch, that doesn't look good! The rotation pivot is wrong, this means
-it needs to be adjusted.
+Ouch, no luce bien! El pivot de rotación esta mal, esto implica que
+debe ser ajustado.
 
-This small little cross in the middle of the
-:ref:`Sprite <class_Sprite>` is
-the rotation pivot:
+Esta pequeña cruz en el medio de el :ref:`Sprite <class_Sprite>` es
+el pivot de rotación:
 
 .. image:: /img/tuto_cutout4.png
 
-Adjusting the pivot
-~~~~~~~~~~~~~~~~~~~
+Ajustando el pivot
+~~~~~~~~~~~~~~~~~~
 
-The pivot can be adjusted by changing the *offset* property in the
+El pivot puede ser ajustado al cambiar la propiedad *offset* en el
 Sprite:
 
 .. image:: /img/tuto_cutout5.png
 
-However, there is a way to do it more *visually*. While hovering over the
-desired pivot point, simply press the "v" key to move the pivot there for the
-selected Sprite. Alternately, there is a tool in the tool bar that has a
-similar function.
+Sin embargo, hay una forma de hacerlo mas visualmente. Mientras flotas
+sobre el punto deseado como pivot, simplemente presiona la tecla "v" para
+mover el pivot allí para el sprite seleccionado. Alternativamente, hay
+una herramienta en la barra de herramientas que tiene una función similar.
 
 .. image:: /img/tutovec_torso2.gif
 
-Now it looks good! Let's continue adding body pieces, starting by the
-right arm. Make sure to put the sprites in hierarchy, so their rotations
-and translations are relative to the parent:
+Ahora luce bien! Continuemos agregando piezas del cuerpo, empezando por
+el brazo derecho. Asegúrate de poner los sprites en jerarquía, así sus
+rotaciones y traslaciones son relativas al padre:
 
 .. image:: /img/tuto_cutout6.png
 
-This seems easy, so continue with the right arm. The rest should be
-simple! Or maybe not:
+Esto parece fácil, asique continua con el brazo derecho. El resto
+debería ser simple! O tal vez no:
 
 .. image:: /img/tuto_cutout7.png
 
-Right. Remember your tutorials, Luke. In 2D, parent nodes appear below
-children nodes. Well, this sucks. It seems Godot does not support cutout
-rigs after all. Come back next year, maybe for 3.0.. no wait. Just
-Kidding! It works just fine.
+Bien. Recuerda tus tutoriales, Luke. En 2D, los nodos padre aparecen
+debajo de los nodos hijos. Bueno, esto apesta. Parece que Godot no
+soporta rigs cutout después de todo. Vuelve el año próximo, tal vez
+para la 3.0.. no espera. Solo bromeaba! Funciona bien.
 
-But how can this problem be solved? We want the left arm to appear behind
-the hip and the torso. For this, we can move the nodes behind the hip
-(note that you can bypass this by setting the Node2D Z property, but then you
-won't learn about all this!):
+Pero como puede ser resuelto este problema? Queremos que el brazo
+izquierdo aparezca detrás de la cadera y el torso. Para esto, podemos
+mover los nodos detrás de la cadera (ten en cuenta que puedes eludir
+este paso al ajustar la propiedad Z del Node2D, pero entonces no
+aprenderías todo esto!):
 
 .. image:: /img/tuto_cutout8.png
 
-But then, we lose the hierarchy layout, which allows to control the
-skeleton like.. a skeleton. Is there any hope?.. Of Course!
+Pero entonces, perdemos el orden de la jerarquia, lo que nos permite
+controlar el esqueleto como.. un esqueleto. Hay alguna esperanza?..
+Por supuesto!
 
-RemoteTransform2D node
+Nodo RemoteTransform2D
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Godot provides a special node, :ref:`RemoteTransform2D <class_RemoteTransform2D>`.
-This node will transform nodes that are sitting somewhere else in the
-hierarchy, by applying the transform to the remote nodes.
+Godot provee un nodo especial, :ref:`RemoteTransform2D <class_RemoteTransform2D>`.
+Este nodo transformara nodos que están en algún otro lugar en la
+jerarquía, al aplicar la transformación en los nodos remotos.
 
-This enables to have a visibility order independent from the
-hierarchy.
+Esto permite tener un orden de visibilidad independiente de la
+jerarquía.
 
-Simply create two more nodes as children from torso, remote_arm_l and
-remote_hand_l and link them to the actual sprites:
+Simplemente crea dos nodos mas como hijos del torso, remote_arm_l y
+remote_hand_l y vincúlalos a los sprites:
 
 .. image:: /img/tuto_cutout9.png
 
-Moving the remote transform nodes will move the sprites, allowing you to
-easily animate and pose the character:
+Mover los nodos de transformación remota hará mover los sprites,
+para posar y animar fácilmente al personaje:
 
 .. image:: /img/tutovec_torso4.gif
 
-Completing the skeleton
-~~~~~~~~~~~~~~~~~~~~~~~
+Completando el esqueleto
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Complete the skeleton by following the same steps for the rest of the
-parts. The resulting scene should look similar to this:
+Completa el esqueleto siguiendo los mismos pasos para el resto de las
+partes. La escena resultante debería lucir similar a esto:
 
 .. image:: /img/tuto_cutout10.png
 
-The resulting rig will be easy to animate. By selecting the nodes and
-rotating them you can animate forward kinematics (FK) efficiently.
+El rig resultante será fácil de animar. Al seleccionar los nodos y
+rotarlos puedes animarlo eficientemente usando forward kinematics (FK).
 
-For simple objects and rigs this is fine, however the following problems
-are common:
+Para objetos y rigs simples esto esta bien, sin embargo los siguientes
+problemas son comunes:
 
--  Selecting sprites can become difficult for complex rigs, and the
-   scene tree ends being used due to the difficulty of clicking over the
-   proper sprite.
--  Inverse Kinematics is often desired for extremities.
+-  Seleccionar sprites puede volverse difícil para rigs complejos, y
+   el árbol de escena termina siendo usado debido a la dificultar de
+   hacer clic sobre los sprites adecuados.
+-  A menudo es deseable usar Inverse Kinematics (IK) para las
+   extremidades.
 
-To solve these problems, Godot supports a simple method of skeletons.
+Para solucionar estos problemas, Godot soporta un método simple de
+esqueletos.
 
-Skeletons
-~~~~~~~~~
+Esqueletos
+~~~~~~~~~~
 
-Godot doesn't actually support *true* Skeketons, but it does feature a
-helper to create "bones" between nodes. This is enough for most cases, 
-but the way it works is not completely obvious.
+Godot en realidad no soporta *verdaderos* esqueletos, pero contiene un
+ayudante (helper) para crear "huesos" entre nodos. Esto es suficiente
+para la mayoría de los casos, pero la forma como funciona no es
+completamente obvia.
 
-
-
-As an example, let's turn the right arm into a skeleton. To create
-skeletons, a chain of nodes must be selected from top to bottom:
+Como ejemplo, vamos a volver un esqueleto el brazo derecho. Para
+crear esqueletos, una cadena de nodos debe ser seleccionada desde
+la cima al fondo:
 
 .. image:: /img/tuto_cutout11.png
 
-Then, the option to create a skeleton is located at Edit > Make Bones:
+Luego, la opción para crear un esqueleto esta localizada en Editar >
+Esqueleto > Crear Huesos:
 
 .. image:: /img/tuto_cutout12.png
 
-This will add bones covering the arm, but the result is not quite what
-is expected.
+Esto agregara huesos cubriendo el brazo, pero el resultado no es lo
+que esperabas.
 
 .. image:: /img/tuto_cutout13.png
 
-It looks like the bones are shifted up in the hierarchy. The hand
-connects to the arm, and the arm to the body. So the question is:
+Parece que los huesos fueron desplazados hacia arriba en la jerarquía.
+La mano se conecta al brazo, y al brazo al cuerpo. Entonces la pregunta
+es:
 
--  Why does the hand lack a bone?
--  Why does the arm connect to the body?
+-  Porque la mano carece de un hueso?
+-  Porque el brazo se conecta al cuerpo?
 
-This might seem strange at first, but will make sense later on. In
-traditional skeleton systems, bones have a position, an orientation and
-a length. In Godot, bones are mostly helpers so they connect the current
-node with the parent. Because of this, **toggling a node as a bone will
-just connect it to the parent**.
+Esto puede ser extraño al comienzo, pero tendrá sentido mas tarde.
+En sistemas tradicionales de esqueletos, los huesos tienen una posición,
+una orientación y un largo. En Godot, los huesos son mas que nada
+ayudantes por lo que conectan al nodo actual con el padre. Por esto,
+**alternar un nodo como un hueso solo lo conectara con el padre**.
 
-So, with this knowledge. Let's do the same again so we have an actual,
-useful skeleton.
+Así que, con este conocimiento. Hagamos lo mismo nuevamente así tenemos
+un esqueleto útil.
 
-The first step is creating an endpoint node. Any kind of node will do,
-but :ref:`Position2D <class_Position2D>` is preferred because it's
-visible in the editor. The endpoint node will ensure that the last bone
-has orientation.
+El primer paso es crear no nodo endpoint (punto final). Cualquier tipo
+de nodo lo hará, pero :ref:`Position2D <class_Position2D>`es preferido
+porque será visible en el editor. El nodo endpoint asegurara que el
+ultimo nodo tenga orientación.
 
 .. image:: /img/tuto_cutout14.png
 
-Now select the whole chain, from the endpoint to the arm and create
-bones:
+Ahora seleccionar la cadena completa, desde el endpoint hasta el brazo
+para crear huesos
 
 .. image:: /img/tuto_cutout15.png
 
-The result resembles a skeleton a lot more, and now the arm and forearm
-can be selected and animated.
+El resultado se parece mucho mas a un esqueleto, y ahora el brazo y el
+antebrazo puede ser seleccionado y animado.
 
-Finally, create endpoints in all meaningful extremities and connect the
-whole skeleton with bones up to the hip:
+Finalmente, crea endpoints en todas las extremidades adecuadas y conecta
+el esqueleto completo con huesos hasta la cadera:
 
 .. image:: /img/tuto_cutout16.png
 
-Finally! the whole skeleton is rigged! On close look, it is noticeable
-that there is a second set of endpoints in the hands. This will make
-sense soon.
+Al fin! El esqueleto completo fue rigged! Mirando de cerca, se puede ver
+que hay un segundo conjunto de endpoints en las manos. Esto tendrá
+sentido pronto.
 
-Now that a whole skeleton is rigged, the next step is setting up the IK
-chains. IK chains allow for more natural control of extremities.
+Ahora que el esqueleto completo fue rigged, el próximo paso es ajustar
+IK chains. IK chains permiten un control mas natural de las extremidades.
 
-IK chains
+IK chains (cadenas IK)
 ~~~~~~~~~
 
-IK chains are a powerful animation tool. Imagine you want to pose a character's foot in a specific position on the ground. Without IK chains, each motion of the foot would require rotating and positioning several other bones. This would be quite complex and lead to imprecise results.
+IK chains es una poderosa herramienta de animación. Imagina que quieres
+posar el pie de un personaje en una posición especifica en el piso. Sin IK
+chains, cada movimiento del pise requerirá rotar y posicionar varios
+huesos mas. Esto seria bastante complejo y nos llevaría a resultados
+imprecisos.
 
-What if we could move the foot and let the rest of the leg self-adjust?
+Y si pudiéramos mover el pie y dejar que el resto de la pierna se ajuste
+sola?
 
-This type of posing is called IK (Inverse Kinematic).
+Este tipo de pose se llama IK (Inverse Kinematic - Cinematica Inversa).
 
-To create an IK chain, simply select a chain of bones from endpoint to
-the base for the chain. For example, to create an IK chain for the right
-leg, select the following:
+Para crear una cadena IK, simplemente selecciona una cadena de huesos
+desde el endpoint hasta la base de la cadena. Por ejemplo, para crear
+una cadena IK para la pierna derecha, selecciona lo siguiente:
 
 .. image:: /img/tuto_cutout17.png
 
-Then enable this chain for IK. Go to Edit > Make IK Chain.
+Para habilitar esta cadena para IK. Ve a Editar > Esqueleto > Crear
+Cadena IK.
 
 .. image:: /img/tuto_cutout18.png
 
-As a result, the base of the chain will turn *Yellow*.
+Como resultado, la base de la cadena se volverá *Amarilla*
 
 .. image:: /img/tuto_cutout19.png
 
-Once the IK chain is set-up, simply grab any of the bones in the
-extremity, any child or grand-child of the base of the chain and try to
-grab it and move it. Result will be pleasant, satisfaction warranted!
+Una vez que la cadena IK ha sido configurada, simplemente toma cualquiera
+de los huesos en la extremidades, cualquier hijo o nieto de la base de la
+cadena y trata de moverlo. El resultado será placentero, satisfacción
+garantizada!
 
 .. image:: /img/tutovec_torso5.gif
 
-Animation
+Animación
 ~~~~~~~~~
 
-The following section will be a collection of tips for creating
-animation for your rigs. If unsure about how the animation system in
-Godot works, refresh it by checking again the :ref:`doc_animations`.
+La siguiente sección será una colección de consejos para crear
+animaciones para tus rigs. Si no esta seguro sobre como funciona
+el sistema de animación en godot, refréscalo chequeando nuevamente
+:ref:`doc_animations`.
 
-2D animation
+Animación 2D
 ------------
 
-When doing animation in 2D, a helper will be present in the top menu.
-This helper only appears when the animation editor window is opened:
+Cuando hagas animación en 2D, un ayudante estará presente en el menú
+superior. Este ayudante solo aparece cuando la ventana del editor de
+animación este abierta:
 
 .. image:: /img/tuto_cutout20.png
 
-The key button will insert location/rotation/scale keyframes to the
-selected objects or bones. This depends on the mask enabled. Green items
-will insert keys while red ones will not, so modify the key insertion
-mask to your preference.
+El botón de llave insertara keyframes de posicion(loc)/rotación(rot)/
+escala(scl) a los objetos o huesos seleccionados. Esto depende en la
+mascara habilitada. Los ítems verdes insertaran claves mientras que
+los rojos no, asique modifica la mascara de inserción para tu preferencia.
 
-Rest pose
-~~~~~~~~~
+Pose de descanso
+~~~~~~~~~~~~~~~~
 
-These kind of rigs do not have a "rest" pose, so it's recommended to
-create a reference rest pose in one of the animations.
+Este tipo de rigs no tiene una pose de "descanso", así que es recomendado
+crear una pose de descanso de referencia en una de las animaciones.
 
-Simply do the following steps:
+Simplemente sigue los siguientes pasos.
 
-1. Make sure the rig is in "rest" (not doing any specific pose).
+1. Asegúrate que el rig este en "descanso" (sin hacer ninguna pose especifica).
 
-2. Create a new animation, rename it to "rest".
+2. Crea una nueva animación, renómbrala a "descanso".
 
-3. Select all nodes (box selection should work fine).
+3. Selecciona todos los nodos (la selección de caja debería funcionar bien)
 
-4. Select "loc" and "rot" on the top menu.
+4. Selecciona "loc" y "rot" en el menú superior.
 
-5. Push the key button. Keys will be inserted for everything, creating
-a default pose.
+5. Presiona el botón de llave. Las llaves serán insertadas para todo,
+   creando una pose por defecto.
 
 .. image:: /img/tuto_cutout21.png
 
-Rotation
+Rotación
 ~~~~~~~~
 
-Animating these models means only modifying the rotation of the nodes.
-Location and scale are rarely used, with the only exception of moving
-the entire rig from the hip (which is the root node).
+Animar estos modelos significa solo modificar la rotación de los nodos.
+Lugar y escala raramente son usados, con la única excepción de
+mover el rig entero desde la cadera (la cual es el nodo raíz).
 
-As a result, when inserting keys, only the "rot" button needs to be
-pressed most of the time:
+Como resultado, cuando insertas claves, solo el botón "rot" necesita
+ser presionado la mayoría del tiempo:
+
 
 .. image:: /img/tuto_cutout22.png
 
-This will avoid the creation of extra animation tracks for the position
-that will remain unused.
+Esto evitara la creación de pistas extra de animación para la posición
+que no seran utilizadas.
 
 Keyframing IK
 ~~~~~~~~~~~~~
 
-When editing IK chains, is is not necessary to select the whole chain to
-add keyframes. Selecting the endpoint of the chain and inserting a
-keyframe will automatically insert keyframes until the chain base too.
-This makes the task of animating extremities much simpler.
+Cuando se editan cadenas IK, no es necesario seleccionar la cadena entera
+para agregar keyframes. Seleccionar el endpoint de la cadena e insertar
+un keyframe también insertara automáticamente keyframes hasta la base de
+de la cadena. Esto hace la tarea de animar extremidades mucho mas
+simple.
 
-Moving sprites above and behind others.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Moviendo sprites por delante y detrás de otros.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-RemoteTransform2D works in most cases, but sometimes it is really
-necessary to have a node above and below others during an animation. To
-aid on this the "Behind Parent" property exists on any Node2D:
+RemoteTransform2D trabaja en la mayoría de los casos, pero a veces es
+realmente necesario tener un nodo encima y debajo de otros durante
+una animación. Para ayudar con esto existe la propiedad "Behind Parent"
+en cualquier Node2D:
 
 .. image:: /img/tuto_cutout23.png
 
-Batch setting transition curves
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ajustes de transición de curvas por lotes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When creating really complex animations and inserting lots of keyframes,
-editing the individual keyframe curves for each can become an endless
-task. For this, the Animation Editor has a small menu where changing all
-the curves is easy. Just select every single keyframe and (generally)
-apply the "Out-In" transition curve to smooth the animation:
+Cuando se crean animaciones realmente complejas y se insertan muchos
+keyframes (cuadros clave), editar las curvas individuales de los keyframes
+puede volverse una tarea interminable. Para esto, el Editor de Animación
+tiene un pequeño menú donde es fácil cambiar todas las curvas. Solo
+selecciona cada uno de los keyframes y (generalmente) aplica la curva
+de transición "Out-In" para una animación suave:
 
 .. image:: /img/tuto_cutout24.png
