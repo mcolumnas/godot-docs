@@ -1,5 +1,5 @@
-Graphical user interface (GUI)
-==============================
+Interfaz Gráfica de Usuario (GUI)
+=================================
 
 .. toctree::
    :maxdepth: 1

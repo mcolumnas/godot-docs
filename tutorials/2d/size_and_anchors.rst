@@ -1,42 +1,44 @@
 .. _doc_size_and_anchors:
 
-Size and anchors
-----------------
+Tamaño y anclas
+---------------
 
-If a game was to be always run in the same device and at the same
-resolution, positioning controls would be a simple matter of setting the
-position and size of each one of them. Unfortunately, it is rarely the
-case.
+Si un juego siempre se corre en el mismo dispositivo y a la misma
+resolución, posicionar controles sería tan simple como ajustar la
+posición y tamaño de cada uno de estos. Desafortunadamente, rara vez
+es el caso.
 
-Only TVs nowadays have a standard resolution and aspect ratio.
-Everything else, from computer monitors to tablets, portable consoles
-and mobile phones have different resolutions and aspect ratios.
+Solo las TVs hoy en día tienen resolución y relación de aspecto
+standard. Todo lo demás, desde monitores de computadores hasta tablets,
+consolas portables y teléfonos móviles tienen diferente resolución y
+relacion de aspecto.
 
-There are several ways to handle this, but for now let's just imagine
-that the screen resolution has changed and the controls need to be
-re-positioned. Some will need to follow the bottom of the screen, others
-the top of the screen, or maybe the right or left margins.
+Hay varias formas de manejar esto, pero por ahora vamos a imaginar que
+la resolución de pantalla cambio y los controles necesitan ser
+re-posicionados. Algunos necesitan seguir la parte inferior de la
+pantalla, otros la superior, o tal vez los márgenes derecho o izquierdo.
 
 .. image:: /img/anchors.png
 
-This is done by editing the *margin* properties of controls. Each
-control has four margins: left, right, bottom and top. By default all of
-them represent a distance in pixels relative to the top-left corner of
-the parent control or (in case there is no parent control) the viewport.
+Esto es hecho al editar la propiedad *margin* de los controles. Cada
+control tiene cuatro márgenes: left(izq), right(der), bottom(inferior) y
+top(superior). Por defecto todos representan una distancia en pixeles
+relativa a la esquina superior-izquierda del control padre o (en caso
+que no haya control padre) el viewport.
 
 .. image:: /img/margin.png
 
-When horizontal (left,right) and/or vertical (top,bottom) anchors are
-changed to END, the margin values become relative to the bottom-right
-corner of the parent control or viewport.
+Cuando las anclas horizontales (left, right) y/o vertical (top, bottom)
+se cambian a END, los valores de márgenes se vuelven relativos a la
+esquina inferior-derecha del control padre o viewport.
 
 .. image:: /img/marginend.png
 
-Here the control is set to expand it's bottom-right corner with that of
-the parent, so when re-sizing the parent, the control will always cover
-it, leaving a 20 pixel margin:
+Aquí el control esta ajustado para expandir su esquina inferior-derecha
+con la del padre, por lo que cuando se cambia de tamaño al padre, el
+control siempre lo cubrirá, dejando un margen de 20 pixeles:
 
 .. image:: /img/marginaround.png
 
-Finally, there is also a ratio option, where 0 means left, 1 means right
-and anything in between is interpolated.
+Finalmente, también esta la opción de ratio (relación), donde 0 implica
+izquierda, 1 derecha y cualquier valor entre medio es interpolado.
