@@ -1,164 +1,170 @@
 .. _doc_using_tilemaps:
 
-Using tilemaps
-~~~~~~~~~~~~~~
+Usando Tilemaps
+~~~~~~~~~~~~~~~
 
-Introduction
+Introducción
 ------------
 
-Tilemaps are a simple and quick way to make 2D game levels. Basically,
-you start with bunch of reference tiles (or pieces) that can be put in a
-grid, as many times each as desired:
+Los Tilemaps son una forma simple y rapida de hacer niveles para juegos
+2D. Basicamente, empiezas con un monton de tiles (baldosas, piezas) de
+referencia que pueden ser puestas en una grilla, tantas veces como se
+desee:
 
 .. image:: /img/tilemap.png
 
-Collisions can also be added to the tiles, allowing for both 2D side
-scrolling and top down games.
+Las colisiones tambien pueden ser agregadas a los tiles, permitiendo
+tanto juegos de desplazamiento lateral (side scrolling) o con vista
+desde arriba (top down).
 
-Making a tileset
-----------------
+Haciendo un tileset
+-------------------
 
-To begin, a tileset needs to be made. Here are some tiles for it.
-They are all in the same image because artists will often prefer this.
-Having them as separate images also works.
+Para empezar, un tileset tiene que ser hecho. Aqui hay algunos tiles
+para ello. Estan todos en la misma imagen porque los artistas a menudo
+preferien esto. Tenerlos como imagenes separadas tambien funciona.
 
 .. image:: /img/tileset.png
 
-Create a new project and move the above png image into the directory.
+Crea un nuevo proyecto y mueve la imagen png superior a su directorio.
 
-We will be creating a :ref:`TileSet <class_TileSet>`
-resource. While this resource exports properties, it's pretty difficult
-to get complex data into it and maintain it:
+Estaremos creando un recurso :ref:`TileSet <class_TileSet>`.
+Mientras que este recurso exporta propiedades, es bastante dificil
+ingresarle datos complejos y mantenerlo:
 
 .. image:: /img/tileset_edit_resource.png
 
-There's enough properties to get by, and with some effort editing this
-way can work, but the easiest way to edit and maintain a tileset is with
-the export tool!
+Hay suficientes propiedades para arreglarselas, y con algo de esfuerzo
+editando de esta forma puede funcionar, pero la forma mas simple de
+editar y mantener un tileset es con la herramienta de exportar!
 
-TileSet scene
--------------
+Escena TileSet
+--------------
 
-Create a new scene with a regular node or node2d as root. For each tile,
-add a sprite as a child. Since tiles here are 50x50, enabling snap might be
-a good idea.
+Crea una nueva escena con un nodo regulgar o Node2D como raiz. Para cada
+tile, agrega un sprite como hijo. Ya que los tiles aqui son de 50x50,
+habilitar snap puede ser una buena idea (Editar > Usar Snap, Mostrar
+Grilla y en Configurar Snap, Step Grilla 50 y 50).
 
-If more than one tile is present in the source image, make sure to use
-the region property of the sprite to adjust which part of the texture is being
-used.
+Si mas de un tile esta presente en la imagen de origen, asegurate de
+usar la propiedad region del sprite para ajustar cual parte de la textura
+sera usada.
 
-Finally, make sure to name your sprite node correctly, this will ensure
-that, in subsequent edits to the tileset (for example, if added
-collision, changed the region, etc), the tile will still be **identified
-correctly and updated**. This name should be unique.
+Finalmente, asegurate de ponerle un nombre correcto a tu sprite, esto
+para que, en ediciones posteriores al tileset (por ejemplo, si se agrega
+colision, se cambia region, etc), el tile igual sera **identificado
+correctamente y actualizado**. Este nombre debe ser unico.
 
-Sounds like a lot of requirements, so here's a screenshot that shows
-where everything of relevance is:
+Suena como un monton de requerimientos, asique aqui hay un screenshot
+que muestra donde esta todo lo importante:
 
 .. image:: /img/tile_example.png
 
-Continue adding all the tiles, adjusting the offsets if needed (if you have
-multiple tiles in a single source image). Again, remember that their names must
-be unique.
+Continua agregando todos los tiles, ajustando los offsets si es necesario
+(si tiene multiples tiles en una sola imagen). De nuevo, recuerda que sis
+nombres deben ser unicos.
 
 .. image:: /img/tile_example2.png
 
-Collision
+Colision
 ---------
 
-To add collision to a tile, create a StaticBody2D child for each sprite.
-This is a static collision node. Then, as a child of the StaticBody2D,
-create a CollisionShape2D or CollisionPolygon. The latter is recommended
-because it is easier to edit:
+Para agregar colision a un tile, crea un hijo StaticBody2D para cada
+sprite. Este es un nodo de colision estatica. Luego, como hijo de
+StaticBody2D, crea una CollisionShape2D o CollisionPolygon. La ultima
+es recomendada por ser mas sencilla de editar:
 
 .. image:: /img/tile_example3.png
 
-Finally, edit the polygon, this will give the tile a collision.
-**Remember to use snap!**. Using snap will make sure collision polygons
-are aligned properly, allowing a character to walk seamlessly from tile
-to tile. Also **do not scale or move** the collision and/or collision
-polygon nodes. leave them at offset 0,0, with scale 1,1 and rotation 0
-respect to the parent sprite.
+Finalmente, edita el poligono, esto le dara una colision al tile.
+**Recuerda usar snap!**. Usando snap nos aseguramos que los poligonos
+de colisiones estan alineados correctamente, permitiendo al personaje
+caminar sin problema de tile a tile. Ademas **no escales o muevas** la
+colision y/o los nodos de poligonos. Dejalos con offset 0,0, con escala
+1,1 y rotacion 0 respecto al sprite padre.
 
 .. image:: /img/tile_example4.png
 
-Keep adding collisions to tiles until we are done. Note that BG is just
-a background, so it should not have a collision.
+Sigue agregando colisiones a los tiles hasta que este pronto. Ten en
+cuenta que BG es solo un fondo, por lo que no debe tener colision.
 
 .. image:: /img/tile_example5.png
 
-OK! We're done! Remember to save this scene for future edit, call it
-"tileset_edit.scn" or something like that.
+OK! Esta pronto! Recuerdo guardar la escena para ediciones futuras,
+llamala "tileset_edit.scn" o algo similar.
 
-Exporting a TileSet
+Exportando un TileSet
 -------------------
 
-With the scene created and opened in the editor, next step will be to
-create a tileset. Use Scene > Convert To > Tile Set from the Scene Menu:
+Con la escena creada y abierta en el editor, el siguiente paso sera
+crear el tileset. Usa Escena > Convertir A > TileSet desde el menu
+Escena:
 
 .. image:: /img/tileset_export.png
 
-Then choose a filename, like "mytiles.res". Make sure the "Merge With
-Existing" option is toggled on. This way, every time the tileset
-resource file is overwritten, existing tiles are merged and updated
-(they are referenced by their unique name, so again, **name your tiles
-properly**).
+Luego elije el nombre de archivo, como "mistiles.res". Asegurate que
+la opcion "Mergear con existentes" esta habilitada. De esta forma, cada
+vez que el recurso de tileset es sobrescrito, los tiles existentes seran
+mezclados y actualizados (son referenciados por su nombre unico, asi que
+nuevamente, **nombre tus tiles adecuadamente**).
 
 .. image:: /img/tileset_merge.png
 
-Using the TileSet in a TileMap
-------------------------------
+Usando el TileSet en un TileMap
+-------------------------------
 
-Create a new scene, use any node or node2d as root, then create a
-:ref:`TileMap <class_TileMap>` as
-a child.
+Crea una nueva escena, usa cualquier nodo o node2d como raiz, luego
+crea un :ref:`TileMap <class_TileMap>` como hijo.
 
 .. image:: /img/tilemap_scene.png
 
-Go to the tileset property of this node and assign the one created in
-previous steps:
+Ve hasta la propiedad tileset de este nodo y asigna el que creamos en
+los pasos previos:
 
 .. image:: /img/tileset_property.png
 
-Also set the cell size to '50', since that is the size used by the
-tiles. Quadrant size is a tuning value, which means that the engine will
-draw and cull the tilemap in blocks of 16x16 tiles. This value is
-usually fine and does not need to be changed, but can be used to tune
-performance in specific cases (if you know what you are doing).
+Tambien ajusta el tamaño de cell (celda) a '50', ya que ese es el valor
+usado por los tiles. Quadrant size es un valor de puesta a punto, que
+significa que el motor va a dibujar y escoger el tilempa en bloques
+de baldosas de 16x16. Esta valor suele estar bien y no necesita ser
+cambiado, pero puede ser usado para poner a punto el rendimiento
+en casos especificos (si sabes lo q estas haciendo).
 
-Painting your world
--------------------
+Pintando tu mundo
+-----------------
 
-With all set, make sure the TileMap node is selected. A red grid will
-appear on screen, allowing to paint on it with the selected tile on the
-left palette.
+Con todo pronto, asegurate que el nodo TileMap esta seleccionado. Una
+grilla roja va a aparecer en la pantalla, permitiendo pintar en ella con
+el tile seleccionado en la paleta izquierda.
 
 .. image:: /img/tile_example6.png
 
-To avoid moving and selecting the tilemap node accidentally (something
-common given it's a huge node), it is recommended that you lock it,
-using the lock button:
+Para evitar mover y seleccionar el nodo TileMap accidentalmente (algo
+comun ya que es un nodo gigante), es recomendable que lo bloquees, usando
+el boton de candado:
 
 .. image:: /img/tile_lock.png
 
-Offset and scaling artifacts
-----------------------------
+Offset y artefactos de escala
+-----------------------------
 
-When using a single texture for all the tiles, scaling the tileset (or
-even moving to a non pixel-aligned location) will most likely result in
-filtering artifacts like this:
+Cuando usas una sola textura para todos los tiles, escalando el tileset
+(o aun moverlo a un lugar que no esta alineado en pixels) probablemente
+resultara en artefactos de filtrado como este:
 
 .. image:: /img/tileset_filter.png
 
-This can't be avoided, as it is the way the hardware bilinear filter
-works. So, to avoid this situation, there are a few workarounds, try the
-ones that look better for you:
+Esto no puede ser evitado, ya que es como funciona el filtro bilinear
+por hardware. Entonces, para evitar esta situacion, hay algunas soluciones,
+intenta la que te parezca mejor:
 
--  Use a single image for each tile, this will remove all artifacts but
-   can be more cumbersome to implement, so try the options below first.
--  Disable filtering for either the tileset texture or the entire image
-   loader (see the :ref:`doc_managing_image_files` asset pipeline tutorial).
--  Enable pixel snap (set: "Scene > Project Settings >
-   Display/use_2d_pixel_snap" to true).
--  Viewport Scaling can often help with shrinking the map (see the
-   :ref:`doc_viewports` tutorial).
+-  Usa una sola imagen para cada tile, esto removera los artefactos pero
+   puede ser pesado de implementar, asi que intenta las opciones que estan
+   abajo primero.
+-  Deshabilita el filtrado ya sea para la textura del tileset o el
+   cargador de imagenes entero (ve el tutorial sobre pipeline de assets
+   :ref:`doc_managing_image_files`).
+-  Habilita pixel snap (ajusta: "Escena > Configuracion de Proyecto" >
+   Display/use_2d_pixel_snap").
+-  Escalado de Viewport puede a menudo ayudar para encoger el mapa (ve
+   el tutorial :ref:`doc_viewports`).
