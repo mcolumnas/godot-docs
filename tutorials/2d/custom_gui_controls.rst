@@ -1,46 +1,46 @@
 .. _doc_custom_gui_controls:
 
-Custom GUI controls
-===================
+Controles GUI personalizados
+============================
 
-So many controls...
+Tantos controles...
 -------------------
 
-Yet there are never enough. Creating your own custom controls that act
-just the way you want them is an obsession of almost every GUI
-programmer. Godot provides plenty of them, but they may not work exactly
-the way you want. Before contacting the developers with a pull-request
-to support diagonal scrollbars, at least it will be good to know how to
-create these controls easily from script.
+De todas formas nunca son suficientes. Crear tus propios controles
+personalizados que actúan exactamente como quieres es una obsesión de
+casi todo programador GUI. Godot provee muchos, pero puede que no
+funcionen exactamente en la forma que deseas. Antes de contactar a
+los desarrolladoras con un pull-request para soportar barras de
+desplazamiento diagonales, al menos seria bueno saber como crear
+estos controles fácilmente desde script.
 
-Drawing
--------
+Dibujando
+---------
 
-For drawing, it is recommended to check the :ref:`doc_custom_drawing_in_2d` tutorial.
-The same applies. Some functions are worth mentioning due to their
-usefulness when drawing, so they will be detailed next:
+Para dibujar, es recomendado chequear el tutorial :ref:`doc_custom_drawing_in_2d`.
+Lo mismo aplica. Vale la pena mencionar algunas funciones debido a su utilidad
+para dibujar, asique las detallaremos a continuación:
 
-Checking control size
-~~~~~~~~~~~~~~~~~~~~~
+Chequeando el tamaño de un control
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Unlike 2D nodes, "size" is very important with controls, as it helps to
-organize them in proper layouts. For this, the
-:ref:`Control.get_size() <class_Control_get_size>`
-method is provided. Checking it during _draw() is vital to ensure
-everything is kept in-bounds.
+A diferencia de los nodos 2D, "size"(tamaño) es muy importante para los
+controles, ya que ayuda a organizarlos de forma apropiada. Para esto, se
+provee el método :ref:`Control.get_size() <class_Control_get_size>`.
+Chequearlo durante _draw() es vital para asegurar que todo este dentro
+de los limites.
 
-Checking focus
-~~~~~~~~~~~~~~
+Chequeando el foco
+~~~~~~~~~~~~~~~~~~
 
-Some controls (such as buttons or text editors) might provide input
-focus for keyboard or joypad input. Examples of this are entering text
-or pressing a button. This is controlled with the
-:ref:`Control.set_focus_mode() <class_Control_set_focus_mode>`
-function. When drawing, and if the control supports input focus, it is
-always desired to show some sort of indicator (highight, box, etc) to
-indicate that this is the currently focused control. To check for this
-status, the :ref:`Control.has_focus() <class_Control_has_focus>`
-exists. Example
+Algunos controles (como botones o editores de texto) podrían proveer
+foco de entrada para teclado o joypad. Ejemplos de esto son ingresar
+texto o presionar un botón. Esto es controlado con la función
+:ref:`Control.set_focus_mode() <class_Control_set_focus_mode>`.
+Cuando dibujas, y si el control soporta foco de entrada, siempre es
+deseable mostrar algún tipo de indicador (highight, box, etc) para
+indicar que este es el control que tiene el foco. Para chequear por
+este estatus, existe :ref:`Control.has_focus() <class_Control_has_focus>`.
 
 ::
 
@@ -50,55 +50,56 @@ exists. Example
         else:
              draw_normal()
 
-Sizing
+Tamaño
 ------
 
-As mentioned before, size is very important to controls. This allows
-them to lay out properly, when set into grids, containers, or anchored.
-Controls most of the time provide a *minimum size* to help to properly
-lay them out. For example, if controls are placed vertically on top of
-each other using a :ref:`VBoxContainer <class_VBoxContainer>`,
-the minimum size will make sure your custom control is not squished by
-the other controls in the container.
+Como mencionamos antes, el tamaño es muy importante para los controles.
+Esto permite distribuirlos adecuadamente, cuando se ajustan en grillas,
+contenedores, o anclas. Los controles la mayoría del tiempo proveen un
+*minimum size* para ayudar a distribuirlos adecuadamente. Por ejemplo,
+si los controles son puestos verticalmente encima uno de otro usando
+un :ref:`VBoxContainer <class_VBoxContainer>`, el tamaño mínimo nos
+asegura que tu control personalizado no será aplastado por los demás
+controles en el contenedor.
 
-To provide this callback, just override
+Para proveer esta llamada de retorno, solo sobrescribe
 :ref:`Control.get_minimum_size() <class_Control_get_minimum_size>`,
-for example:
-
+por ejemplo:
 ::
 
-    func get_minimum_size(): 
+    func get_minimum_size():
         return Vector2(30,30)
 
-Or alternatively, set it via function:
+O de forma alternativa, ajústalo a través de una función:
 
 ::
 
     func _ready():
         set_custom_minimum_size( Vector2(30,30) )
 
-Input
+Entrada
 -----
 
-Controls provide a few helpers to make managing input events much easier
-than regular nodes.
+Los controles proveen algunos ayudantes para hacer la gestión de eventos
+de entrada mucho mas sencillos que los nodos regulares.
 
-Input events
-~~~~~~~~~~~~
+Eventos de entrada
+~~~~~~~~~~~~~~~~~~
 
-There are a few tutorials about input before this one, but it's worth
-mentioning that controls have a special input method that only works
-when:
+Hay algunos tutoriales sobre entrada antes de este, pero es valioso
+mencionar que los controles tienen un método especial de entrada que
+solo funciona cuando:
 
--  The mouse pointer is over the control.
--  The button was pressed over this control (control always
-   captures input until button is released)
--  Control provides keyboard/joypad focus via
+-  El puntero del mouse esta sobre el control.
+-  El botón fue presionado sobre el control (control siempre captura
+   la entrada hasta que el botón se suelta)
+-  El control provee foco de teclado/joypad con
    :ref:`Control.set_focus_mode() <class_Control_set_focus_mode>`.
 
-This function is
+Esta simple función es
 :ref:`Control._input_event() <class_Control__input_event>`.
-Simply override it in your control. No processing needs to be set.
+Solo sobrescríbela en tu control. No hay necesidad de ajustar el
+procesamiento.
 
 ::
 
@@ -106,38 +107,40 @@ Simply override it in your control. No processing needs to be set.
 
     func _input_event(ev):
        if (ev.type==InputEvent.MOUSE_BUTTON and ev.button_index==BUTTON_LEFT and ev.pressed):
-           print("Left mouse button was pressed!")
+           print("Botón izquierdo de mouse presionado!")
 
-For more information about events themselves, check the :ref:`doc_inputevent`
-tutorial.
+Para mas información sobre los eventos mismos, chequea el tutorial
+:ref:`doc_inputevent`.
 
-Notifications
-~~~~~~~~~~~~~
+Notificaciones
+~~~~~~~~~~~~~~
 
-Controls also have many useful notifications for which no callback
-exists, but can be checked with the _notification callback:
+Los controles también pueden tener muchas notificaciones útiles para
+las cuales no hay llamada de retorno, pero pueden ser chequeadas con
+la llamada de retorno _notification:
+
 
 ::
 
     func _notification(what):
 
        if (what==NOTIFICATION_MOUSE_ENTER):
-          pass # mouse entered the area of this control
+          pass # el mouse entro al área de este control
        elif (what==NOTIFICATION_MOUSE_EXIT):
-          pass # mouse exited the area of this control
+          pass # el mouse salió del área de este control
        elif (what==NOTIFICATION_FOCUS_ENTER):
-          pass # control gained focus
+          pass # el control tiene foco
        elif (what==NOTIFICATION_FOCUS_EXIT):
-          pass # control lost focus
+          pass # el control perdió el foco
        elif (what==NOTIFICATION_THEME_CHANGED):
-          pass # theme used to draw the control changed
-          # update and redraw is recommended if using a theme
+          pass # el tema usado para dibujar el control cambio
+          # update y redraw son recomendados si se usa un tema
        elif (what==NOTIFICATION_VISIBILITY_CHANGED):
-          pass # control became visible/invisible
-          # check new status with is_visible()
+          pass # el control se volvió visible/invisible
+          # chequea el nuevo estado si is_visible()
        elif (what==NOTIFICATION_RESIZED):
-          pass # control changed size, check new size
-          # with get_size()
+          pass # el control cambio de tamaño, chequea el nuevo tamaño
+          # con get_size()
        elif (what==NOTIFICATION_MODAL_CLOSED):
-          pass # for modal popups, notification
-          # that the popup was closed
+          pass # para ventanas emergentes modales, notificación
+               # que la ventana emergente fue cerrada
