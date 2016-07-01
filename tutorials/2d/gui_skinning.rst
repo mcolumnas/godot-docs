@@ -3,69 +3,71 @@
 GUI skinning
 ============
 
-Oh beautiful GUI!
------------------
+Oh hermosa GUI!
+---------------
 
-This tutorial is about advanced skinning of an user interface. Most
-games generally don't need this, as they end up just relying on
+Este tutorial es sobre skinning avanzado de una interfaz de usuario.
+La mayoría de los juegos no necesitan esto, ya que terminan usando
 :ref:`Label <class_Label>`, :ref:`TextureFrame <class_TextureFrame>`,
-:ref:`TextureButton <class_TextureButton>` and
+:ref:`TextureButton <class_TextureButton>` y
 :ref:`TextureProgress <class_TextureProgress>`.
 
-However, many types of games often need complex user interfaces, like
-MMOs, traditional RPGs, Simulators, Strategy, etc. These kind of
-interfaces are also common in some games that include editors to create
-content, or interfaces for network connectivity.
+Sin embargo, muchos estilos de juegos a menudo necesitan interfaces de
+usuario complejas, como MMOs, RPGs tradicionales, simuladores,
+estrategia, etc. Este tipo de interfaces también son comunes en algunos
+juegos que incluyen editores para crear contenido, o interfaces para
+conectividad de red.
 
-Godot user interface uses these kind of controls with the default theme,
-but they can be skinned to resemble pretty much any kind of user
-interface.
+La interfaz de usuario de Godot usa este tipo de controles con el tema
+por defecto, pero pueden ser skinned para lucir como cualquier otra
+interfaz de usuario.
 
-Theme
+Tema
 -----
 
-The GUI is skinned through the :ref:`Theme <class_Theme>`
-resource. Theme contains all the information required to change the
-entire visual styling of all controls. Theme options are named, so it's
-not obvious which name changes what (specialy from code), but several
-tools are provided. The ultimate place to look at what each theme option
-is for each control, which will always be more up to date than any
-documentation is the file `scene/resources/default_theme/default_theme.cpp
+La GUI esta skinned con el recurso :ref:`Theme <class_Theme>`.
+Los temas contienen toda la información requerida para cambiar el estilo
+visual de todos los controles. Las opciones de tema son por nombre, por
+lo que no es obvio que nombre cambia que cosa (especialmente desde
+código), pero varias herramientas se proveen. El lugar final para fijarse
+que opción de tema es para que control, y que siempre estará mas
+actualizado que cualquier documentación es el archivo
+`scene/resources/default_theme/default_theme.cpp
 <https://github.com/godotengine/godot/blob/master/scene/resources/default_theme/default_theme.cpp>`__.
-The rest of this document will explain the different tools used to
-customize the theme.
+El resto de este documento explicara las diferentes herramientas usadas
+para personalizar el tema.
 
-A Theme can be applied to any control in the scene. As a result, all
-children and grand-children controls will use that same theme too
-(unless another theme is specified further down the tree). If a value is
-not found in a theme, it will be searched in themes higher up in the
-hierarchy towards the root. If nothing was found, the default theme is
-used. This system allows for flexible overriding of themes in complex
-user interfaces.
+Un Tema puede ser aplicado a cualquier control en la escena. Como
+resultado, todos sus controles hijos y nietos usaran el mismo tema
+también (a no ser que otro tema sea especificado mas abajo en el árbol).
+Si un valor no se encuentra en el tema, será buscado en los temas mas
+arriba en la jerarquía hacia la raíz. Si no se encuentra nada, el tema
+por defecto es usado. Este sistema permite una sobrescritura flexible de
+los temas en interfaces de usuario complejas.
 
-Theme options
--------------
+Opciones de tema
+----------------
 
-Each kind of option in a theme can be:
+Cada tipo de opción en un tema puede ser:
 
--  **An integer constant**: A single numerical constant. Generally used
-   to define spacing between compoments or alignment.
--  **A Color**: A single color, with or without transparency. Colors are
-   usually applied to fonts and icons.
--  **A Texture**: A single image. Textures are not often used, but when
-   they are they represent handles to pick or icons in a complex control
-   (such as file dialog).
--  **A Font**: Every control that uses text can be assigned the fonts
-   used to draw strings.
--  **A StyleBox**: Stylebox is a resource that defines how to draw a
-   panel in varying sizes (more information on them later).
+-  **Un entero constante**: Una única constante numérica. Generalmente
+   usada para definir el espaciado entre componentes o alineación.
+-  **Un Color**: Un único color, con o sin transparencia. Los colores
+   usualmente se aplican a fuentes e iconos.
+-  **Una textura**: Una única imagen. Las texturas no se usan a menudo,
+   pero cuando lo son representan manijas para recoger o iconos en un
+   control complejo (como un dialogo de archivo).
+-  **Una Fuente**: Cada control que usa texto puede tener asignada la
+   fuente usada para dibujar cadenas.
+-  **Un StyleBox**: StyleBox es un recurso que defino como dibujar un
+   panel en diferentes tamaños (mas información sobre ellos luego).
 
-Every option is associated to:
+Toda opción esta asociada a:
 
--  A name (the name of the option)
--  A Control (the name of the control)
+-  Un nombre (el nombre de la opción)
+-  Un control (el nombre del control)
 
-An example usage:
+Un ejemplo de uso:
 
 ::
 
@@ -75,12 +77,12 @@ An example usage:
     var l = Label.new()
     l.set_theme(t)
 
-In the example above, a new theme is created. The "font_color" option
-is changed and then applied to a label. As a result, the label (and all
-children and grand children labels) will use that color.
+En el ejemplo de arriba, un nuevo tema es creado. La opcion "font_color"
+es cambiada y luego aplicada a la etiqueta(label). Como resultado,
+la etiqueta (y todas las etiquetas hijas y nietas) usaran ese color.
 
-It is possible to override those options without using the theme
-directly and only for a specific control by using the override API in
+Es posible sobrescribir esas opciones sin usar el tema directamente y
+solo para un control especifico al usar la API de sobrescritura en
 :ref:`Control.add_color_override() <class_Control_add_color_override>`:
 
 ::
@@ -88,74 +90,77 @@ directly and only for a specific control by using the override API in
     var l = Label.new()
     l.add_color_override("font_color",Color(1.0,1.0,1.0))
 
-In the inline help of Godot (in the script tab) you can check which theme options
-are overrideable, or check the :ref:`Control <class_Control>` class reference.
 
-Customizing a control
----------------------
+En la ayuda integrada de Godot (en la pestaña script) tu puedes chequear
+que opciones de tema que pueden ser sobrescritas, o chequea la referencia
+de clase :ref:`Control <class_Control>`.
 
-If only a few controls need to be skinned, it is often not necessary to
-create a new theme. Controls offer their theme options as special kinds
-of properties. If checked, overriding will take place:
+Personalizando un control
+-------------------------
 
-.. image:: /img/themecheck.png
-
-As can be see in the image above, theme options have little check-boxes.
-If checked, they can be used to override the value of the theme just for
-that control.
-
-Creating a theme
-----------------
-
-The simplest way to create a theme is to edit a theme resource. Create a
-Theme from the resource menu, the editor will appear immediately.
-Following to this, save it (to, as example, mytheme.thm):
+Si solo unos pocos controles necesitan ser skinned, suele no ser necesario
+crear un nuevo tema. Los controles ofrecen sus propias opciones de tema
+como propiedades especiales. Si son marcadas, serán sobrescritos:
 
 .. image:: /img/themecheck.png
 
-This will create an empty theme that can later be loaded and assigned to
-controls.
+Como puede verse en la imagen de arriba, las opciones de tema tienen
+pequeñas check-boxes. Si están marcadas, pueden ser usadas para
+sobrescribir el valor del tema solo para ese control.
 
-Example: theming a button
---------------------------
+Creando un tema
+---------------
 
-Take some assets (:download:`skin_assets.zip </files/skin_assets.zip>`),
-go to the "theme" menu and select "Add Class Item":
+La forma mas simple de crear un tema es editar un recurso theme.
+Crea un nuevo recurso en el Inspector y selecciona Theme, el editor
+aparecerá inmediatamente. Luego, guárdalo en el Inspector con el icono
+de disquette (en, por ejemplo, mytheme.thm):
+
+.. image:: /img/themecheck.png
+
+Esto creara un tema vacío que luego puede ser cargado y asignado a
+los controles.
+
+Ejemplo: aplicando tema a un botón
+----------------------------------
+
+Toma algunos assets (:download:`skin_assets.zip </files/skin_assets.zip>`),
+ve al menú "theme" y selecciona "Add Class Item":
 
 .. image:: /img/themeci.png
 
-A menu will appear promting the type of control to create. Select
+Un menú aparecerá para elegir el tipo de control a crear. Selecciona
 "Button":
 
 .. image:: /img/themeci2.png
 
-Immediately, all button theme options will appear in the property
-editor, where they can be edited:
+Inmediatamente, todas las opciones de tema para botones aparecerán en las
+propiedades del editor, donde pueden ser editadas:
 
 .. image:: /img/themeci3.png
 
-Select the "normal" stylebox and create a new "StyleBoxTexture", then
-edit it. A texture stylebox basically contains a texture and the size of
-the margins that will not stretch when the texture is stretched. This is
-called "3x3" stretching:
+Selecciona el stylebox "normal" y crea un nuevo "StyleBoxTexture", luego
+edítalo. Una textura stylebox básicamente contiene una textura y el
+tamaño de los márgenes que no se estiraran cuando la textura sea
+estirada. Esto se llama stretching "3x3":
 
 .. image:: /img/sb1.png
 
-Repeat the steps and add the other assets. There is no hover or disabled
-image in the example files, so use the same stylebox as in normal. Set
-the supplied font as the button font and change the font color to black.
-Soon, your button will look different and retro:
+Repite los pasos y agrega otros assets. No hay imagen para los estados
+hover o deshabilitado en los archivos de ejemplo, por lo que usa el mismo
+stylebox que normal. Ajusta la fuente proporcionada como la fuente del
+botón y cambia el color de la fuente a negro. Pronto, tu botón lucirá
+diferente y retro:
 
 .. image:: /img/sb2.png
 
-Save this theme to the .thm file. Go to the 2D editor and create a few
-buttons:
+Guarda este tema al archivo .thm. Ve al editor 2D y crea algunos botones:
 
 .. image:: /img/skinbuttons1.png
 
-Now, go to the root node of the scene and locate the "theme" property,
-replace it by the theme that was just created. It should look like this:
+Ahora, ve al nodo raíz de la escena y encuentra la propiedad "tema",
+reemplázala por el tema que recién creamos. Debería lucir así:
 
 .. image:: /img/skinbuttons2.png
 
-Congratulations! You have created a reusable GUI Theme!
+Felicitaciones! Has creado un tema GUI reusable!
