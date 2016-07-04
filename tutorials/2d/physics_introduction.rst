@@ -1,90 +1,91 @@
 .. _doc_physics_introduction:
 
-Physics introduction
-====================
+Introducción a la física
+========================
 
-Our world is made of tangible matter. In our world, a piano can't go
-through a wall when going into a house. It needs to use the door. Video
-games are often like the the real world and Pac-Man can't go through the
-walls of his maze (although he can teleport from the left to the right
-side of the screen and back).
+Nuestro mundo esta hecho de materia tangible. En nuestro mundo, un piano
+no puede ir a través de la pared cuando es ingresado a una casa. Necesita
+usar la puerta. Los videojuegos a menudo son como el mundo real por lo
+que Pac-Man no puede ir a través de las paredes de su laberinto (aunque
+se puede tele transportar desde el lado izquierdo al derecho de la
+pantalla y viceversa).
 
-Anyway, moving sprites around is nice but one day they have to collide
-properly, so let's get to the point.
+Es decir, mover sprites por ahí es lindo pero un día tienen que
+colisionar adecuadamente, asique vayamos al punto.
 
-Shapes
-------
+Shapes (Formas)
+---------------
 
-The base collidable object in Godot's 2D world is a
+El objeto base que puede colisionar en el mundo 2D de Godot es un
 :ref:`Shape2D <class_Shape2D>`.
-There are many types of shapes, all of them inherit this base class:
 
 -  :ref:`CircleShape2D <class_CircleShape2D>`
 -  :ref:`RectangleShape2D <class_RectangleShape2D>`
 -  :ref:`CapsuleShape2D <class_CapsuleShape2D>`
 -  :ref:`ConvexPolygonShape2D <class_ConvexPolygonShape2D>`
 -  :ref:`ConcavePolygonShape2D <class_ConcavePolygonShape2D>`
--  etc. (there are others check the class list).
+-  etc. (hay mas, chequea la lista de clases).
 
-Shapes are of type
-:ref:`Resource <class_Resource>`,
-but they can be created via code easily. For example:
+Shapes pueden ser del tipo :ref:`Resource <class_Resource>`,
+pero pueden ser creados desde código fácilmente. Por ejemplo:
 
 ::
 
-    # Create a circle
+    # Crea un círculo
     var c = CircleShape2D.new()
     c.set_radius(20)
 
-    # Create a box
+    # Crea una caja
     var b = RectangleShape2D.new()
     b.set_extents(Vector2(20,10))
 
-The main use for shapes is checking collision/intersection and getting
-resolution information. Shapes are mostly convex, (except the
-concavepolygon one, which is just a list of segments to check collision
-against). This collision check is done easily with the built-in
-functions like:
+El uso principal de los shapes es chequear colisiones/intersecciones y
+obtener información de resolución. Son principalmente convexas, (excepto
+concavepolygon, que no es mas que una lista de segmentos contra la cual
+chequear colisiones). Este chequeo de colisión es hecho fácilmente con
+funciones incorporadas como:
 
 ::
 
-    # Check if there is a collision between two shapes, each with a transform
+    # Chequea si hay una colisión entre dos formas, cada una tiene un transform
     if b.collide(b_xform, a, a_xform):
-        print("OMG Collision!")
+        print("OMG Colisión!")
 
-Godot will return correct collision and collision info from the
-different calls to the Shape2D api. Collision between all shapes and
-transforms can be done this way, or even obtaining contact information,
-motion casting, etc.
+Godot retornara informació correcta de colisión y de información de
+colisión desde las diferentes llamadas a la API Shape2D. La colision
+entre todas las formas y transformaciones pueden ser hechas de esta
+manera, o aun obtener información de contacto, motion casting, etc.
 
-Transforming shapes
-~~~~~~~~~~~~~~~~~~~
+Transformando shapes
+~~~~~~~~~~~~~~~~~~~~
 
-As seen before in the collide functions, 2D shapes in godot can be
-transformed by using a regular :ref:`Matrix32 <class_Matrix32>`
-transform, meaning the can check collision while scaled, moved and
-rotated. The only limitation to this is that shapes with curved sections
-(such as circle and capsule) can only be scaled uniformly. This means
-that circle or capsule shapes scaled in the form of an ellipse **will
-not work properly**. This is a limitation on the collision algorithm
-used (SAT), so make sure that your circle and capsule shapes are always
-scaled uniformly!
+Como vimos antes en las funciones de colisión, los shapes 2D en Godot
+pueden ser transformados usando una transformación regular
+:ref:`Matrix32 <class_Matrix32>`, lo que significa que puede chequear
+una colisión cuando es escalada, movida o rotada. La única limitación
+para esto es que las formas con secciones curvas (como circulo y capsula)
+pueden solo ser escaladas uniformemente. Esto implica que las formas de
+circulo o capsula escaladas en forma de elipse **no funcionaran
+adecuadamente**. Esta es una limitación en el algoritmo de colisión
+usado (SAT), así que asegúrate que tus formas de circulo y capsula
+siempre se escalen uniformemente!
+
 
 .. image:: /img/shape_rules.png
 
-When problems begin
--------------------
+Cuando comienzan los problemas
+------------------------------
 
-Even though this sounds good, reality is that collision detection alone
-is usually not enough in most scenarios. Many problems start arising as
-long as the development of the game is in progress:
+Aunque esto suena bien, la realidad es que usualmente la detección de
+colisiones sola no es suficiente en la mayoría de los escenarios. Muchos
+problemas aparecen en la medida que el desarrollo del juego progresa:
 
-Too many combinations!
+Demasiadas combinaciones!
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Games have several dozens, hundreds, thousands! of objects that can
-collide and be collided. The typical approach is to test everything
-against everything in two for loops like this:
+Los juegos tienen varias docenas, cientos, miles! de objetos que pueden
+colisionar y ser colisionados. El enfoque típico es probar todo contra
+todo en dos bucles for como este:
 
 ::
 
@@ -93,261 +94,270 @@ against everything in two for loops like this:
             if (i.collides(j)):
                 do_collision_code()
 
-But this scales really bad. Let's imagine there are only 100 objects in
-the game. This means that 100\*100=10000 collisions will need to be
-tested each frame. This is a lot!
+Pero esto escala realmente mal. Imaginemos que hay solo 100 objetos en
+el juego. Esto implica que 100*100=10000 colisiones necesitaran ser
+probadas en cada frame. Esto es mucho!
 
-Visual aid
-~~~~~~~~~~
+Ayuda visual
+~~~~~~~~~~~~
 
-Most of the time, creating a shape via code is not enough. We need to
-visually place it over a sprite, draw a collision polygon, etc. It is
-obvious that we need nodes to create the proper collision shapes in a
-scene.
+La mayoría del tiempo, crear un shape con código no es suficiente.
+Necesitamos ubicarlo visualmente sobre nuestro sprite, dibujar un
+polígono de colisión, etc. Es obvio que necesitamos nodos para crear
+las formas de colisión apropiadas en una escena.
 
-Collision resolution
-~~~~~~~~~~~~~~~~~~~~
+Resolución de colisión
+~~~~~~~~~~~~~~~~~~~~~~
 
-Imagine we solved the collision issue, we can tell easily and quickly
-which shapes overlap. If many of them are dynamic objects that move
-around, or move according to newtonian physics, solving a collision of
-multiple objects can be really difficult code-wise.
+Imagina que resolvimos el problema de colisión, podemos saber de forma
+fácil y rápida que formas se superponen. Si muchas de ellas son objetos
+dinámicos que se mueven por ahí, o que se mueven de acuerdo a física
+newtoniana, resolver la colisión de muchos objetos puede ser realmente
+difícil desde código.
 
-Introducing... Godot's physics engine!
+Introduciendo... Motor de física de Godot!
 --------------------------------------
 
-To solve all these problems, Godot has a physics and collision engine
-that is well integrated into the scene system, yet it allows different
-levels and layers of functionality. The built-in physics engine can be
-used for:
+Para resolver todos esos problemas, Godot tiene un motor de física y
+colisión que esta bien integrado en el sistema de escena, y de todas
+formas permite diferentes niveles y capas de funcionalidad. El motor
+de física incorporado puede ser usado para:
 
--  Simple Collision Detection: See :ref:`Shape2D <class_Shape2D>`
-   API.
--  Scene Kinematics: Handle shapes, collisions, broadphase, etc as
-   nodes. See :ref:`Area2D <class_Area2D>`.
--  Scene Physics: Rigid bodies and constraints as nodes. See
-   :ref:`RigidBody2D <class_RigidBody2D>`, and the joint nodes.
+-  Detección simple de colisión: Ve la API :ref:`Shape2D <class_Shape2D>`
+-  Cinemática de Escena: Maneja formas, colisiones, broadphase, etc
+   como nodos. Ve :ref:`Area2D <class_Area2D>`.
+-  Física de Escena: Cuerpos rígidos y restricciones como nodos. Ve
+   :ref:`RigidBody2D <class_RigidBody2D>`, y los nodos joint.
 
-Units of measure
+Unidad de medida
 ~~~~~~~~~~~~~~~~
 
-It is often a problem when integrating a 2D physics engine to a game
-that such engines are optimized to work using meters as unit of measure.
-Godot uses a built-in custom 2D physics engine that is designed to
-function properly in pixels, so all units and default values used for
-stabilization are tuned for this, making development more
-straightforward.
+A menudo es un problema cuando se integra un motor de física 2D en un
+juego, que dichos motores están optimizados para trabajar usando metros
+como unidad de medida. Godot utiliza un motor de física 2D incorporado
+y personalizado que esta diseñado para funcionar adecuadamente en pixels,
+así que todas las unidades y valores por defecto usados para
+estabilización están preparados para esto, haciendo el desarrollo mas
+directo.
 
 CollisionObject2D
 -----------------
 
-:ref:`CollisionObject2D <class_CollisionObject2D>`
-is the (virtual) base node for everything that can be collided in 2D.
-Area2D, StaticBody2D, KinematicBody2D and RigidBody2D all inherit from
-it. This node contains a list of shapes (Shape2D) and a relative
-transform. This means that all collisionable objects in Godot can use
-multiple shapes at different transforms (offset/scale/rotation). Just
-remember that, as mentioned before, **non-uniform scale will not work
-for circle and capsule shapes**.
+:ref:`CollisionObject2D <class_CollisionObject2D>` es el nodo (virtual)
+base para todo lo que puede colisionar en 2D. Area2D, StaticBody2D,
+KinematicBody2D y RigidBody2D todos heredan desde el. Este nodo contiene
+una lista de formas (Shape2D) y una transformación relativa. Esto
+significa que todos los objetos colisionables en Godot pueden usar
+múltiples formas en diferentes transformaciones (offset/scale/rotation).
+Solo recuerda que, como mencionamos antes, **escalado no uniforma no
+funcionara para formas de circulo o capsulas**.
 
 .. image:: /img/collision_inheritance.png
 
 StaticBody2D
 ~~~~~~~~~~~~
 
-The simplest node in the physics engine is the StaticBody2D, which
-provides a static collision. This means that other objects can collide
-against it, but StaticBody2D will not move by itself or generate any
-kind of interaction when colliding other bodies. It's just there to be
-collided.
+El nodo mas simple en el motor de física es el StaticBody2D, el cual
+provee una colisión estática. Esto implica que otros objetos pueden
+colisionar contra el, pero StaticBody2D no se moverá por si mismo o
+generara algún tipo de interacción cuando colisione otros cuerpos.
+Esta allí solo para ser colisionado.
 
-Creating one of those bodies is not enough, because it lacks collision:
+Crear uno de estos cuerpos no alcanza, porque carece de colisión:
 
 .. image:: /img/collision_inheritance.png
 
-From the previous point, we know that CollisionObject2D derived nodes
-have an internal lists of shapes and transforms for collisions, but how
-to edit them? There are two special nodes for that.
+Por el punto previo, sabemos que los nodos derivados de
+ColiisionObject2D tienen una lista interna de formas y transformaciones
+para colisiones, pero como lo editamos? Hay dos nodos especiales para
+ello.
 
 CollisionShape2D
 ~~~~~~~~~~~~~~~~
 
-This node is a helper node. It must be created as a direct children of a
-CollisionObject2D derived node: :ref:`Area2D <class_Area2D>`,
+Este nodo es un nodo ayudante. Debe ser creado como un hijo directo de
+un nodo derivado de CollisionObject2D: :ref:`Area2D <class_Area2D>`,
 :ref:`StaticBody2D <class_StaticBody2D>`, :ref:`KinematicBody2D <class_KinematicBody2D>`,
 :ref:`RigidBody2D <class_RigidBody2D>`.
 
-By itself it does nothing, but when created as a child of the above
-mentioned nodes, it adds collision shapes to them. Any amount of
-CollisionShape2D children can be created, meaning the parent object will
-simply have more collision shapes. When added/deleted/moved/edited, it
-updates the list of shapes in the parent node.
+Por si mismo no hace nada, pero cuando se crea como hijo de los nodos
+mencionados arriba, les agrega forma de colisión. Cualquier cantidad
+de hijos CollisionShape2D pueden ser creados, lo que significa que
+el objeto padre simplemente tendrá mas formas de colisión. Cuando se
+agrega/borra/mueve/edita, actualiza la lista de formas en el nodo padre.
 
-At run time, though, this node does not exist (can't be accessed with
-``get_node()``), since it's only meant to be an editor helper. To access
-the shapes created at runtime, use the CollisionObject2D API directly.
+En tiempo de ejecución, sin embargo, esto nodo no existe (no puede ser
+accedido con ``get_node()``), ya que solo esta destinado para ser un
+ayudante en el editor. Para acceder a las formas en tiempo de ejecución,
+usa la API CollisionObject2D directamente.
 
-As an example, here's the scene from the platformer, containing an
-Area2D with child CollisionObject2D and coin sprite:
+Como un ejemplo, aquí esta la escena del juego plataformer (se puede
+descargar junto con los demás demos desde el sitio oficial de Godot),
+conteniendo un Area2D con hijo CollisionObject2D como icono de moneda:
 
 .. image:: /img/area2dcoin.png
 
-Triggers
-~~~~~~~~
+Triggers (disparadores)
+~~~~~~~~~~~~~~~~~~~~~~~
 
-A CollisionShape2D or CollisionPolygon2D can be set as a trigger. When
-used in a RigidBody2D or KinematicBody2D, "trigger" shapes become
-non-collidable (objects can't collide against it). They just move around
-with the object as ghosts. This makes them useful in two situations:
+Un CollisionShape2D o CollisionPolygon2D puede ser ajustado como un
+trigger. Cuando se usa en un RigidBody2D o KinematicBody2D, las formas
+"trigger" se vuelven no colisionables (los objetos no pueden colisionar
+contra el). Solo se mueven al rededor de los objetos como fantasmas.
+Esto los vuelve útiles en dos situaciones:
 
--  Disabling collision in a specific shape.
--  Get an Area2D to trigger a body_enter / body_exit signals with non
-   collidable objects (useful in several situations).
+-  Deshabilitar la colisión en una forma especifica.
+-  Hacer que Area2D dispare una señal body_enter / body_exit con
+   objetos no colisionables (útil en varias situaciones).
 
 CollisionPolygon2D
 ~~~~~~~~~~~~~~~~~~
 
-This one is similar to CollisionShape2D, except that instead of
-assigning a shape, a polygon can be edited (drawn by the user) to
-determine the shape. The polygon can be convex or concave, it doesn't
-matter.
+Este es similar a CollisionShape2D, excepto que en lugar de asignarse
+una forma, un polígono puede ser editado (dibujado por el usuario) para
+determinar la forma. El polígono puede ser convexo o cóncavo, no importa.
 
-Going back, here's the scene with the StaticBody2D, the static body is
-the child of a sprite (meaning if the sprite moves, the collision does
-too). In turn, the CollisionPolygon is a child of staticbody, meaning it
-adds collision shapes to it.
+Yendo atrás, aquí esta la escena con el StaticBody2D, el static body es
+hijo de un sprite (lo que significa que si el sprite se mueve, la
+colisión también lo hace). CollisionPolygon es un hijo de staticbody,
+lo que implica que le agrega formas de colisión.
 
 .. image:: /img/spritewithcollision.png
 
-In fact, what CollisionPolygon does is to decompose the polygon in
-convex shapes (shapes can only be convex, remember?) and adds them to
-the CollisionObject2D:
+De hecho, lo que hace CollisionPolygon es descomponer el polígono en
+formas convexas (los shapes solo pueden ser convexos, recuerdan?) y
+agregarla a CollisionObject2D:
 
 .. image:: /img/decomposed.png
 
 KinematicBody2D
 ~~~~~~~~~~~~~~~
 
-:ref:`KinematicBody2D <class_KinematicBody2D>` bodies are special types
-of bodies that are meant to be user-controlled.
-They are not affected by the physics at all (to other types of bodies,
-such a character or a rigidbody, these are the same as a staticbody).
-They have however, two main uses:
+:ref:`KinematicBody2D <class_KinematicBody2D>` son tipos especiales de
+cuerpos que están pensados para ser controlados por el usuario. No son
+afectados por la física en lo absoluto (para otros tipos de cuerpos,
+como un character o rigidbody, estos son los mismos que un staticbody).
+Tienen sin embargo, dos usos principales:
 
--  **Simulated Motion**: When these bodies are moved manually, either
-   from code or from an :ref:`AnimationPlayer <class_AnimationPlayer>`
-   (with process mode set to fixed!), the physics will automatically
-   compute an estimate of their linear and angular velocity. This makes
-   them very useful for moving platforms or other
-   AnimationPlayer-controlled objects (like a door, a bridge that opens,
-   etc). As an example, the 2d/platformer demo uses them for moving
-   platforms.
--  **Kinematic Characters**: KinematicBody2D also has an api for moving
-   objects (the move() function) while performing collision tests. This
-   makes them really useful to implement characters that collide against
-   a world, but that don't require advanced physics. There is a tutorial
-   about :ref:`doc_kinematic_character_2d`.
+-  **Movimiento Simulado**: Cuando estos cuerpos son movidos manualmente,
+   ya sea desde código o desde :ref:`AnimationPlayer <class_AnimationPlayer>`
+   (con proccess mode ajustado a fixed!), la física va a computar
+   automáticamente un estimado de su velocidad linear y angular. Esto
+   los vuelve muy útiles para mover plataformas u otros objetos
+   controlados desde AnimationPlayer (como una puerta, un puente que se
+   abre, etc). Como un ejemplo, el demo 2d/platformer los usa para mover
+   plataformas.
+-  **Personajes Cinemáticos**: KinematicBody2D también tiene una API para
+   mover objetos (la función move()) mientras realiza pruebas de colisión.
+   Esto los vuelve realmente útiles para implementar personajes que
+   colisionan contra un mundo, pero que no requieren física avanzada. Hay
+   un tutorial sobre esto :ref:`doc_kinematic_character_2d`.
 
 RigidBody2D
 ~~~~~~~~~~~
 
-This type of body simulates newtonian physics. It has mass, friction,
-bounce, and the 0,0 coordinates simulates the center of mass. When real
-physics are needed, :ref:`RigidBody2D <class_RigidBody2D>`
-is the node to use. The motion of this body is affected by gravity
-and/or other bodies.
+Este tipo de cuerpo simula física newtoniana. Tiene masa, fricción,
+rebote, y las coordenadas 0,0 simulan el centro de masa. Cuando se
+necesita física real, :ref:`RigidBody2D <class_RigidBody2D>` es el
+nodo ha usar. El movimiento de este cuerpo es afectado por la gravedad
+y/u otros cuerpos.
 
-Rigid bodies are usually active all the time, but when they end up in
-resting position and don't move for a while, they are put to sleep until
-something else wakes them up. This saves an enormous amount of CPU.
+Los Rigid bodies suelen estar activos todo el tiempo, pero cuando
+terminan en una posición de descanso y no se mueven por un rato, son
+puestos a dormir hasta que algo los despierte. Esto ahorra una cantidad
+enorme de CPU.
 
-RigidBody2D nodes update their transform constantly, as it is generated
-by the simulation from a position, linear velocity and angular velocity.
-As a result, [STRIKEOUT:this node can't be scaled]. Scaling the children
-nodes should work fine though.
+Los nodos RigidBody2D actualizan sus trasformaciones constantemente, ya
+que es generada por la simulación desde una posición, velocidad linear y
+velocidad angular. Como resultado, [STRIKEOUT:this node can't be scaled].
+Escalar los nodos hijos debería funcionar sin embargo.
 
-As a plus, as this is very common in games, it is possible to change a
-RigidBody2D node to behave like a Character (no rotation), StaticBody or
-KinematicBody according to different situations (example, an enemy
-frozen by an ice beam becomes a StaticBody)
+Como un plus, ya que es muy común en los juegos, es posible cambiar un
+nodo RigidBody2D para que se comporte como un Character (sin rotación),
+StaticBody o KinematicBody de acuerdo a diferentes situaciones (ejemplo,
+un enemigo congelado por hielo se vuelve un StaticBody).
 
-The best way to interact with a RigidBody2D is during the force
-integration callback. In this very moment, the physics engine
-synchronizes state with the scene and allows full modification of the
-internal parameters (otherwise, as it may be running in a thread,
-changes will not take place until next frame). To do this, the following
-function must be overridden:
+La mejor forma de interactuar con un RigidBody2D es durante la llamada
+de retorno force integration. En este momento exacto, el motor físico
+sincroniza estado con la escena y permite modificación completa de los
+parámetros internos (de otra forma, ya que puede estar corriendo en un
+thread, los cambios no tendrán lugar hasta el siguiente frame). Para
+hacer esto, la siguiente función debe ser sobrescrita:
 
 ::
 
     func _integrate_forces(state):
         [use state to change the object]
 
-The "state" parameter is of type :ref:`Physics2DDirectBodyState <class_Physics2DDirectBodyState>`.
-Please do not use this object (state) outside the callback as it will
-result in an error.
+El parámetro "state" es del tipo :ref:`Physics2DDirectBodyState <class_Physics2DDirectBodyState>`.
+Por favor no uses este objeto (estado) fuera de la llamada de retorno
+ya que resultara en un error.
 
-Contact reporting
------------------
+Reporte de contacto
+-------------------
 
-In general, RigidBody2D will not keep track of the contacts, because
-this can require a huge amount of memory if thousands of rigid bodies
-are in the scene. To get contacts reported, simply increase the amount
-of the "contacts reported" property from zero to a meaningful value
-(depending on how many you are expecting to get). The contacts can be
-later obtained via the
+En general, RigidBody2D no se mantendrá al corriente de los contactos,
+ya que esto puede requerir una cantidad enorme de memoria si miles de
+rigid bodies están en la escena. Para tener los contactos reportados,
+simplemente aumenta la cantidad de la propiedad "contacts reported" desde
+cero hasta un valor que tenga sentido (dependiendo en cuantos esperas
+obtener). Los contactos pueden ser las tarde obtenidos con
 :ref:`Physics2DDirectBodyState.get_contact_count() <class_Physics2DDirectBodyState_get_contact_count>`
-and related functions.
+y las funciones relacionadas.
 
-Contact monitoring via signals is also available (signals similar to the
-ones in Area2D, described below) via a boolean property.
+El monitoreo de contactos a través de señales también esta disponible
+( las señales son similares a las de Area2D, descritas mas abajo) con
+propiedades booleanas.
 
 Area2D
 ~~~~~~
 
-Areas in Godot physics have three main roles:
+Las áreas en la física de Godot tienen tres roles principales:
 
-1. Override the space parameters for objects entering them (ie.
-gravity, gravity direction, gravity type, density, etc).
+1. Sobrescribir los parámetros de espacio para objetos que entran a
+ellas (ejemplo: gravedad, dirección de gravedad, tipo de gravedad,
+densidad, etc).
 
-2. Monitor when rigid or kinematic bodies enter or exit the area.
+2. Monitorear cuando rigid o kinematic bodies entrar o salen del área.
 
-3. Monitor other areas (this is the simplest way to get overlap test)
+3. Monitorear otras áreas (esta es la forma mas simple de probar la
+superposición)
 
-The second function is the most common. For it to work, the "monitoring"
-property must be enabled (it is by default). There are two types of
-signals emitted by this node:
+La segunda función es la mas común. Para que funcione, la propiedad
+"monitoring" debe estar habilitada (lo esta por defecto). Hay dos tipos
+de señales emitidas por este nodo:
 
 ::
 
-    # Simple, high level notification
+    # Notificación simple, de alto nivel
     body_enter(body:PhysicsBody2D)
     body_exit(body:PhysicsBody2D)
     area_enter(area:Area2D)
     area_exit(body:Area2D)
 
-    # Low level shape-based notification
-    # Notifies which shape specifically in both the body and area are in contact
+    # Notificación de bajo nivel basada en shape
+    # Notifica específicamente cual shape en ambos, cuerpo y área, están en contacto
     body_enter_shape(body_id:int,body:PhysicsBody2D,body_shape_index:int,area_shape_index:idx)
     body_exit_shape(body_id:int,body:PhysicsBody2D,body_shape_index:int,area_shape_index:idx)
     area_enter_shape(area_id:int,area:Area2D,area_shape_index:int,self_shape_index:idx)
     area_exit_shape(area_id:int,area:Area2D,area_shape_index:int,self_shape_index:idx)
 
-By default, areas also receive mouse/touchscreen input, providing a
-lower-level way than controls to implement this kind of input in a game.
-Bodies support this but it's disabled by default.
+Por defecto, las áreas también reciben entrada de mouse/touchscreen,
+proveyendo una forma de mas bajo nivel que controla la implementación
+de este tipo de entrada en un juego.
 
-In case of overlap, who receives collision information?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+En caso de overlap, quien recibe la información de colisión?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Remember that not every combination of two bodies can "report" contacts.
-Static bodies are passive and will not report contacts when hit.
-Kinematic Bodies will report contacts but only against Rigid/Character
-bodies. Area2D will report overlap (not detailed contacts) with bodies
-and with other areas. The following table should make it more visual:
+Recuerda que no toda combinación de dos cuerpos puede hacer "report"
+de contactos. Los cuerpos Static son pasivos y no reportaran contacto
+cuando son tocados. Los cuerpos Kinematic reportaran contactos pero solo
+contra cuerpos Rigid/Character. Area2D reportara overlap (no el contacto
+detallado) con cuerpos y otras áreas. La siguiente tabla debería hacerlo
+mas visual:
 
 +-------------------+-------------+-----------------+-----------------+---------------+--------+
-| **Type**          | *RigidBody* | *CharacterBody* | *KinematicBody* | *StaticBody*  | *Area* |
+| **Tipo**          | *RigidBody* | *CharacterBody* | *KinematicBody* | *StaticBody*  | *Area* |
 +===================+=============+=================+=================+===============+========+
 | **RigidBody**     | Both        | Both            | Both            | Rigidbody     | Area   |
 +-------------------+-------------+-----------------+-----------------+---------------+--------+
@@ -360,41 +370,45 @@ and with other areas. The following table should make it more visual:
 | **Area**          | Area        | Area            | Area            | None          | Both   |
 +-------------------+-------------+-----------------+-----------------+---------------+--------+
 
-Physics global variables
-------------------------
+Variables globales de física
+----------------------------
 
-A few global variables can be tweaked in the project settings for
-adjusting how 2D physics works:
+Algunas variables globales pueden ser modificadas en la configuración
+de proyecto para ajustar como funciona la física 2D:
 
 .. image:: /img/physics2d_options.png
 
-Leaving them alone is best (except for the gravity, that needs to be
-adjusted in most games), but there is one specific parameter that might
-need tweaking which is the "cell_size". Godot 2D physics engine used by
-default a space hashing algorithm that divides space in cells to compute
-close collision pairs more efficiently.
+Dejarlos sin tocar es lo mejor (excepto para la gravedad, que necesita
+ser ajustada en la mayoría de los juegos), pero hay un parámetro
+especifico que puede necesitar ser ajustado "cell_size". El motor físico
+de Godot usa por defecto un algoritmo de space hashing que divide el
+espacio en celdas para computar pares de colisiones cercanas mas
+eficientemente.
 
-If a game uses several colliders that are really small and occupy a
-small portion of the screen, it might be necessary to shrink that value
-(always to a power of 2) to improve efficiency. Likewise if a game uses
-few large colliders that span a huge map (of several screens of size),
-increasing that value a bit might help save resources.
+Si un juego utiliza varios colisionadores que son realmente pequeños y
+ocupan una pequeña porción de la pantalla, puede ser necesario encoger
+ese valor (siempre a una potencia de 2) para mejorar la eficiencia. De
+la misma manera si un juego usa pocos colisionadores grandes que cubren
+un mapa gigante (del tamaño de varias pantallas), aumentar ese valor
+un poco puede ayudar a salvar recursos.
 
-Fixed process callback
-----------------------
+Llamada de retorneo fixed process
+---------------------------------
 
-The physics engine may spawn multiple threads to improve performance, so
-it can use up to a full frame to process physics. Because of this, when
-accessing physics variables such as position, linear velocity, etc. they
-might not be representative of what is going on in the current frame.
+El motor físico puede iniciar múltiples threads para mejorar el
+rendimiento, para que puede utilizar hasta un frame completo para
+procesar física. Por este motivo, cuando se acceden variables de física
+como la posición, velocidad linear, etc. pueden no ser representativas
+de lo que esta sucediendo en el frame actual.
 
-To solve this, Godot has a fixed process callback, which is like process
-but it's called once per physics frame (by default 60 times per second).
-During this time, the physics engine is in *synchronization* state and
-can be accessed directly and without delays.
+Para resolver esto, Godot tiene una llamada de retorno fixed process,
+que es como process pero es llamada una vez por frame de física (por
+defecto 60 veces por segundo). Durante este tiempo, el motor de física
+esta en estado de *sincronización* y puede ser accedido directamente
+sin demoras.
 
-To enable a fixed process callback, use the ``set_fixed_process()``
-function, example:
+Para habilitar una llamada de retorno fixed process, usa la función
+``set_fixed_process()``, ejemplo:
 
 ::
 
@@ -406,25 +420,26 @@ function, example:
     func _ready():
         set_fixed_process(true)
 
-Casting rays and motion queries
--------------------------------
 
-It is very often desired to "explore" the world around from our code.
-Throwing rays is the most common way to do it. The simplest way to do
-this is by using the RayCast2D node, which will throw a ray every frame
-and record the intersection.
+Casting rays y consultas de movimiento
+--------------------------------------
 
-At the moment there isn't a high level API for this, so the physics
-server must be used directly. For this, the
+Es muy a menudo necesario "explorar" el mundo al rededor desde nuestro
+código. Emitir rays (rayos) es la forma mas común de hacerlo. La forma
+mas simple de hacer esto es usando el nodo RayCast2D, el cual va a
+emitir un rayo en cada frame y grabar la intersección.
+
+Por el momento no hay una API de alto nivel para esto, así que el
+servidor de física debe ser usado directamente. Para esto, la clase
 :ref:`Physics2DDirectspaceState <class_Physics2DDirectspaceState>`
-class must be used. To obtain it, the following steps must be taken:
+debe ser usada. Para obtenerla, los siguiente pasos deben ser tomados:
 
-1. It must be used inside the ``_fixed_process()`` callback, or at
-``_integrate_forces()``
+1. Debe ser usada dentro de la llamada de retorno ``_fixed_process()``,
+   o en ``_integrate_forces()``
 
-2. The 2D RIDs for the space and physics server must be obtained.
+2. Los RIDs 2D para el servidor de espacio y física deben ser obtenidos.
 
-The following code should work:
+El siguiente código debería funcionar:
 
 ::
 
@@ -432,4 +447,4 @@ The following code should work:
         var space = get_world_2d().get_space()
         var space_state = Physics2DServer.space_get_direct_state(space)
 
-Enjoy doing space queries!
+Disfruta haciendo consultas de espacio!
