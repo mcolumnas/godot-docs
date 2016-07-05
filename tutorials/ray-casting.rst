@@ -1,55 +1,57 @@
 .. _doc_ray-casting:
 
-Ray-casting
-===========
+Ray-casting (Emision de rayos)
+==============================
 
-Introduction
+Introducción
 ------------
 
-One of the most common tasks in game development is casting a ray (or
-custom shaped object) and checking what it hits. This enables complex
-behaviors, AI, etc. to take place. This tutorial will explain how to
-do this in 2D and 3D.
+Una de las tareas mas comunes en el desarrollo de juegos es emitir un
+rayo (o un objeto con una forma personalizada) y chequear que golpea.
+Esto permite que comportamientos complejos, AI, etc. tengan lugar.
+Este tutorial va a explicar como hacer esto en 2D y 3D.
 
-Godot stores all the low level game information in servers, while the
-scene is just a frontend. As such, ray casting is generally a
-lower-level task. For simple raycasts, node such as
-:ref:`RayCast <class_RayCast>` and :ref:`RayCast2D <class_RayCast2D>`
-will work, as they will return every frame what the result of a raycast
-is.
+Godot guarda toda la información de bajo nivel del juego en servidores,
+mientras que la escena es solo una interfaz. Como tal, ray casting en
+general es una tarea de bajo-nivel. Para raycasts simples, nodos como
+:ref:`RayCast <class_RayCast>` y :ref:`RayCast2D <class_RayCast2D>`
+funcionaran, ya que regresaran en cada frame cual es el resultado del
+raycast.
 
-Many times, though, ray-casting needs to be a more interactive process
-so a way to do this by code must exist.
+Muchas veces, sin embargo, ray-casting necesita ser un proceso mas
+interactivo por lo que una forma de hacer esto por código debe existir.
 
-Space
------
+Espacio
+-------
 
-In the physics world, Godot stores all the low level collision and
-physics information in a *space*. The current 2d space (for 2D Physics)
-can be obtained by calling
+En el mundo físico, Godot guarda todas las colisiones de bajo nivel e
+información física en un *space*. El actual espacio 2D (para física 2D)
+puede ser obtenido al llamar
 :ref:`CanvasItem.get_world_2d().get_space() <class_CanvasItem_get_world_2d>`.
-For 3D, it's :ref:`Spatial.get_world().get_space() <class_Spatial_get_world>`.
+Para 3D, es :ref:`Spatial.get_world().get_space() <class_Spatial_get_world>`.
 
-The resulting space :ref:`RID <class_RID>` can be used in
-:ref:`PhysicsServer <class_PhysicsServer>` and
-:ref:`Physics2DServer <class_Physics2DServer>` respectively for 3D and 2D.
+El espacio resultante :ref:`RID <class_RID>` puede ser usado en
+:ref:`PhysicsServer <class_PhysicsServer>` y
+:ref:`Physics2DServer <class_Physics2DServer>` para 3D y 2D
+respectivamente.
 
-Accessing space
---------------
+Accediendo al espacio
+---------------------
 
-Godot physics runs by default in the same thread as game logic, but may
-be set to run on a separate thread to work more efficiently. Due to
-this, the only time accessing space is safe is during the
-:ref:`Node._fixed_process() <class_Node__fixed_process>`
-callback. Accessing it from outside this function may result in an error
-due to space being *locked*.
+La física de Godot corre por defecto en el mismo thread que la lógica del
+juego, pero puede ser ajustada para correr en un thread separado para
+funcionar mas eficientemente. Debido a esto, el único momento donde acceder
+al espacio es seguro es durante la llamada de retorno
+:ref:`Node._fixed_process() <class_Node__fixed_process>`.
+Accediéndola desde fuera de esta función puede resultar en un error
+debido a que el espacio esta *locked*(bloqueado).
 
-To perform queries into physics space, the
-:ref:`Physics2DDirectSpaceState <class_Physics2DDirectSpaceState>`
-and :ref:`PhysicsDirectSpaceState <class_PhysicsDirectSpaceState>`
-must be used.
+Para realizar cónsulas en espacio físico, la clase
+:ref:`Physics2DDirectSpaceState <class_Physics2DDirectSpaceState>` y
+ref:`PhysicsDirectSpaceState <class_PhysicsDirectSpaceState>` deben
+ser usadas.
 
-In code, for 2D spacestate, this code must be used:
+En código, para 2D spacestate, este código debe ser usado:
 
 ::
 
@@ -57,73 +59,76 @@ In code, for 2D spacestate, this code must be used:
         var space_rid = get_world_2d().get_space()
         var space_state = Physics2DServer.space_get_direct_state(space_rid)
 
-Of course, there is a simpler shortcut:
+Por supuesto, hay un atajo mas simple:
 
 ::
 
     func _fixed_process(delta):
         var space_state = get_world_2d().get_direct_space_state()
 
-For 3D:
+Para 3D:
 
 ::
 
     func _fixed_process(delta):
         var space_state = get_world().get_direct_space_state()
 
-Raycast query
--------------
+Consulta Raycast
+----------------
 
-For performing a 2D raycast query, the method
+Para realizar una consulta raycast 2D, el método
 :ref:`Physics2DDirectSpaceState.intersect_ray() <class_Physics2DDirectSpaceState_intersect_ray>`
-must be used, for example:
+debe ser usado, por ejemplo:
 
 ::
 
     func _fixed_process(delta):
         var space_state = get_world().get_direct_space_state()
-        # use global coordinates, not local to node
+        # usa coordenadas globales, no locales al nodo
         var result = space_state.intersect_ray( Vector2(0,0), Vector2(50,100) )
 
-Result is a dictionary. If the ray didn't hit anything, the dictionary will
-be empty. If it did hit something it will contain collision information:
+El resultado es un diccionario. Si el rayo no pego contra nada, el
+diccionario estará vacío. Si pego algo entonces tendrá la información de
+colisión:
 
 ::
 
         if (not result.empty()):
-            print("Hit at point: ",result.position)
+            print("Golpe en el punto: ",result.position)
 
-The collision result dictionary, when something hit, has this format:
+El diccionario de resultado de colisión, cuando pega en algo, tiene este
+formato:
 
 ::
 
     {
-       position:Vector2 # point in world space for collision
-       normal:Vector2 # normal in world space for collision
-       collider:Object # Object collided or null (if unassociated)
-       collider_id:ObjectID # Object it collided against
-       rid:RID # RID it collided against
-       shape:int # shape index of collider
-       metadata:Variant() # metadata of collider
+       position:Vector2 # punto en el world space para la colisión
+       normal:Vector2 # normal en el world space para colisión
+       collider:Object # Objeto colisionado o null (si no esta asociado)
+       collider_id:ObjectID # Objeto contra el que colisiono
+       rid:RID # RID contra el que colisiono
+       shape:int # indice de forma del colisionador
+       metadata:Variant() # metadata del colisionador
     }
 
-    # in case of 3D, Vector3 is returned.
+    # En caso de 3D, Vector3 es regresado.
 
-Collision exceptions
---------------------
+Excepciones de colisiones
+-------------------------
 
-It is a very common case to attempt casting a ray from a character or
-another game scene to try to infer properties of the world around it.
-The problem with this is that the same character has a collider, so the
-ray can never leave the origin (it will keep hitting it's own collider),
-as evidenced in the following image.
+Es un caso muy común el intentar emitir un rayo desde un personaje u
+otra escena del juego para tratar de inferir propiedades de el mundo
+a su al rededor. El problema con esto es que el mismo personaje tiene
+un colisionador, por lo que el rayo nunca deja el origen (se mantendrá
+golpeando su propio colisionador), como queda en evidencia en la
+siguiente imagen.
 
 .. image:: /img/raycast_falsepositive.png
 
-To avoid self-intersection, the intersect_ray() function can take an
-optional third parameter which is an array of exceptions. This is an
-example of how to use it from a KinematicBody2D or any other
-collisionobject based node:
+Para evitar la intersección propia, la función intersect_ray() puede
+tomar un tercer parámetro opcional que es un arreglo de excepciones.
+Este es un ejemplo de como usarlo desde un KinematicBody2D o cualquier
+otro nodo basado en CollisionObject:
 
 ::
 
@@ -133,26 +138,27 @@ collisionobject based node:
         var space_state = get_world().get_direct_space_state()
         var result = space_state.intersect_ray( get_global_pos(), enemy_pos, [ self ] )
 
-The extra argument is a list of exceptions, can be objects or RIDs.
+El argumento extra es una lista de excepciones, pueden ser objetos o
+RIDs.
 
-3D ray casting from screen
---------------------------
+Ray casting 3D desde  pantalla.
+-------------------------------
 
-Casting a ray from screen to 3D physics space is useful for object
-picking. There is not much of a need to do this because
-:ref:`CollisionObject <class_CollisionObject>`
-has an "input_event" signal that will let you know when it was clicked,
-but in case there is any desire to do it manually, here's how.
+Emitir un rayo desde pantalla a un espacio físico 3D es útil para
+tomar objetos. No hay mucha necesidad de hacer esto porque
+:ref:`CollisionObject <class_CollisionObject>` tiene una señal
+"input_event" que te permite saber cuando es pinchada, pero en caso
+que haya deseo de hacerlo manualmente, aquí esta como.
 
-To cast a ray from the screen, the :ref:`Camera <class_Camera>` node
-is needed. Camera can be in two projection modes, perspective and
-orthogonal. Because of this, both the ray origin and direction must be
-obtained. (origin changes in orthogonal, while direction changes in
-perspective):
+Para emitir un rayo desde la pantalla, el nodo :ref:`Camera <class_Camera>`
+es necesario. La cámara puede estar en dos modos de proyección,
+perspectiva y ortogonal. Por este motivo, ambos el origen del rayo y la
+dirección deben obtenerse. (el origen cambia en ortogonal, mientras
+que la dirección cambia en perspectiva):
 
 .. image:: /img/raycast_projection.png
 
-To obtain it using a camera, the following code can be used:
+Para obtenerlo usando una cámara, el siguiente código puede ser usado:
 
 ::
 
@@ -165,5 +171,5 @@ To obtain it using a camera, the following code can be used:
               var from = camera.project_ray_origin(ev.pos)
               var to = from + camera.project_ray_normal(ev.pos) * ray_length
 
-Of course, remember that during ``_input()``, space may be locked, so save
-your query for ``_fixed_process()``.
+Por supuesto, recuerda que durante ``_input()``, el espacio puede estar
+locked, así que guarda tu consulta para ``_fixed_process()``.
