@@ -1,57 +1,62 @@
 .. _doc_kinematic_character_2d:
 
-Kinematic Character (2D)
-========================
+Kinematic Character (2D) (Personaje Cinemático)
+===============================================
 
-Introduction
+Introducción
 ~~~~~~~~~~~~
 
-Yes, the name sounds strange. "Kinematic Character". What is that?
-The reason is that when physics engines came out, they were called
-"Dynamics" engines (because they dealt mainly with collision
-responses). Many attempts were made to create a character controller
-using the dynamics engines but it wasn't as easy as it seems. Godot
-has one of the best implementations of dynamic character controller
-you can find (as it can be seen in the 2d/platformer demo), but using
-it requieres a considerable level of skill and understanding of
-physics engines (or a lot of patience with trial and error).
+Si, el nombre suena extraño. "Kinematic  Character". Que es? La razón
+es que cuando salieron los motores de física, se llamaban motores
+"Dynamics"(Dinámicos) (porque se encargaban principalmente de las
+respuestas de las colisiones). Muchos intentos tuvieron lugar para crear
+un character controller usando los motores dinámicos pero no era tan
+simple como parecía. Godot tiene una de las mejores implementaciones de
+dynamic character controller que puedes encontrar (basta chequear
+el demo 2d/platformer), pero usarlo requiere un nivel considerable de
+habilidad y entendimiento de los motores de física (o un montón de
+paciencia con prueba y error).
 
-Some physics engines such as Havok seem to swear by dynamic character
-controllers as the best alternative, while others (PhysX) would rather
-promote the Kinematic one.
+Algunos motores de física como Havok parecen jurar que los dynamic
+character controllers son la mejor alternativa, mientras otros (PhysX)
+prefiere promover los de tipo Kinematic.
 
-So, what is really the difference?:
+Entonces, cual es realmente la diferencia?:
 
--  A **dynamic character controller** uses a rigid body with infinite
-   inertial tensor. Basically, it's a rigid body that can't rotate.
-   Physics engines always let objects collide, then solve their
-   collisions all together. This makes dynamic character controllers
-   able to interact with other physics objects seamlessly (as seen in
-   the platformer demo), however these interactions are not always
-   predictable. Collisions also can take more than one frame to be
-   solved, so a few collisions may seem to displace a tiny bit. Those
-   problems can be fixed, but require a certain amount of skill.
--  A **kinematic character controller** is assumed to always begin in a
-   non-colliding state, and will always move to a non colliding state.
-   If it starts in a colliding state, it will try to free itself (like
-   rigid bodies do) but this is the exception, not the rule. This makes
-   their control and motion a lot more predictable and easier to
-   program. However, as a downside, they can't directly interact with
-   other physics objects (unless done by hand in code).
+-  Un **dynamic character controller** usa un rigid body con tensor
+   inercial infinito. Básicamente, es un rigid body que no puede rotar.
+   Los motores de fisica siempre permiten que los objetos colisionen,
+   luego resuelven las colisiones todas juntas. Esto hace que los dynamic
+   character controllers sean capaces de interactuar con otros objetos
+   físicos sin problemas (como se ve en el demo platformer), sin embargo
+   estas interacciones no siempre son predecibles. Las colisiones también
+   pueden tomar mas de un frame para ser resueltas, por lo que algunas
+   colisiones puede parecer que se desplazan un poquito. Esos problemas
+   pueden ser arreglados, pero requieren una cierta cantidad de
+   habilidad.
+-  Un **kinematic character controller** se asume que siempre empieza en
+   un estado de no-colisionar, y siempre se moverá a un estado de
+   no-colisionar. Si empieza en un estado de colisión, tratara de
+   liberarse (como hacen los rigid bodies) pero esta es la excepción, no
+   la regla. Esto vuelve su control y movimiento mucho mas predecible y
+   fácil de programar. Sin embargo, como contrapartida, no pueden
+   interactuar directamente con otros objetos de física (a no ser que se
+   haga a mano en el codigo).
 
-This short tutorial will focus on the kinematic character controller.
-Basically, the oldschool way of handling collisions (which is not
-necessarily simpler under the hood, but well hidden and presented as a
-nice and simple API).
+Este corto tutorial se enfocara en los kinematic character controllers.
+Básicamente, la forma antigua de manejar colisiones (que no es
+necesariamente mas simple bajo el capó, pero bien escondida y presentada
+como una linda y simple API).
 
 Fixed process
 ~~~~~~~~~~~~~
 
-To manage the logic of a kinematic body or character, it is always
-advised to use fixed process, which is called the same amount of times
-per second, always. This makes physics and motion calculation work in a
-more predictable way than using regular process, which might have spikes
-or lose precision if the frame rate is too high or too low.
+Para manejar la lógica de cuerpos o personajes kinematic, siempre es
+recomendable usar fixed process, el cual es llamado la misma cantidad
+de veces por segundo, siempre. Esto hace que los cálculos
+de física y movimiento funcionen de una forma mas predecible que usando
+el process regular, el cual puede tener picos o perder precisión si el
+frame rate (cuadros por segundo) es demasiado alto o demasiado bajo.
 
 ::
 
@@ -63,63 +68,64 @@ or lose precision if the frame rate is too high or too low.
     func _ready():
         set_fixed_process(true)
 
-Scene setup
-~~~~~~~~~~~
+Configuración de la escena
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To have something to test, here's the scene (from the tilemap tutorial):
-:download:`kbscene.zip </files/kbscene.zip>`. We'll be creating a new scene
-for the character. Use the robot sprite and create a scene like this:
+Para tener algo que probar, aquí esta la escena (del tutorial de tilemap):
+:download:`kbscene.zip </files/kbscene.zip>`. Vamos a estar creando una
+nueva escena para el personaje. Usa los sprites del robot y crea una
+escena como esta:
 
 .. image:: /img/kbscene.png
 
-Let's add a circular collision shape to the collision body, create a new
-CircleShape2D in the shape property of CollisionShape2D. Set the radius
-to 30:
+Agreguemos una forma de colisión circular al collision body, crea una
+nueva CircleShape2D en la propiedad shape de CollisionShape2D. Ajusta
+el radio a 30:
 
 .. image:: /img/kbradius.png
 
-**Note: As mentioned before in the physics tutorial, the physics engine
-can't handle scale on most types of shapes (only collision polygons,
-planes and segments work), so always change the parameters (such as
-radius) of the shape instead of scaling it. The same is also true for
-the kinematic/rigid/static bodies themselves, as their scale affect the
-shape scale.**
+**Nota: Como se menciono antes en el tutorial de física, el motor de
+física no puede manejar escala en la mayoría de las formas (solo los
+polígonos de colisión, planos y segmentos parecen funcionar), así que
+siempre cambia los parámetros (como el radio) en la forma en lugar de
+escalarlo. Lo mismo es cierto para los cuerpos kinematic/rigid/static,
+porque su escala afecta la escala de la forma.**
 
-Now create a script for the character, the one used as an example
-above should work as a base.
+Ahora crea un script para el personaje, el que se uso como un ejemplo
+arriba debería funcionar como base.
 
-Finally, instance that character scene in the tilemap, and make the
-map scene the main one, so it runs when pressing play.
+Finalmente, instancia esa escena de personaje en el tilemap, y haz
+que la escena del mapa sea la principal, asi corre cuando tocamos play.
 
 .. image:: /img/kbinstance.png
 
-Moving the Kinematic character
+Moviendo el Kinematic character
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Go back to the character scene, and open the script, the magic begins
-now! Kinematic body will do nothing by default, but it has a really
-useful function called :ref:`KinematicBody2D.move() <class_KinematicBody2D_move>`.
-This function takes a :ref:`Vector2 <class_Vector2>` as
-an argument, and tries to apply that motion to the kinematic body. If a
-collision happens, it stops right at the moment of the collision.
+Ve nuevamente a la escena del personaje, y abre el script, la magia
+empieza ahora! Kinematic body no hará nada por defecto, pero tiene una
+función realmente util llamada :ref:`KinematicBody2D.move() <class_KinematicBody2D_move>`.
+Esta función toma un :ref:`Vector2 <class_Vector2>` como argumento,
+e intenta aplicar ese movimiento al kinematic body. Si una colisión
+sucede, se detiene justo en el momento de la colisión.
 
-So, let's move our sprite downwards until it hits the floor:
+Entonces, vamos a mover nuestro sprite hacia abajo hasta que toque el piso:
 
 ::
 
     extends KinematicBody2D
 
     func _fixed_process(delta):
-        move( Vector2(0,1) ) #move down 1 pixel per physics frame
+        move( Vector2(0,1) ) #mover abajo 1 pixel por frame de física
 
     func _ready():
         set_fixed_process(true)
 
-The result is that the character will move, but stop right when
-hitting the floor. Pretty cool, huh?
+El resultado es que el personaje se va a mover, pero se detendrá justo
+cuando toque el piso. Copado, eh?
 
-The next step will be adding gravity to the mix, this way it behaves a
-little more like an actual game character:
+El siguiente paso será agregar gravedad a la mezcla, de esta forma se
+comporta un poco mas como un personaje de juego:
 
 ::
 
@@ -133,16 +139,17 @@ little more like an actual game character:
         velocity.y += delta * GRAVITY
 
         var motion = velocity * delta
-        move( motion )  
+        move( motion )
 
     func _ready():
         set_fixed_process(true)
 
-Now the character falls smoothly. Let's make it walk to the sides, left
-and right when touching the directional keys. Remember that the values
-being used (for speed at least) is pixels/second.
+Ahora el personaje cae suavemente. Hagamos que camine hacia los costados,
+izquierda y derecha cuando se tocan las teclas direccionales. Recuerda que
+los valores siendo usados (al menos para la velocidad) son pixels/segundo.
 
-This adds simple walking support by pressing left and right:
+Esto agrega soporte simple para caminar cuando se presiona izquierda y
+derecha:
 
 ::
 
@@ -165,52 +172,53 @@ This adds simple walking support by pressing left and right:
             velocity.x = 0
 
         var motion = velocity * delta
-        move(motion)  
+        move(motion)
 
     func _ready():
         set_fixed_process(true)
 
-And give it a try.
+Y dale una prueba.
 
-Problem?
+Problema?
 ~~~~~~~~
 
-And... it doesn't work very well. If you go to the left against a wall,
-it gets stuck unless you release the arrow key. Once it is on the floor,
-it also gets stuck and it won't walk. What is going on??
+Y... no funciona muy bien. Si vas hacia la izquierda contra una pared,
+se queda trancado a no ser que sueltes la flecha. Una vez en el piso,
+también se queda trancado y no camina. Que sucede??
 
-The answer is, what it seems like it should be simple, it isn't that
-simple in reality. If the motion can't be completed, the character will
-stop moving. It's as simple as that. This diagram should illustrate
-better what is going on:
+La respuesta es, lo que parece que debería ser simple, no es tan simple
+en realidad. Si el movimiento no puede ser completado, el personaje
+dejara de moverse. Es así de sencillo. Este diagrama debería ilustrar
+mejor que esta sucediendo:
 
 .. image:: /img/motion_diagram.png
 
-Basically, the desired motion vector will never complete because it hits
-the floor and the wall too early in the motion trajectory and that makes
-it stop there. Remember that even though the character is on the floor,
-the gravity is always turning the motion vector downwards.
+Básicamente, el movimiento vectorial deseado nunca se completara porque
+golpea el piso y la pared demasiado temprano en la trayectoria de
+movimiento y eso hace que se detenga allí. Recuerda que aunque el
+personaje esta en el piso, la gravedad siempre esta empujando el
+vector movimiento hacia abajo.
 
-Solution!
+Solución!
 ~~~~~~~~~
 
-The solution? This situation is solved by "sliding" by the collision
-normal. KinematicBody2D provides two useful functions:
+La solución? Esta situación se resuelve al "deslizar" por la normal de
+la colisión. KinematicBody2D provee dos funciones útiles:
 
 -  :ref:`KinematicBody2D.is_colliding() <class_KinematicBody2D_is_colliding>`
 -  :ref:`KinematicBody2D.get_collision_normal() <class_KinematicBody2D_get_collision_normal>`
 
-So what we want to do is this:
+Así que lo que queremos hacer es esto:
 
 .. image:: /img/motion_reflect.png
 
-When colliding, the function ``move()`` returns the "remainder" of the
-motion vector. That means, if the motion vector is 40 pixels, but
-collision happened at 10 pixels, the same vector but 30 pixels long is
-returned.
+Cuando colisiona, la función ``move()`` retorna el "remanente" del
+vector movimiento. Esto significa, que si el vector de movimiento es
+40 pixels, pero la colisión sucedió a los 10 pixeles, el mismo vector
+pero con 30 pixels de largo es retornado.
 
-The correct way to solve the motion is, then, to slide by the normal
-this way:
+La forma correcta de resolver el movimiento es, entonces, deslizarse
+por la normal de esta forma:
 
 ::
 
@@ -225,11 +233,11 @@ this way:
             velocity.x = 0
 
         var motion = velocity * delta
-        motion = move(motion) 
+        motion = move(motion)
 
         if (is_colliding()):
             var n = get_collision_normal()
-            motion = n.slide(motion) 
+            motion = n.slide(motion)
             velocity = n.slide(velocity)
             move(motion)
 
@@ -237,13 +245,14 @@ this way:
     func _ready():
         set_fixed_process(true)
 
-Note that not only the motion has been modified but also the velocity.
-This makes sense as it helps keep the new direction too.
+Observa que no solo el movimiento ha sido modificado pero también la
+velocidad. Esto tiene sentido ya que ayuda a mantener la nueva dirección
+también.
 
-The normal can also be used to detect that the character is on floor, by
-checking the angle. If the normal points up (or at least, within a
-certain threshold), the character can be determined to be there.
+La normal también puede ser usada para detectar que el personaje esta en
+el piso, al chequear el ángulo. Si la normal apunta hacia arriba (o al
+menos, con cierto margen), se puede determinar que el personaje esta allí.
 
-A more complete demo can be found in the demo zip distributed with the
-engine, or in the
+Una demo mas completa puede encontrarse en el zip de demos distribuidos
+con el motor, o en
 https://github.com/godotengine/godot/tree/master/demos/2d/kinematic_char.
