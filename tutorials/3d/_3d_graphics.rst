@@ -1,5 +1,5 @@
-Graphics
-========
+Graphicos
+=========
 
 .. toctree::
    :maxdepth: 1

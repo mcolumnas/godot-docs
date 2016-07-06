@@ -1,5 +1,5 @@
-3D tutorials
-============
+Tutoriales 3D
+=============
 
 .. toctree::
    :maxdepth: 2
