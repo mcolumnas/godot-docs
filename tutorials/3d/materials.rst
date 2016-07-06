@@ -1,116 +1,126 @@
 .. _doc_materials:
 
-Materials
+Materiales
 =========
 
-Introduction
+Introducción
 ------------
 
-Materials can be applied to most visible 3D objects, they basically
-are a description to how light reacts to that object. There are many
-types of materials, but the main ones are the
-:ref:`FixedMaterial <class_FixedMaterial>` and
-:ref:`ShaderMaterial <class_ShaderMaterial>`.
-Tutorials for each of them exist :ref:`doc_fixed_materials` and :ref:`doc_shader_materials`.
+Los materiales pueden ser aplicados a la mayoría de los objetos 3D, son
+básicamente una descripción de como la luz reacciona con ese objeto. Hay
+muchos tipos de materiales, pero los principales son
+:ref:`FixedMaterial <class_FixedMaterial>` y :ref:`ShaderMaterial <class_ShaderMaterial>`.
+Existen tutoriales para cada uno de ellos:
+:ref:`doc_fixed_materials` and :ref:`doc_shader_materials`.
 
-This tutorial is about the basic properties shared between them.
+Este tutorial es sobre las propiedades básicas compartidas entre ellos.
 
 .. image:: /img/material_flags.png
 
-Flags
------
+Flags (banderas)
+----------------
 
-Materials, no matter which type they are, have a set of flags
-associated. Each has a different use and will be explained as follows.
+Los materiales, no importa del tipo que sean, tienen un grupo de flags
+asociados. Cada una tiene un uso diferente y será explicado a
+continuacián.
 
 Visible
 ~~~~~~~
 
-Toggles whether the material is visible. If unchecked, the object will
-not be shown.
+Alterna si el material es visible. Si no esta marcado, el objeto no
+será mostrado.
 
 Double sided & invert faces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Godot by default only shows geometry faces (triangles) when facing the
-camera. To do this it needs them to be in view in clockwise order.
-This saves a lot of GPU power by ensuring that not visible triangles
-are not drawn.
+Godot por defecto solo muestra las caras de la geometría (triángulos)
+cuando están frente a la cámara. Para hacer esto necesita que estén en
+un orden de agujas de reloj. Esto ahorra un montón de trabajo a la
+GPU al asegurarse que los triángulos no visibles no sean dibujados.
 
-Some flat objects might need to be drawn all the times though, for
-this the "double sided" flag will make sure that no matter the facing,
-the triangle will always be drawn. It is also possible to invert this
-check and draw counter-clockwise looking faces too, though it's not
-very useful except for a few cases (like drawing outlines).
+Algunos objetos planos pueden necesitar ser dibujados todo el tiempo
+sin embargo, para esto el flag "double sided" se asegurara que no importa
+hacia donde este mirando, el triángulo siempre será dibujado. También
+es posible invertir este chequeo y dibujar caras en un orden contrario
+a las agujas de reloj, aunque no es muy útil excepto para algunos casos
+(como dibujar outlines).
 
 Unshaded
 ~~~~~~~~
 
-Objects are always black unless light affects them, and their shading
-changes according to the type and direction of lights. When this flag is
-turned on, the diffuse color is displayed right the same as it appears
-in the texture or parameter:
+Los objetos siempre son negros a no ser que la luz los afecta, y el
+shading (sombreado) cambia de acuerdo al tipo y dirección de las luces.
+Cuando este flag es prendido, el color diffuse (difuso) es mostrado
+tal cual aparece en la textura o parámetro.
 
 .. image:: /img/material_unshaded.png
 
 On top
 ~~~~~~
 
-When this flag is turned on, the object will be drawn after everything
-else has been drawn and without a depth test. This is generally only
-useful for HUD effects or gizmos.
+Cuando este flag esta encendido, el objeto será dibujado luego que todo
+lo demás ha sido dibujado y sin una prueba de profundidad. Esto en general
+solo es útil para efectos de HUD o gizmos.
 
 Ligthmap on UV2
 ~~~~~~~~~~~~~~~
 
-When using lightmapping (see the :ref:`doc_light_baking` tutorial), this option
-determines that the lightmap should be accessed on the UV2 array instead
-of regular UV.
+Cuando usas lightmapping (ve el tutorial :ref:`doc_light_baking`), esta
+opción determina que el lightmap debería ser accedido en el arreglo UV2
+en lugar del UV regular.
 
-Parameters
+Parámetros
 ----------
 
-Some parameters also exist for controlling drawing and blending:
+Algunos párametros también existen para controlar el dibujado y mezclado:
 
 Blend mode
 ~~~~~~~~~~
 
-Objects are usually blended in Mix mode. Other blend modes (Add and Sub)
-exist for special cases (usually particle effects, light rays, etc.) but
-materials can be set to them:
+Los objetos son usualmente mezclados en modo Mix. Otros modos de blend
+(Add and Sub) existen para casos especiales (usualmente efectos de
+partículas, rayos de luz, etc.) pero se pueden ajustar los materiales a
+ellos:
 
 .. image:: /img/fixed_material_blend.png
 
 Line width
 ~~~~~~~~~~
 
-When drawing lines, the size of them can be adjusted here per material.
+Cuando dibujas líneas, el tamaño de ellas puede ser ajustado aquí para
+cada material.
 
 Depth draw mode
 ~~~~~~~~~~~~~~~
 
-This is a tricky but very useful setting. By default, opaque objects are
-drawn using the depth buffer and translucent objects are not (but are
-sorted by depth). This behavior can be changed here. The options are:
+Este es un ajuste difícil pero muy útil. Por defecto, los objetos opacos
+son dibujados usando el depth buffer y los objetos translucientes no
+(pero son ordenados por profundidad). Este comportamiento puede ser
+cambiado aquí. Las opciones son:
 
--  **Always**: Draw objects with depth always, even those with alpha.
-   This often results in glitches like the one in the first image (which
-   is why it's not the default).
--  **Opaque Only**: Draw objects with depth only when they are opaque,
-   and do not set depth for alpha. This is the default because it's fast,
-   but it's not the most correct setting. Objects with transparency that
-   self-intersect will always look wrong, especially those that mix
-   opaque and transparent areas, like grass, tree leaves, etc. Objects
-   with transparency also can't cast shadows, this is evident in the
-   second image.
--  **Alpha Pre-Pass**: The same as above, but a depth pass is performed
-   for the opaque areas of objects with transparency. This makes objects
-   with transparency look much more correct. In the third image it is
-   evident how the leaves cast shadows between them and into the floor.
-   This setting is turned off by default because, while on PC this is
-   not very costly, mobile devices suffer a lot when this setting is
-   turned on, so use it with care.
--  **Never**: Never use the depth buffer for this material. This is
-   mostly useful in combination with the "On Top" flag explained above.
+-  **Always**: Dibuja objetos con profundidad siempre, aun aquellos con
+   alpha. Esto a menudo resulta en glitches como el de la primer
+   imagen (motivo por el cual no es el valor por defecto)
 
-.. image:: /img/material_depth_draw.png
+-  **Opaque Only**: Dibuja objetos con profundidad solo cuando son opacos,
+   y no ajusta la profundidad para alpha. Este es el valor por defecto
+   porque es rápido, pero no es el ajuste mas correcto. Los objetos con
+   transparencia que se auto-intersectan siempre lucirán mal,
+   especialmente aquellos que mezclan áreas opacas y transparentes, como
+   pasto, hojas de árboles, etc. Los objetos con transparencia tampoco
+   pueden emitir sombras, esto es evidente en la segunda imagen.
+
+-  **Alpha Pre-Pass**: Lo mismo que el anterior, pero una pasada de
+   profundidad es realizada para las áreas opacas de los objetos con
+   transparencia. Esto hace que los objetos con transparencia luzcan
+   mucho mejor. En la tercer imagen es evidente como las hojas emiten
+   sombras entre ellas y hacia el piso. Este ajuste es apagado por
+   defecto ya que, mientras en PC no es muy costoso, los dispositivos
+   móviles sufren un montón cuando es habilitado, así que úsalo con
+   cuidado.
+
+-  **Never**: Nunca usar el buffer de profundidad para este material.
+   Esto es mas útil en combinación con la bandera "On Top" explicada
+   mas arriba.
+
+ .. image:: /img/material_depth_draw.png
