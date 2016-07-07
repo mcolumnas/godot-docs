@@ -1,179 +1,185 @@
 .. _doc_fixed_materials:
 
-Fixed materials
-===============
+Fixed Materials (Materiales Fijos)
+==================================
 
-Introduction
+Introducción
 ------------
 
-Fixed materials (originally Fixed Pipeline Materials) are the most
-common type of materials, using the most common material options found
-in 3D DCCs (such as Maya, 3DS Max or Blender). The big advantage of
-using them is that 3D artists are very familiar with this layout. They
-also allow to try out different things quickly without the need of
-writing shaders. Fixed Materials inherit from
-:ref:`Material <class_Material>`,
-which also has several options. If you haven't read it before, reading
-the :ref:`doc_materials` tutorial is recommended.
+Fixed materials (originalmente Fixed Pipeline Materials) son el tipo
+mas común de materiales, usando las opciones mas comunes de materiales
+encontradas en DCCs 3D (Como Maya, 3DS Max, o Blender). La gran ventaja
+de usarlos es que los artistas 3D están muy familiarizados con este
+diseño. También permiten probar diferentes cosas rápidamente sin la
+necesidad de escribir shaders. Fixed Materials heredan desde
+:ref:`Material <class_Material>`, que también tiene varias opciones.
+Si no lo has leido antes, es recomendable leer el tutorial
+:ref:`doc_materials`.
 
-Options
--------
+Opciones
+--------
 
-Here is the list of all the options available for fixed materials:
+Aquí hay una lista de todas las opciones disponibles para fixed materials:
 
 .. image:: /img/fixed_materials.png
 
-From this point, every option will be explained in detail:
+A partir de este punto, toda opción se explicara en detalle:
 
-Fixed flags
+Flags fijas
 -----------
 
-These are a set of flags that control general aspects of the material.
+Este es un conjunto de flags (banderas) que controlan aspectos generales
+del material.
 
 Use alpha
 ~~~~~~~~~
 
-This flag needs to be active for transparent materials to blend with
-what is behind, otherwise display will always be opaque. Do not enable
-this flag unless the material really needs it, because it can severely
-affect performance and quality. Materials with transparency will also
-not cast shadows (unless they contain opaque areas and the "opaque
-pre-pass" hint is turned on, see the :ref:`doc_materials` tutorial for more
-information).
+Este flag necesita estar activo para que materiales transparentes se
+mezclen con lo que esta detrás, de otra forma siempre se desplegara
+de forma opaca. No habilites este flag a no ser que el material
+realmente lo necesite, porque puede afectar severamente la performance
+y calidad. Los materiales con transparencia no proyectaran sombras
+(a no ser que contengan áreas opacas y que el hint "opaque pre-pass"
+este habilitado, ve el tutorial :ref:`doc_materials` para mas
+información)
 
 .. image:: /img/fixed_material_alpha.png
 
 Use vertex colors
 ~~~~~~~~~~~~~~~~~
 
-Vertex color painting is a very common technique to add detail to
-geometry. 3D DCCs all support this, and many even support baking
-occlusion to it. Godot allows this information to be used in the fixed
-material by modulating the diffuse color when enabled.
+Pintar por vertex color es una técnica muy común de agregar detalle a
+la geometría. Todos los DDCs 3D soportan esto, y puede que hasta soporten
+baking occlusion. Godot permite que esta información sea usada en el
+fixed material al modular el color diffuse cuando se habilita.
 
 .. image:: /img/fixed_material_vcols.png
 
 Point size
 ~~~~~~~~~~
 
-Point size is used to set the point size (in pixels) for when rendering
-points. This feature is mostly used in tools and HUDs
+Point size es usado para ajustar el tamaño del punto (en pixels) para
+cuando se renderizan puntos. Esta característica es mas que nada usada
+para herramientas y HUDs.
 
 Discard alpha
 ~~~~~~~~~~~~~
 
-When alpha is enabled (see above) the invisible pixels are blended
-with what is behind them. In some combinations (of using alpha to
-render depth) it may be possible that invisible pixels cover other
-objects.
+Cuando alpha esta habilitado (ve arriba) los pixels invisibles son
+mezclados con lo que hay detrás de ellos. En algunas combinaciones (de
+usar alpha para renderizar profundidad) puede suceder que pixels
+invisibles cubran otros objetos.
 
-If this is the case, enable this option for the material. This option
-is often used in combination with "opaque pre-pass" hint (see the
-:ref:`doc_materials` tutorial for more information).
+Si este es el caso, habilita esta opción para el material. Esta opción
+es a menudo usada en combinación con el hint "opaque pre-pass" (ve el
+tutorial :ref:`doc_materials` para mas información).
 
-Parameters
-----------
+Parameteros
+-----------
 
-Diffuse, specular, emission and specular exponent
+Diffuse, specular, emission y specular exponent
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These are the base colors for the material.
+Esto son los colores base para un material.
 
--  Diffuse color is responsible for the light that reaches the material,
-   then gets diffused around. This color varies by the angle to the
-   light and the distance (in the case of spot and omni lights). It is
-   the color that best represents the material. It can also have alpha
-   (transparency)
--  Specular color is the color of the reflected light and responsible
-   for shines. It is affected by the specular exponent.
--  Emission is the color of the light generated within the material
-   (although it will not lit anything else around unless baking). This
-   color is constant.
--  Specular Exponent (or "Shininess"/"Intensity" in some 3D DCCs) is the
-   way light is reflected. If the value is high, light is reflected
-   completely, otherwise it is diffused more and more.
+-  Diffuse color es responsable por la iluminación que llega al material,
+   y luego se difumina al rededor. Este color varia por el ángulo a la
+   luz y la distancia (en el caso de luces spot y omni). Es el color que
+   mejor representa al material. También puede tener alpha (transparencia)
+-  Specular color es el color de la luz reflejada y es responsable de los
+   brillos. Es afectada por el valor de specular exponent.
+-  Emission es el color de la luz generada dentro del material (aunque
+   no iluminara nada al rededor a no ser que se haga baking). Este color
+   es constante.
+-  Specular Exponent (o "Shininess"/"Intensity" en algunos DCCs 3D) es
+   la forma en que la luz es reflejada. Si el valor es alto, la luz es
+   completamente reflejada, de otra forma es difuminada mas y mas.
 
-Below is an example of how they interact:
+Abajo un ejemplo de como interactúan:
 
 .. image:: /img/fixed_material_colors.png
 
 Shader & shader param
 ~~~~~~~~~~~~~~~~~~~~~
 
-Regular shader materials allow custom lighting code. Fixed materials
-come with four predefined shader types:
+Los materiales shader regulares permiten código personalizado de
+iluminación. Los materiales fijos vienen con cuatro tipos predefinidos
+de shader:
 
--  **Lambert**: The standard diffuse light, where the amount of light is
-   proportional to the angle from the light emitter.
--  **Wrap**: A variation on Lambert, where the "coverage" of the light
-   can be changed. This is useful for many types of materials such as
-   wood, clay, hair, etc.
--  **Velvet**: This is similar to Lambert, but adds light scattering in
-   the edges. It's useful for leathers and some types of metals.
--  **Toon**: Standard toon shading with a coverage parameter. The
-   specular component also becomes toon-ized.
+-  **Lambert**: La luz difusa estandard, donde la cantidad de luz es
+   proporcional al ángulo del emisor de luz.
+-  **Wrap**: Una variante de Lambert, donde el "coverage" de la luz
+   puede ser cambiado. Esto es útil para muchos tipos de materiales
+   como son madera, arcilla, pelo, etc.
+-  **Velvet**: Este es similar a Lambert, pero agrega light scattering
+   en los bordes. Es útil para cueros y algunos tipos de metales.
+-  **Toon**: Sombreado estilo toon standard con un parámetro de cobertura.
+   El componente especular también se vuelve toon-isado.
 
 .. image:: /img/fixed_material_shader.png
 
 Detail & detail mix
 ~~~~~~~~~~~~~~~~~~~
 
-Detail is a second diffuse texture which can be mixed with the first one
-(more on textures later!). Detail blend and mix control how these are
-added together, here's an example of what detail textures are for:
+Detail es una segunda textura difusa la cual puede ser mezclada con la
+primera (mas sobre texturas luego!). Detail blend y mix controlan como
+estas son sumadas, aquí hay un ejemplo de lo que hacen las texturas
+detail:
 
 .. image:: /img/fixed_material_detail.png
 
 Normal depth
 ~~~~~~~~~~~~
 
-Normal depth controls the intensity of the normal-mapping as well as the
-direction. On 1 (the default) normalmapping applies normally, on -1 the
-map is inverted and on 0 is disabled. Intermediate or greater values are
-accepted. Here's how it's supposed to look:
+Normal depth controla la intensidad del normal-mapping así como la
+dirección. En 1 (por defecto) normalmapping aplica normalmente, en
+-1 el map es invertido y en 0 deshabilitado. Valores intermedios o
+mayores son aceptados. Aquí esta como debería verse:
 
-.. image:: /img/fixed_material_normal_depth.png
+ .. image:: /img/fixed_material_normal_depth.png
 
 Glow
 ~~~~
 
-This value controls how much of the color is sent to the glow buffer. It
-can be greater than 1 for a stronger effect. For glow to work, a
-WorldEnvironment must exist with Glow activated.
+Este valor controla que cantidad de color es enviado al buffer glow.
+Puede ser mayor a 1 para un efecto mas fuerte. Para que glow funcione,
+debe existir un WorldEnvironment con Glow activado.
 
 .. image:: /img/fixed_material_glow.png
 
 Blend mode
 ~~~~~~~~~~
 
-Objects are usually blended in Mix mode. Other blend modes (Add and Sub)
-exist for special cases (usually particle effects, light rays, etc.) but
-materials can be set to them:
+Los objetos son usualmente mezclados en modo Mix. Otros modos de mezcla
+(Add y Sub) existen para casos especiales (usualmente efectos de partículas,
+rayos de luz, etc.) pero los materiales pueden ser ajustados a ellos:
 
 .. image:: /img/fixed_material_blend.png
 
 Point size, line width
 ~~~~~~~~~~~~~~~~~~~~~~
 
-When drawing points or lines, the size of them can be adjusted here per
-material.
+Cuando dibujas puntos o líneas, el tamaño de ellos puede ser ajustado
+aquí por material.
 
-Textures
+Texturas
 --------
 
-Almost all of the parameters above can have a texture assigned to them.
-There are four options to where they can get their UV coordinates:
+Casi todos los parámetros de arriba pueden tener una textura asignada
+a ellos. Hay cuatro opciones de donde pueden obtener sus coordenadas
+UV:
 
--  **UV Coordinates (UV Array)**: This is the regular UV coordinate
-   array that was imported with the model.
--  **UV x UV XForm**: UV Coordinates multiplied by the UV Xform matrix.
--  **UV2 Coordinates**: Some imported models might have come with a
-   second set of UV coordinates. These are common for detail textures or
-   for baked light textures.
--  **Sphere**: Spherical coordinates (difference of the normal at the
-   pixel by the camera normal).
+-  **UV Coordinates (UV Array)**: Este es el arreglo de coordenada
+   regular UV que fue importado con el modelo.
+-  **UV x UV XForm**: Coordenadas UV multiplicadas por la matriz
+   UV Xform.
+-  **UV2 Coordinates**: Algunos modelos importados pueden venir con
+   un segundo grupo de coordenadas UV. Son comunes en texturas detail
+  o para texturas baked light.
+-  **Sphere**: Coordenadas esféricas (diferencia de la normal en el pixel
+   por la normal de la cámara).
 
-The value of every pixel of the texture is multiplied by the original
-parameter. This means that if a texture is loaded for diffuse, it will
-be multiplied by the color of the diffuse color parameter. Same applies
-to all the others except for specular exponent, which is replaced.
+El valor de cada pixel de la textura es multiplicado por el parámetro
+original. Esto implica que si una textura es cargada para diffuse, será
+multiplicada por el color del parametro diffuse color. Lo mismo aplica
+a todos los demás excepto por specular exponent, que es remplazada.
