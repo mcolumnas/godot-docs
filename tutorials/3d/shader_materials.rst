@@ -1,64 +1,68 @@
 .. _doc_shader_materials:
 
-Shader materials
-================
+Shader materials (Materiales Shader)
+====================================
 
-Introduction
+Introducción
 ------------
 
-For the most common cases, :ref:`doc_fixed_materials` are enough to create the
-desired textures or look and feel. Shader materials are a step beyond
-that, adding a huge amount of flexibility. With them, it is possible to:
+Para la mayoría de los casos, :ref:`doc_fixed_materials` es suficiente
+para crear las texturas deseadas o el "look and feel". Los materiales
+shader están un paso más adelante, agregando una cantidad enorme de
+flexibilidad. Con ellos es posible:
 
--  Create procedural textures.
--  Create complex texture blendings.
--  Create animated materials, or materials that change with time.
--  Create refractive effects or other advanced effects.
--  Create special lighting shaders for more exotic materials.
--  Animate vertices, like tree leaves or grass.
--  And much more!
+-  Crear texturas procedurales.
+-  Crear texturas con mezclas complejas.
+-  Crear materiales animados, o materiales que cambian con el tiempo.
+-  Crear efectos refractarios u otros efectos avanzados.
+-  Crear shaders de iluminación especial para materiales mas exóticos.
+-  Animar vértices, como hojas de árboles o pasto.
+-  Y mucho mas!
 
-Traditionally, most engines will ask you to learn GLSL, HLSL or CG,
-which are pretty complex for the skillset of most artists. Godot uses a
-simplified version of a shader language that will detect errors as you
-type, so you can see your edited shaders in real-time. Additionally, it
-is possible to edit shaders using a visual, node-based graph editor.
+Tradicionalmente, la mayoría de los motores te pedirán que aprendas GLSL,
+HLSL o CG, los cuales son bastante complejos para las habilidades de la
+mayoría de los artistas. Godot usa una versión simplificada de un lenguaje
+de shaders que detecta errores en la medida que escribes, así puedes ver
+la edición de tus shaders en tiempo real. Adicionalmente, es posible editar
+shaders usando un editor gráfico visual basado en nodos.
 
-Creating a ShaderMaterial
+Creando un ShaderMaterial
 -------------------------
 
-Create a new ShaderMaterial in some object of your choice. Go to the
-"Shader" property, then create a new "MaterialShader" (use
-"MaterialShaderGraph" for access to the visual graph editor):
+Crea un nuevo ShaderMaterial en algín objeto de tu elección. Ve a la
+propiedad "Shader", luego crea un nuevo "MaterialShader" (usa
+"MatrialShaderGraph" para acceder al editor gráfico visual):
 
 .. image:: /img/shader_material_create.png
 
-Edit the newly created shader, and the shader editor will open:
+Edita el shader recientemente creado, y el editor de shader aparecerá:
 
 .. image:: /img/shader_material_editor.png
 
-There are three code tabs open, the first is for the vertex shader, the
-second for the fragment and the third for the lighting. The shader
-language is documented in :ref:`doc_shading_language` so a small example will be
-presented next.
+Hay tres pestañas de código abiertas, la primera es para el vertex
+shader (shader de vértice), la segunda para el fragment (fragmento) y
+la tercera para lighting (iluminación). El lenguaje de shader esta
+documentado en :ref:`doc_shading_language` asique un pequeño ejemplo
+será presentado a continuación.
 
-Create a very simple fragment shader that writes a color:
+Crear un shader fragment muy simple que escribe un color:
 
 ::
 
     uniform color col;
     DIFFUSE = col.rgb;
 
-Code changes take place in real-time. If the code is modified, it will
-be instantly recompiled and the object will be updated. If a typo is
-made, the editor will notify of the compilation failure:
+Los cambios de código tienen lugar en tiempo real. Si el código es
+modificado, se recompila instantáneamente y el objeto es actualizado.
+Si se comete un error de escritura, el editor notificara la falla de
+compilación:
 
 .. image:: /img/shader_material_typo.png
 
-Finally, go back and edit the material, and the exported uniform will be
-instantly visible:
+Finalmente, ve atrás y edita el material, y la exportación uniforme será
+visible instantáneamente:
 
 .. image:: /img/shader_material_col.png
 
-This allows to very quickly create custom, complex materials for every
-type of object.
+Esto permite crear de forma muy rápida y personalizada, materiales
+complejos para cada tipo de objeto.
