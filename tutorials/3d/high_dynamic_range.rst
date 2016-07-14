@@ -3,7 +3,7 @@
 High dynamic range
 ==================
 
-Introduction
+Introducción
 ------------
 
 Normally, an artist does all the 3D modelling, then all the texturing,
