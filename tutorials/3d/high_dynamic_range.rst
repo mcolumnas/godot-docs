@@ -6,160 +6,163 @@ High dynamic range
 Introducción
 ------------
 
-Normally, an artist does all the 3D modelling, then all the texturing,
-looks at his or her awesome looking model in the 3D DCC and says "looks
-fantastic, ready for integration!" then goes into the game, lighting is
-setup and the game runs.
+Normalmente, un artista hace todo el modelado 3d, luego las texturas,
+mira su modelo que luce increíblemente bien en el DCC 3D (Maya, Blender,
+etc) y dice "luce fantástico, listo para la integración!" luego va al
+juego, se ajustan las luces y el juego corre.
 
-So where does all this HDR stuff thing come from? The idea is that
-instead of dealing with colors that go from black to white (0 to 1), we
-use colors whiter than white (for example, 0 to 8 times white).
+Así que de donde viene todo este tema de HDR? La idea es que en lugar
+de tratar con colores que van del negro al blanco (0 a 1), usamos
+colores más blancos que el blanco (por ejemplo, 0 a 8 veces blanco).
 
-To be more practical, imagine that in a regular scene, the intensity
-of a light (generally 1.0) is set to 5.0. The whole scene will turn
-very bright (towards white) and look horrible.
+Para ser más practico, imagina que en una escena regular, la intensidad
+de una luz (generalmente 1.0) se ajusta a 5.0. La escena completa se
+volverá muy brillosa (hacia el blanco) y lucirá horrible.
 
-After this the luminance of the scene is computed by averaging the
-luminance of every pixel of it, and this value is used to bring the
-scene back to normal ranges. This last operation is called
-tone-mapping. Finally, we are at a similar place from where we
-started:
+Luego de esto el luminance de la escena es computado al promediar el
+luminance de cada pixel que la conforma, y este valor es usado para traer
+la escena de vuelta a rangos normales. Esta última operación es llamada
+tone-mapping. Al final, estamos en un lugar similar a donde empezamos:
 
 .. image:: /img/hdr_tonemap.png
 
-Except the scene is more contrasted, because there is a higher light
-range in play. What is this all useful for? The idea is that the scene
-luminance will change while you move through the world, allowing
-situations like this to happen:
+Excepto que la escena tiene más contraste, porque hay un mayor rango de
+iluminación en juego. Para que sirve esto? La idea es que el luminance
+de la escena va a cambiar mientras te mueves a través del mundo,
+permitiendo que sucedan situaciones como esta:
 
 .. image:: /img/hdr_cave.png
 
-Additionally, it is possible to set a threshold value to send to the
-glow buffer depending on the pixel luminance. This allows for more
-realistic light bleeding effects in the scene.
+Además, es posible ajustar un valor threshold para enviar al glow buffer
+dependiendo en el luminance del pixel. Esto permite efectos de light
+bleeding más realistas en la escena.
 
-Linear color space
-------------------
+Espacio de color lineal
+-----------------------
 
-The problem with this technique is that computer monitors apply a
-gamma curve to adapt better to the way the human eye sees. Artists
-create their art on the screen too, so their art has an implicit gamma
-curve applied to it.
+El problema con esta técnica es que los monitores de computadora aplican
+una curva gamma para adaptarse mejor a la forma que ve el ojo humano.
+Los artistas crean su arte en la pantalla también, así que su arte tiene
+una curva gamma implícita aplicada.
 
-The color space where images created in computer monitors exist is
-called "sRGB". All visual content that people have on their computers
-or download from the internet (such as pictures, movies, etc.)
-is in this colorspace.
+El espacio de color donde las imágenes creadas en computadora existen es
+llamada "sRGB". Todo el contenido visual que la gente tiene en sus
+computadoras o descarga de Internet (como imagenes, peliculas, etc.)
+esta en este colorspace.
 
 .. image:: /img/hdr_gamma.png
 
-The mathematics of HDR require that we multiply the scene by different
-values to adjust the luminance and exposure to different light ranges,
-and this curve gets in the way as we need colors in linear space for
-this.
+La matemática de HDR requiere que multipliquemos la escena por diferentes
+valores para ajustar el luminance y exposure a diferentes rangos de luz,
+y esta curva molesta ya que necesitamos colores en espacio linear para
+esto.
 
-Linear color space & asset pipeline
------------------------------------
+Espacio de color lineal & asset pipeling
+----------------------------------------
 
-Working in HDR is not just pressing a switch. First, imported image
-assets must be converted to linear space on import. There are two ways
-to do this:
+Trabajar en HDR no es solo presionar un interruptor. Primero, los assets
+de imágenes importados deben convertirse a espacio linear al importarse.
+Hay dos formas de hacer esto:
 
-SRGB -> linear conversion on image import
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SRGB -> linear conversion al importar imagen
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is the most compatible way of using linear-space assets and it will
-work everywhere including all mobile devices. The main issue with this
-is loss of quality, as sRGB exists to avoid this same problem. Using 8
-bits per channel to represent linear colors is inefficient from the
-point of view of the human eye. These textures might be later compressed
-too, which makes the problem worse.
+Esta es la forma más compatible de usar assets de espacio-linear y
+funcionará en todos lados incluyendo todos los dispositivos moviles.
+El principal tema con esto es la pérdida de calidad, ya que sRGB existe
+para evitar este mismo problema. Usando 8 bits por canal para representar
+colores lineales es ineficiente desde el punto de vista del ojo humano.
+Estas texturas pueden comprimirse más tarde también, lo que vuelve al
+problema peor.
 
-In any case though, this is the easy solution that works everywhere.
+Pero en cualquier caso, esta es la solución fácil que funciona en todos
+lados.
 
-Hardware sRGB -> linear conversion.
+sRGB por Hardware -> linear conversion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is the most correct way to use assets in linear-space, as the
-texture sampler on the GPU will do the conversion after reading the
-texel using floating point. This works fine on PC and consoles, but most
-mobile devices do no support it, or do not support it on compressed
-texture format (iOS for example).
+Esta es la forma mas correcta de usar assets en espacio-linear, ya que
+el sampler de texturas en la GPU hará la conversión luego de leer el
+texel usando punto flotante. Esto funciona bien en PC y consolas, pero
+la mayoría de los dispositivos móviles no lo soporta, o no lo soportan
+en formato de textura comprimida (iOS por ejemplo).
 
-Linear -> sRGB at the end.
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Linear -> sRGB al final
+~~~~~~~~~~~~~~~~~~~~~~~
 
-After all the rendering is done, the linear-space rendered image must be
-converted back to sRGB. To do this, simply enable sRGB conversion in the
-current :ref:`Environment <class_Environment>` (more on that below).
+Luego de que todo el renderizado está hecho, la imagen de espacio-linear
+renderizada debe ser convertida de nuevo a sRGB. Para hacer esto, solo
+habilita sRGB conversión en el :ref:`Environment <class_Environment>` actual
+(mas sobre esto abajo).
 
-Keep in mind that sRGB [STRIKEOUT:> Linear and Linear]> sRGB conversions
-must always be **both** enabled. Failing to enable one of them will
-result in horrible visuals suitable only for avant garde experimental
-indie games.
+Maten en mente que las conversiones sRGB [STRIKEOUT:> Linear and Linear]> sRGB
+deben siempre estar **ambas** habilitadas. Fallar al habilitar una de
+ellas resultara en visuales horribles adecuadas solo para juegos indie
+avant garde experimentales.
 
-Parameters of HDR
+Parámetros de HDR
 -----------------
 
-HDR is found in the :ref:`Environment <class_Environment>`
-resource. These are found most of the time inside a
-:ref:`WorldEnvironment <class_WorldEnvironment>`
-node, or set in a camera. There are many parameters for HDR:
+HDR se encuentra en el recurso :ref:`Environment <class_Environment>`.
+Estos se encuentran la mayoría de las veces dentro de un nodo
+:ref:`WorldEnvironment <class_WorldEnvironment>`, o ajustado en una
+cámara. Hay muchos parámetros para HDR:
 
 .. image:: /img/hdr_parameters.png
 
 ToneMapper
 ~~~~~~~~~~
 
-The ToneMapper is the heart of the algorithm. Many options for
-tonemappers are provided:
+El ToneMapper es el corazón del algoritmo. Muchas opciones para
+tonemappers son proveídas:
 
--  Linear: Simplest tonemapper. It does it's job for adjusting scene
-   brightness, but if the differences in light are too big, it will
-   cause colors to be too saturated.
--  Log: Similar to linear, but not as extreme.
--  Reinhardt: Classical tonemapper (modified so it will not desaturate
-   as much)
--  ReinhardtAutoWhite: Same as above, but uses the max scene luminance
-   to adjust the white value.
+-  Linear: El tonemapper más simple. Hace su trabajo para ajustar el
+   brillo de la escena, pero si la diferencia en luz es muy grande,
+   causara que los colores estén muy saturados.
+-  Log: Similar a linear, pero no tan extremo.
+-  Reinhardt: Tonemapper clásico (modificado para que no desature
+   demasiado)
+-  ReinhardtAutoWhite: Igual que el anterior, peor usa el luminance
+   de escena máximo para ajustar el valor blanco.
 
 Exposure
 ~~~~~~~~
 
-The same exposure parameter as in real cameras. Controls how much light
-enters the camera. Higher values will result in a brighter scene and
-lower values will result in a darker scene.
+El mismo parámetro de exposure que en cámaras reales. Controla cuanta
+luz entra a la cámara. Valores altos resultara en una escena mas
+brillante mientras valores bajos resultara en una escena más oscura.
 
 White
 ~~~~~
 
-Maximum value of white.
+Valor máximo de blanco.
 
 Glow threshold
 ~~~~~~~~~~~~~~
 
-Determine above which value (from 0 to 1 after the scene is tonemapped),
-light will start bleeding.
+Determina luego de que valor (desde 0 a 1 luego que a la escena se le
+hace tonemapped), la luz empezara a hacer bleeding.
 
 Glow scale
 ~~~~~~~~~~
 
-Determine how much light will bleed.
+Determina cuanta luz hará bleeding.
 
 Min luminance
 ~~~~~~~~~~~~~
 
-Lower bound value of light for the scene at which the tonemapper stops
-working. This allows dark scenes to remain dark.
+Valor más bajo de luz para la escena en la cual el tonemapper dejara
+de trabajar. Esto permite que escenas oscuras permanezcan oscuras.
 
 Max luminance
 ~~~~~~~~~~~~~
 
-Upper bound value of light for the scene at which the tonemapper stops
-working. This allows bright scenes to remain saturated.
+Valor más alto de luz para la escena en la cual el tonemapper dejara
+de trabajar. Esto permite que las escenas brillantes se mantengan
+saturadas.
 
 Exposure adjustment speed
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Auto-exposure will change slowly and will take a while to adjust (like
-in real cameras). Bigger values means faster adjustment.
+Auto-exposure cambiara lentamente y llevara un rato ajustarlo (como en
+las cámaras reales). Valores más altos significan ajustes más rápidos.
