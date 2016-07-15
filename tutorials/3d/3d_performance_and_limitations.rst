@@ -1,189 +1,197 @@
 .. _doc_3d_performance_and_limitations:
 
-3D performance and limitations
-==============================
+Rendimiento 3D y limitaciones
+=============================
 
-Introduction
+Introducción
 ~~~~~~~~~~~~
 
-Godot follows a balanced performance philosophy. In performance world,
-there are always trade-offs, which consist in trading speed for
-usability and flexibility. Some practical examples of this are:
+Godot sigue una filosofía de rendimiento balanceado. En el mundo del
+rendimiento, siempre hay concesiones, que consisten en intercambiar
+velocidad por usabilidad y flexibilidad. Algunos ejemplos prácticos son:
 
--  Rendering objects efficiently in high amounts is easy, but when a
-   large scene must be rendered it can become inefficient. To solve
-   this, visibility computation must be added to the rendering, which
-   makes rendering less efficient, but at the same less objects are
-   rendered, so efficiency overall improves.
--  Configuring the properties of every material for every object that
-   needs to be renderer is also slow. To solve this, objects are sorted
-   by material to reduce the costs, but at the same time sorting has a
-   cost.
--  In 3D physics a similar situation happens. The best algorithms to
-   handle large amounts of physics objects (such as SAP) are very slow
-   at insertion/removal of objects and ray-casting. Algorithms that
-   allow faster insertion and removal, as well as ray-casting will not
-   be able to handle as many active objects.
+-  Renderizar objetos eficientemente en grandes cantidades es fácil, pero
+   cuando una escena grande debe ser renderizada se puede volver
+   ineficiente. Para resolver esto, la computación de la visibilidad
+   debe ser agregado al renderizado, lo cual vuelve el renderizado menos
+   eficiente, pero al mismo tiempo se renderizan menos objetos, entonces
+   la eficiencia en su conjunto mejora.
+-  Configurar las propiedades de cada material para cada objeto que
+   necesita ser renderizado también es lento. Para resolver esto, los
+   objetos son ordenados por material para reducir los costos, pero al
+   mismo tiempo ordenarlos tiene un costo.
+-  En física 3D sucede una situación similar. Los mejores algoritmos para
+   manejar grandes cantidades de objetos físicos (como SAP) son muy lentos
+   para insertar/remover objetos y hacer ray-casting. Los algoritmos que
+   permiten inserción y remoción mas rápida, asi como ray-casting no serán
+   capaces de manejar tantos objetos activos.
 
-And there are many more examples of this! Game engines strive to be
-general purpose in nature, so balanced algorithms are always favored
-over algorithms that might be the fast in some situations and slow in
-others.. or algorithms that are fast but make usability more difficult.
+Y hay muchos ejemplos más de esto! Los motores de juegos se esfuerzan en
+ser de propósito general por naturaleza, así que los algoritmos
+balanceados siempre son favorecidos sobre algoritmos que pueden ser mas
+rápidos en algunas situaciones y lentos en otras.. o algoritmos que son
+rápidos pero vuelven la usabilidad más difícil.
 
-Godot is not an exception and, while it is designed to have backends
-swappable for different algorithms, the default ones (or more like, the
-only ones that are there for now) prioritize balance and flexibility
-over performance.
+Godot no es una excepción y, aunque está diseñado para tener backends
+intercambiables para diferentes algoritmos, los que están por defecto (o
+mejor dicho, los únicos que están allí por ahora) priorizan balance y
+flexibilidad sobre rendimiento.
 
-With this clear, the aim of this tutorial is to explain how to get the
-maximum performance out of Godot.
+Con esto aclarado, el objetivo de este tutorial es explicar cómo obtener
+la máxima performance de Godot.
 
-Rendering
-~~~~~~~~~
+Renderizado
+~~~~~~~~~~~
 
-3D rendering is one of the most difficult areas to get performance from,
-so this section will have a list of tips.
+El renderizado 3D es una de las áreas mas difíciles desde la cual obtener
+rendimiento, así que esta sección tendrá una lista de consejos.
 
-Reuse shaders and materials
+Reusar shaders y materiales
 ---------------------------
 
-Godot renderer is a little different to what is out there. It's designed
-to minimize GPU state changes as much as possible.
-:ref:`FixedMaterial <class_FixedMaterial>`
-does a good job at reusing materials that need similar shaders but, if
-custom shaders are used, make sure to reuse them as much as possible.
-Godot's priorities will be like this:
+El renderizador de Godot es un poco diferente a lo que hay por ahí. Esta
+diseñado para minimizar los cambios de estado de la GPU lo más posible.
+:ref:`FixedMaterial <class_FixedMaterial>` hace un buen trabajo de
+reusar materiales que necesitan shaders similares pero, si un shader
+personalizado es usado, asegúrate de reusarlo lo mas posible.
+Las prioridades de Godot serán las siguientes:
 
--  **Reusing Materials**: The less amount of different materials in the
-   scene, the faster the rendering will be. If a scene has a huge amount
-   of objects (in the hundreds or thousands) try reusing the materials
-   or in the worst case use atlases.
--  **Reusing Shaders**: If materials can't be reused, at least try to
-   re-use shaders (or FixedMaterials with different parameters but same
-   configuration).
+-  **Reusar Materiales**: Cuanto menor es la cantidad de materiales
+   diferentes en una escena, mas rápido será el renderizado. Si una
+   escena tiene una cantidad enorme de objetos (en los cientos o miles)
+   intenta reusar los materiales o en el peor caso usa atlases.
+-  **Reusar Shaders**: Si los materiales no pueden ser reusados, al menos
+   intenta reusar los shaders (o FixedMaterials con diferentes parámetros
+   pero misma configuración).
 
-If a scene has, for example, 20.000 objects with 20.000 different
-materials each, rendering will be really slow. If the same scene has
-20.000 objects, but only uses 100 materials, rendering will be blazing
-fast.
+Si una escena tiene, por ejemplo, 20.000 objetos con 20.000 diferentes
+materiales cada uno, el renderizado será realmente lento. Si la misma
+escena tiene 20.000 objetos, pero apenas usa 100 materiales, el
+renderizado será muy veloz.
 
-Pixels cost vs vertex cost
---------------------------
+Costo de pixel vs costo de vertex
+---------------------------------
 
-It is a common thought that the lower the polygons in a model, the
-faster it will be rendered. This is *really* relative and depends on
-many factors.
+Es un pensamiento común que cuanto menor cantidad de polígonos en un
+modelo, mas rápido será renderizado. Esto es *realmente* relativo y
+depende de muchos factores.
 
-On a modern PC and consoles, vertex cost is low. Very low. GPUs
-originally only rendered triangles, so all the vertices:
+En PC y consolas modernas, el costo de vertex es bajo. Muy bajo.
+Las GPUs originalmente solo renderizaban triángulos, así que todos
+los vértices:
 
-1. Had to be transformed by the CPU (including clipping).
+1. Tenían que ser transformados por la CPU (incluyendo clipping).
 
-1. Had to be sent to the GPU memory from the main RAM.
+2. Tenían que ser enviadas a la memoria del GPU desde la memoria RAM.
 
-Nowadays, all this is handled inside the GPU, so the performance is
-extremely high. 3D artists usually have the wrong feeling about
-polycount performance because 3D DCCs (such as Blender, Max, etc.) need
-to keep geometry in CPU memory in order for it to be edited, reducing
-actual performance. Truth is, a model rendered by a 3D engine is much
-more optimal than how 3D DCCs display them.
+Hoy en día, todo esto es manejado dentro de la GPU, así que la
+performance es extremadamente alta. Los artistas 3D usualmente tienen
+el pensamiento incorrecto sobre la performance por cantidad de polígonos
+debido a los DCCs 3D (como blender, Max, etc.) necesitan mantener la
+geometría en la memoria CPU para poder ser editada, reduciendo la
+performance real. La verdad es, un modelo renderizado por un motor 3D
+es mucho más optimo que como se muestran por los DCCs 3D.
 
-On mobile devices, the story is different. PC and Console GPUs are
-brute-force monsters that can pull as much electricity as they need from
-the power grid. Mobile GPUs are limited to a tiny battery, so they need
-to be a lot more power efficient.
+En dispositivos móviles, la historia es diferente. Las GPU de PCs y
+consolas son monstruos de fuerza-bruta que pueden obtener tanta
+electricidad como necesiten de la red eléctrica. Las GPUs móviles están
+limitadas a una pequeña batería, por lo que necesitan ser mucho mas
+eficiente con la energía.
 
-To be more efficient, mobile GPUs attempt to avoid *overdraw*. This
-means, the same pixel on the screen being rendered (as in, with lighting
-calculation, etc.) more than once. Imagine a town with several buildings,
-GPUs don't really know what is visible and what is hidden until they
-draw it. A house might be drawn and then another house in front of it
-(rendering happened twice for the same pixel!). PC GPUs normally don't
-care much about this and just throw more pixel processors to the
-hardware to increase performance (but this also increases power
-consumption).
+Para ser más eficientes, las GPUs móviles intentan evitar el *overdraw*.
+Esto significa, el mismo pixel en la pantalla siendo renderizado (con
+cálculos de luces, etc.) más de una vez. Imagina una ciudad con varios
+edificios, las GPUs realmente no saben que esta visible y que esta
+oculto hasta que lo dibujan. Una casa puede estar dibujada y luego otra
+casa frente de la primera (el renderizado sucedió dos veces para el
+mismo pixel!). Las GPUs de PC normalmente no se preocupan mucho por
+esto y solo agregan mas procesadores de pixels al hardware para aumentar
+el rendimiento (pero esto también aumenta el consumo de poder).
 
-On mobile, pulling more power is not an option, so a technique called
-"Tile Based Rendering" is used (almost every mobile hardware uses a
-variant of it), which divide the screen into a grid. Each cell keeps the
-list of triangles drawn to it and sorts them by depth to minimize
-*overdraw*. This technique improves performance and reduces power
-consumption, but takes a toll on vertex performance. As a result, less
-vertices and triangles can be processed for drawing.
+En móvil, obtener más energía no es una opción, así que una técnica
+llamada "Tile Based Rendering" es usada (prácticamente todo hardware
+móvil usa una variante de dicha técnica), la cual divide la pantalla en
+una cuadricula (grid). Cada celda mantiene la lista de triángulos que
+se dibujan en ella y los ordena por profundidad para minimizar el
+*overdraw*. Esta técnica mejora el rendimiento y reduce el consumo de
+poder, pero impone una pena para el rendimiento vertex. Como resultado,
+menos vértices y triángulos pueden ser procesados para dibujar.
 
-Generally, this is not so bad, but there is a corner case on mobile that
-must be avoided, which is to have small objects with a lot of geometry
-within a small portion of the screen. This forces mobile GPUs to put a
-lot of strain on a single screen cell, considerably decreasing
-performance (as all the other cells must wait for it to complete in
-order to display the frame).
+Generalmente, esto no es tan malo, pero hay un caso para móvil que debe
+ser evitado, que es tener objetos pequeños con mucha geometría dentro
+de una pequeña porción de la pantalla. Esto fuerza al GPU móvil a poner
+un gran esfuerzo en una sola celda de la pantalla, disminuyendo
 
-To make it short, do not worry about vertex count so much on mobile, but
-avoid concentration of vertices in small parts of the screen. If, for
-example, a character, NPC, vehicle, etc. is far away (so it looks tiny),
-use a smaller level of detail (LOD) model instead.
+Resumiendo, no te preocupes tanto por la cantidad de vértices en móvil,
+pero evita la concentración de vértices en partes pequeñas de la pantalla.
+Si, por ejemplo, un personaje, NPC, vehículo, etc. esta lejos (y luce
+minúsculo), usa un modelo con menor nivel de detalle (LOD).
 
-An extra situation where vertex cost must be considered is objects that
-have extra processing per vertex, such as:
+Una situación extra donde el costo de vértices debe ser considerado son
+objetos que tienen procesamiento extra por vértice, como es:
 
 -  Skinning (skeletal animation)
 -  Morphs (shape keys)
--  Vertex Lit Objects (common on mobile)
+-  Vertex Lit Objects (común en móvil)
 
-Texture compression
--------------------
+Compresión de texturas
+----------------------
 
-Godot offers to compress textures of 3D models when imported (VRAM
-compression). Video RAM compression is not as efficient in size as PNG
-or JPG when stored, but increase performance enormously when drawing.
+Godot ofrece comprimir las texturas de los modelos 3D cuando se importan
+(compresión VRAM). La compresión Video RAM no es tan eficiente en tamaño
+como PNG o JPG al guardarse, pero aumenta enormemente el rendimiento
+cuando se dibuja.
 
-This is because the main goal of texture compression is bandwidth
-reduction between memory and the GPU.
+Esto es debido a que el objetivo principal de la compresión de textura es
+la reducción del ancho de banda entre la memoria y la GPU.
 
-In 3D, the shapes of objects depend more on the geometry than the
-texture, so compression is generally not noticeable. In 2D, compression
-depends more on shapes inside the textures, so the artifacting resulting
-from the compression is more noticeable.
+En 3D, la forma de los objetos depende más de la geometría que la textura,
+por lo que la compresión en general no es aparente. En 2D, la compresión
+depende más de las formas dentro de las texturas, por lo que los
+artefactos resultantes de la compresión es más aparente.
 
-As a warning, most Android devices do not support texture compression of
-textures with transparency (only opaque), so keep this in mind.
+Como una advertencia, la mayoría de los dipositivos Android no soportan
+compresión de texturas para texturas con transparencia (solo opacas),
+así que ten esto en cuenta.
 
-Transparent objects
--------------------
+Objetos transparentes
+---------------------
 
-As mentioned before, Godot sorts objects by material and shader to
-improve performance. This, however, can not be done on transparent
-objects. Transparent objects are rendered from back to front to make
-blending with what is behind work. As a result, please try to keep
-transparent objects to a minimum! If an object has a small section with
-transparency, try to make that section a separate material.
+Como se mencionó antes, Godot ordena los objetos por material y shader
+para mejorar el rendimiento. Esto, sin embargo, no puede ser hecho en
+objetos transparentes. Los objetos transparentes son renderizados desde
+el fondo al frente para hacer que la mezcla con lo que esta atrás
+funcione. Como resultado, por favor trata de mantener los objetos
+transparentes al mínimo! Si un objeto tiene una sección pequeña con
+transparencia, trata de hacer esa sección un material separado.
 
 Level of detail (LOD)
 ---------------------
 
-As also mentioned before, using objects with less vertices can improve
-performance in some cases. Godot has a very simple system to use level
-of detail,
-:ref:`GeometryInstance <class_GeometryInstance>`
-based objects have a visibility range that can be defined. Having
-several GeometryInstance objects in different ranges works as LOD.
+Como se mencionó antes, usar objetos con menos vértices puede mejorar
+el rendimiento en algunos casos. Godot tiene un sistema muy simple
+para usar nivel de detalle, los objetos basados en
+:ref:`GeometryInstance <class_GeometryInstance>` tienen un rango de
+visibilidad que puede ser definido. Tener varios objetos
+GeometryInstance en diferentes rangos funciona como LOD.
 
-Use instancing (MultiMesh)
---------------------------
+Usar instanciamiento (MultiMesh)
+--------------------------------
 
-If several identical objects have to be drawn in the same place or
-nearby, try using :ref:`MultiMesh <class_MultiMesh>`
-instead. MultiMesh allows drawing of dozens of thousands of objects at
-very little performance cost, making it ideal for flocks, grass,
-particles, etc.
+Si varios objetos idénticos tienen que ser dibujados en el mismo lugar
+o cerca, intenta usar :ref:`MultiMesh <class_MultiMesh>` en su lugar.
+MultiMesh permite dibujar docenas de miles de objetos con muy poco
+costo de rendimiento, haciéndolo ideal para bandadas, pasto, partículas,
+etc.
 
 Bake lighting
 -------------
 
-Small lights are usually not a performance issue. Shadows a little more.
-In general, if several lights need to affect a scene, it's ideal to bake
-it (:ref:`doc_light_baking`). Baking can also improve the scene quality by
-adding indirect light bounces.
+Las luces pequeñas usualmente no son un problema de rendimiento. Las
+sombras un poco más. En general, si varias luces necesitan afectar la
+escena, es ideal hacerles bake (:ref:`doc_light_baking`). Baking también
+puede mejorar la calidad de la escena al agregar rebotes de luz
+indirectos.
 
-If working on mobile, baking to texture is recommended, since this
-method is even faster.
+Si trabajas en móvil, hacer baking a las texturas es recomendado, dado
+que este método es mas rápido.
