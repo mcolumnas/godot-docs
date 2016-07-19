@@ -1,59 +1,65 @@
 .. _doc_importing_3d_meshes:
 
-Importing 3D meshes
-===================
+Importando mallas 3D
+====================
 
-Introduction
+Introducción
 ------------
 
-Godot supports a flexible and powerful :ref:`3D scene importer
-<doc_importing_3d_scenes>` that allows for full scene importing. For a lot of
-artists and developers this is more than enough. However, many do not like this
-workflow as much and prefer to import individual 3D Meshes and build the scenes
-inside the Godot 3D editor themselves. (Note that for more advanced features
-such as skeletal animation, there is no option to the 3D Scene Importer).
+Godot soporta un importador de escena flexible y poderoso
+:ref:`3D scene importer <doc_importing_3d_scenes>` que permite importar
+una escena completa. Para un montón de artistas y desarrolladores esto
+es mas que suficiente. Sin embargo, a muchos no les gusta este workflow
+tanto y prefieren importar 3D Meshes individualmente y construir la
+escena dentro del editor 3D de Godot. (Nota que para características más
+avanzadas como animación por esqueletos, no hay opción en el 3D Scene
+Importer).
 
-The 3D mesh import workflow is simple and works using the OBJ file
-format. The imported meshes result in a .msh binary file which the user
-can put into a :ref:`class_meshinstance`, which in turn can be placed
-somewhere in the edited scene.
+El workflow de importación de malla 3D es simple y funciona usando el
+formato de archivo OBJ. Las mallas importadas resultan en un archivo
+binario .msh que el usuario puede poner en un :ref:`class_meshinstance`,
+el cual a su vez es puede ser ubicado en algún lugar de la escena editada.
 
-Importing
----------
+Importando
+----------
 
-Importing is done through the Import 3D Mesh menu:
+La importación es hecha a través del menú Importar > Mesh:
 
 .. image:: /img/mesh_import.png
 
-Which opens the Mesh import window:
+El cual abre la ventana de importación de Mesh:
 
 .. image:: /img/mesh_dialog.png
 
-This dialog allows the import of one more more OBJ files into a target
-path. OBJ files are converted to .msh files. Files are imported without
-any material on them, material has to be added by the user (see the
-:ref:`doc_fixed_materials` tutorial). If the external OBJ file is changed it
-will be re-imported, while keeping the newly assigned material.
+Este dialogo permite la importación de uno o más archivos OBJ en un
+target path. Los archivos OBJ son convertidos a archivos .msh. Son
+importados sin material en ellos, el material debe ser agregado por el
+usuario (ve el tutorial :ref:`doc_fixed_materials`). Si el archivo
+externo OBJ cambia será re-importado, manteniendo el material
+recientemente asignado.
 
-Options
--------
+Opciones
+--------
 
-A few options are present. Normals are needed for regular shading, while
-Tangents are needed if you plan to use normal-mapping on the material. In
-general, OBJ files describe how to be shaded very well, but an option to
-force smooth shading is available.
+Algunas opciones están presentes. Las Normals son necesarias para
+sombreado regular, mientras que Tangents son necesarias si planificas
+usar normal-mapping en el material. En general, los archivos OBJ
+describen como se debe sombrear muy bien, pero una opción para forzar
+smooth shading está disponible.
 
-Finally, there is an option to weld vertices. Given OBJ files are
-text-based, it is common to find some of these with vertices that do not
-match, which results in strange shading. The weld vertices option merges
-vertices that are too close to keep proper smooth shading.
+Finalmente, hay una opción para soldar vértices. Dado que los archivos
+OBJ son basados en texto, es común encontrar algunos de esos vértices
+que no cierran, lo que resulta en sombreado extraño. La opción weld
+vertices mezcla vértices que están demasiado cercanos para mantener
+un sombreado suave adecuado.
 
-Usage
------
+Uso
+---
 
-Mesh resources (what this importer imports to) are used inside MeshInstance
-nodes. Simply set them to the Mesh property of them.
+Los recursos de Mesh (lo que este importador importa hacia) son usados
+dentro de nodos MeshInstance. Simplemente ajusta la propiedad Mesh de
+ellos.
 
 .. image:: /img/3dmesh_instance.png
 
-And that is it.
+Y eso es todo.

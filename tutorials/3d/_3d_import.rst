@@ -1,5 +1,5 @@
-Import
-======
+Importar
+========
 
 .. toctree::
    :maxdepth: 1
