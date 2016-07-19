@@ -1,90 +1,95 @@
 .. _doc_using_gridmaps:
 
-Using gridmaps
-~~~~~~~~~~~~~~
+Usando gridmaps
+~~~~~~~~~~~~~~~
 
-Introduction
+Introducción
 ------------
 
-:ref:`Gridmaps <class_GridMap>` are a simple and fast way to create 3D
-game levels. Think of it as a 3D version of the :ref:`TileMap<doc_using_tilemaps>`
-node. Similarly, you start with a predefined library of 3D meshes that
-can be put on a grid, just like if you were building a level with an
-unlimited amount of Lego blocks.
+Los :ref:`Gridmaps <class_GridMap>` son una forma simple y rápida de
+crear niveles para juegos 3D. Piensa de ellos como una versión 3D de los
+nodos :ref:`TileMap<doc_using_tilemaps>`. De forma similar, empiezas con
+una librería predefinida de mallas 3D que pueden ser puestas en un grid,
+justo como si estuvieras haciendo un nivel con una cantidad ilimitada de
+bloques Lego.
 
-Collisions can also be added to the meshes, just like you would do with
-the tiles of a tilemap.
+Las colisiones también pueden ser agregadas a las mallas, como harías
+con los mosaicos de un tilemap.
 
-Creating a MeshLibrary
+Creando un MeshLibrary
 ----------------------
 
-To begin, you need a :ref:`class_MeshLibrary`, which is a collection
-of meshes that can be used in the gridmap. Here are some meshes you can
-use to set it up.
+Para empezar, necesitas un :ref:`class_MeshLibrary`, el cual es una
+colección de mallas que pueden ser usadas en un gridmap. Aquí hay
+algunas mallas que puedes usar para configurarlo.
 
 .. image:: /img/meshes.png
 
-Open a new scene and create a root node (this is important, as without
-the root node, it will not be able to generate the MeshLibrary!). Then,
-create a :ref:`class_MeshInstance` node:
+Abre una nueva escena y crea el nodo raíz (esto es importante, ya que
+sin nodo raíz, no será capaz de generar el MeshLibrary!). Luego, crea
+un nodo :ref:`class_MeshInstance`:
 
 .. image:: /img/mesh_meshlib.png
 
-If you don't need to apply physics to the building blocks, that's all
-you need to do. In most cases though, you will need your block to
-generate collisions, so let's see how to add them.
+Si no necesitas aplicar física a los bloques de construcción, eso es
+todo lo que tienes que hacer. En la mayoría de los casos sin embargo,
+vas a necesitar que tu bloque genere colisiones, así que veamos como
+agregarlas.
 
-Collisions
+Colisiones
 ----------
 
-To assign a :ref:`class_CollisionShape` and :ref:`class_PhysicsBody`
-to the meshes, the simplest way is to do it while creating the
-MeshLibrary. Alternatively, you can also edit an existing MeshLibrary
-from within the GridMap inspector, but only CollisionShapes can be
-defined there and not PhysicsBody.
+Para asignar una :ref:`class_CollisionShape` y :ref:`class_PhysicsBody`
+a las mallas, la forma más simple es hacerlo mientras creas el
+MeshLibrary. De forma alternativa, también puedes editar una
+MeshLibrary existente desde dentro del inspector de GridMap, pero solo
+CollisionShapes pueden ser definidos allí y no PhysicsBody.
 
-To give the meshes a CollisionShape, you simply add children nodes to
-the MeshInstance node. You would typically add the desired PhysicsBody
-and CollisionShape in this order:
+Para darle a las mallas un CollisionShape, simplemente agrega nodos hijos
+al nodo MeshInstance. Típicamente se agregan los PyhisicsBody y
+CollisionShape necesarios en este orden:
+
 
 .. image:: /img/collide_mesh_meshlib.png
 
-You can adjust the order according to your needs.
+Puedes ajustar el orden de acuerdo a tus necesidades.
 
-Exporting the MeshLibrary
+Exportando la MeshLibrary
 -------------------------
 
-To export, go to ``Scene > Convert To.. > MeshLibrary..``, and save it
-as a resource.
+Para exportar, ve a ``Escena > Convertir a.. > MeshLibrary..``. y la
+guardas como un recurso.
 
 .. image:: /img/export_meshlib.png
 
-You are now ready to use the GridMap node.
+Ahora estás listo para usar el nodo GridMap.
 
-Using the MeshLibrary in a GridMap
-----------------------------------
+Usando MeshLibrary en un GridMap
+--------------------------------
 
-Create a new scene using any node as root, then add a Gridmap node.
-Then, load the MeshLibrary that you just exported.
+Crea una nueva escena usando cualquier nodo como raíz, luego agrega un
+nodo GridMap. Despues, carga el MeshLibrary que recién exportaste.
 
 .. image:: /img/load_meshlib.png
 
-Now, you can build your own level as you see best fit. Use left click
-to add tiles and right click to remove them. You can adjust the floor
-level when you need to put meshes at specific heights.
+Ahora, puedes construir tu propio nivel como te parezca mejor. Usa clic
+izquierdo para agregar mosaicos y botón derecho para quitarlos. Puedes
+ajustar el nivel del piso cuando necesitas poner mallas en alturas
+específicas.
+
 
 .. image:: /img/gridmap.png
 
-As mentioned above, you can also define new CollisionShapes at this
-stage by doing the following steps:
+Como mencionamos arriba, también puedes definir nuevas CollisionShapes
+en esta etapa siguiendo estos pasos:
 
 .. image:: /img/load_collisionshape.png
 
-There you are!
+Lo lograste!
 
-Reminder
---------
+Recordatorio
+------------
 
--  Be cautious before scaling meshes if you are not using uniform
-   meshes.
--  There are many ways to make use of gridmaps, be creative!
+-  Se cuidadoso antes de escalar mallas si no estás usando mallas
+   uniformes.
+-  Hay muchas formas de usar gridmaps, se creativo!
