@@ -1,83 +1,57 @@
 .. _doc_working_with_3d_skeletons:
 
-Working with 3D skeletons
-=========================
+Trabajando con esqueletos 3D
+============================
 
-Godot 3D skeleton support is currently quite rudimentary. The
-:ref:`class_Skeleton` node and class were designed mainly to support importing
-skeletal animations as a set of transformation matrices.
+El soporte de esqueletos 3D actualmente es bastante rudimentario. El nodo
+y clase :ref:`class_Skeleton` fueron diseñados principalmente para
+soportar la importación de animaciones por esqueleto como un conjunto de
+matrices de transformación.
 
-Skeleton node
+Nodo Skeleton
 -------------
 
-Skeleton node can be directly added anywhere you want on scene. Usually
-mesh is a child of Skeleton, as it easier to manipulate this way, as
-Transforms within skeleton are relative to where Skeleton is. But you
-can specify Skeleton node in every MeshInstance.
+Un nodo Skeleton puede ser directamente agregado en el lugar que quieras
+en la escena. Usualmente Mesh es hijo de Skeleton, ya que es más fácil de
+manipular de esta forma, porque las transformaciones en esqueletos son
+relativas a donde se encuentra. Pero puedes especificar nodo Skeleton en
+toda MeshInshatnce.
 
-Being obvious, Skeleton is intended to deform meshes, and consists of
-structures called "bones". Each "bone" is represented as Transform, which is
-applied to a group of vertices within a mesh. You can directly control a group
-of vertices from Godot. For that please reference :ref:`class_MeshDataTool`
-class, method :ref:`set_vertex_bones <class_MeshDataTool_set_vertex_bones>`.
-This class is very powerful.
+Siendo obvio, Skeleton está pensado para deformar mallas (meshes), y
+consiste de estructuras llamadas "bones"(huesos). Cada "bone" se
+representa como un Transform(transformación), la cual es aplicada a un
+grupo de vértices dentro de la malla. Puedes controlar directamente un
+grupo de vértices desde Godot. Para ello por favor ve la referencia en
+:ref:`class_MeshDataTool` class,
+method :ref:`set_vertex_bones <class_MeshDataTool_set_vertex_bones>`.
+Esta clase es muy poderosa.
 
-The "bones" are organized in hierarchy, every bone, except for root
-bone(s) have parent. Every bone have associated name you can use to
-refer to it (e.g. "root" or "hand.L", etc.). Also bones are all numbered,
-these numbers are bone IDs. Bone parents are referred by their numbered
-IDs.
+Los "bones" son organizados en jerarquía, cada hueso, excepto por el/los
+hueso/huesos root(raíz) tienen padres. Cada hueso tiene un nombre asociado
+que podes usar para referirlo (ej: "raiz" o "mano.I", etc.). Además los
+huesos están numerados, esos números son IDs de huesos. La referencia de
+los huesos padre es por sus números ID.
 
-For the rest of the article we consider the following scene:
+Para el resto del articulo consideramos la siguiente escena:
 
 ::
 
-    main (Spatial) - script is always here
+    main (Spatial) - el script siempre está aquí
     == skel (Skeleton)
     ==== mesh (MeshInstance)
 
-This scene is imported from Blender. It contains arm mesh with 2 bones -
-upperarm and lowerarm, with lowerarm parented to upperarm.
+Esta escena esta importada de Blender. Contiene la malla arm(brazo) con
+2 huesos - upperarm y lowerarm, y upperarm es el padre de lowerarm.
 
-Skeleton class
+Clase Skeleton
 --------------
 
-You can view Godot internal help for descriptions of every function.
-Basically all operations on bones are done using their numeric ID. You
-can convert from name to numeric ID and vise versa.
+Puedes ver la ayuda interna de Godot para descripciones de todas las
+funciones. Básicamente todas las operaciones en huesos son hechos usando
+su ID numérica. Puedes convertir de nombre a numero ID y vice-versa.
 
-**To find number of bones in skeleton we use get_bone_count()
-function**
-
-::
-
-    extends Spatial
-    var skel
-
-    func _ready():
-        skel = get_node("skel")
-        var id = skel.find_bone("upperarm")
-        print("bone id:", id)
-        var parent = skel.get_bone_parent(id)
-        print("bone parent id:", id)
-
-**to find ID for the bone, use find_bone() function**
-
-::
-
-    extends Spatial
-    var skel
-
-    func _ready():
-        skel = get_node("skel")
-        var id = skel.find_bone("upperarm")
-        print("bone id:", id)
-
-Now, we want to do something interesting with ID except for printing it.
-Also, we might need additional information - to find bone parents to
-complete chain, etc. This all is done with get/set_bone\_\* functions.
-
-**To find bone parent we use get_bone_parent(id) function**
+**Para encontrar el número de huesos en un esqueleto usamos la función
+get_bone_count()**
 
 ::
 
@@ -91,10 +65,41 @@ complete chain, etc. This all is done with get/set_bone\_\* functions.
         var parent = skel.get_bone_parent(id)
         print("bone parent id:", id)
 
-Bone transforms is the thing why we're here at all. There are 3 kind of
-transforms - local, global, custom.
+**para encontrar el ID para el hueso, usa la función find_bone()**
 
-**To find bone local Transform we use get_bone_pose(id) function**
+::
+
+    extends Spatial
+    var skel
+
+    func _ready():
+        skel = get_node("skel")
+        var id = skel.find_bone("upperarm")
+        print("bone id:", id)
+
+Ahora, queremos hacer algo interesante con ID excepto imprimirlo.
+Además, podemos necesitar información adicional - para encontrar huesos
+padres para completar la cadena, etc. Esto se hace completamente con las
+funciones get/set_bone\_\*.
+
+**Para encontrar padres de hueso usamos la función get_bone_parent(id)**
+
+::
+
+    extends Spatial
+    var skel
+
+    func _ready():
+        skel = get_node("skel")
+        var id = skel.find_bone("upperarm")
+        print("bone id:", id)
+        var parent = skel.get_bone_parent(id)
+        print("bone parent id:", id)
+
+Las transformaciones de huesos es el motivo por el cual estamos acá. Hay 3
+tipos de transformaciones - local, global, custom (personalizada).
+
+**Para encontrar el Transform local usamos la función get_bone_pose(id)**
 
 ::
 
@@ -110,12 +115,13 @@ transforms - local, global, custom.
         var t = skel.get_bone_pose(id)
         print("bone transform: ", t)
 
-So we see 3x4 matrix there, with first column of 1s. What can we do
-about that? It is a Transform, so we can do everything we can do with
-Transform, basically translate, rotate and scale. Also we can multiply
-transforms to have complex transforms. Remember, "bones" in Godot are
-just Transforms over a group of vertices. Also we can copy Transforms of
-other objects there. So lets rotate our "upperarm" bone:
+Así que vemos una matriz 3x4 allí, la primer columna de 1s. Que podemos
+hacer sobre eso? Es un Transform, así que podemos hacer todo lo que se
+hace con Transform, básicamente traslación, rotación y escala. También
+podemos multiplicar transformaciones para obtener transformaciones
+complejas. Recuerda, los "bones" en Godot son solo Transforms sobre un
+grupo de vétrices. También podemos copiar Transforms de otros objetos
+aquí. Así que vamos a rotar nuestro hueso "upperarm":
 
 ::
 
@@ -138,18 +144,18 @@ other objects there. So lets rotate our "upperarm" bone:
         t = t.rotated(Vector3(0.0, 1.0, 0.0), 0.1 * dt)
         skel.set_bone_pose(id, t)
 
-Now we can rotate individual bones. The same happens for scale and
-translate - try these on your own and see results.
+Ahora podemos rotar huesos individuales. Lo mismo sucede para escala y
+traslación - inténtalos por tu cuenta y ve los resultados.
 
-What we used now was local pose. By default all bones are not modified.
-But this Transform tells us nothing about relationship between bones.
-This information is needed for quite a number of tasks. How can we get
-it? Here comes global transform:
+Lo que usamos ahora fue local pose. Por defecto todos los huesos no
+están modificados. Pero este Transform no nos dice nada sobre la relación
+entre huesos. Esta información es necesaria para un buen número de cosas.
+Como lo podemos obtener? Aquí viene global transform:
 
-**To find bone global Transform we use get_bone_global_pose(id)
-function**
+**Para encontrar el Transform global del hueso usamos la función
+get_bone_global_pose(id)**
 
-We will find global Transform for lowerarm bone:
+Vamos a encontrar el Transform global para el hueso lowerarm:
 
 ::
 
@@ -165,9 +171,10 @@ We will find global Transform for lowerarm bone:
         var t = skel.get_bone_global_pose(id)
         print("bone transform: ", t)
 
-As you see, this transform is not zeroed. While being called global, it
-is actually relative to Skeleton origin. For root bone, origin is always
-at 0 if not modified. Lets print origin for our lowerarm bone:
+Como puedes ver, este transform no está en ceros. Aunque se llama global,
+en realidad es relativo al origén del Skeleton. Para el hueso raíz, el
+origén siempre esta en 0 si no fue modificado. Vamos a imprimir el origén
+de nuestro hueso lowerarm:
 
 ::
 
@@ -183,58 +190,63 @@ at 0 if not modified. Lets print origin for our lowerarm bone:
         var t = skel.get_bone_global_pose(id)
         print("bone origin: ", t.origin)
 
-You will see a number. What does this number mean? It is a rotation
-point of Transform. So it is base part of the bone. In Blender you can
-go to Pose mode and try there to rotate bones - they will rotate around
-their origin. But what about tip? We can't know things like bone length,
-which we need for many things, without knowing tip location. For all
-bones in chain except for last one we can calculate tip location - it is
-simply a child bone origin. Yes, there are situations when this is not
-true, for non-connected bones. But that is OK for us for now, as it is
-not important regarding Transforms. But the leaf bone tip is nowhere to
-be found. Leaf bone is a bone without children. So you don't have any
-information about its tip. But this is not a showstopper. You can
-overcome this by either adding extra bone to the chain or just
-calculating leaf bone length in Blender and store the value in your
-script.
+Vas a ver un número. Que significa este número? Es un punto de rotación
+de Transform. Así que es la parte base del hueso. En Blender, puedes ir
+a modo Pose e intentar allí rotar los huesos - van a rotar al rededor
+de su origen. Pero que hay sobre el extremo del hueso? No podemos saber
+cosas como el largo del hueso, el cual es necesario para muchas cosas,
+sin saber la ubicación del extremo. Para todos los huesos en cadena
+excepto el ultimo podemos calcular la ubicación del extremo - es
+simplemente el origen de un hueso hijo. Sí, hay situaciones donde esto
+no es cierto, para huesos no conectados. Pero eso está OK por ahora,
+ya que no es importante respecto a los Transforms. Pero el extremo de
+leaf bone no se puede encontrar. Leaf bone es un hueso sin hijo. Por lo
+que no tienes ninguna información sobre su extremo. Pero esto no es tan
+grave. Puedes superarlo ya sea agregando un hueso extra a la cadena o
+simplemente calculando el largo del leaf bone en Blender y guardando
+su valor en tu script.
 
-Using 3D "bones" for mesh control
----------------------------------
+Usando "bones" 3D para control de malla
+---------------------------------------
 
-Now as you know basics we can apply these to make full FK-control of our
-arm (FK is forward-kinematics)
+Ahora que ya sabes lo básico podemos aplicar esto para hacer FK-control
+completo de nuestro brazo (FK es forward-kinematics)
 
-To fully control our arm we need the following parameters:
+Para controlar completamente nuestro brazo necesitamos los siguientes
+parámetros:
 
 -  Upperarm angle x, y, z
 -  Lowerarm angle x, y, z
 
-All of these parameters can be set, incremented and decremented.
+Todos estos parámetros pueden ser ajustados, incrementados y
+reducidos.
 
-Create the following node tree:
+Crea el siguiente árbol de nodos:
 
 ::
 
-    main (Spatial) <- script is here
+    main (Spatial) <- el script esta aquí
     +-arm (arm scene)
     + DirectionLight (DirectionLight)
     + Camera
 
-Set up Camera so that arm is properly visible. Rotate DirectionLight
-so that arm is properly lit while in scene play mode.
+Ajusta una Camera de tal forma que el brazo este adecuadamente visible.
+Rota DirectionLight así ese brazo es apropiadamente iluminado cuando
+esta en modo de reproducción de escena.
 
-Now we need to create new script under main:
+Ahora necesitamos crear un nuevo script debajo de main:
 
-First we setup parameters:
+Primero ajustamos los parámetros:
 
 ::
 
     var lowerarm_angle = Vector3()
     var upperarm_angle = Vector3()
 
-Now we need to setup a way to change them. Let us use keys for that.
+Ahora necesitamos configurar una forma de cambiarlos. Usemos las teclas
+para eso.
 
-Please create 7 actions under project settings:
+Por favor crea 7 acciones en la configuración de proyecto:
 
 -  **selext_x** - bind to X key
 -  **selext_y** - bind to Y key
@@ -244,8 +256,8 @@ Please create 7 actions under project settings:
 -  **increment** - bind to key numpad +
 -  **decrement** - bind to key numpad -
 
-So now we want to adjust the above parameters. Therefore we create code
-which does that:
+Así que ahora queremos ajustar los parámetros de arriba. Entonces vamos a
+crear código para que lo haga:
 
 ::
 
@@ -270,7 +282,7 @@ which does that:
             elif bone == "upperarm":
                 upperarm_angle[coordinate] += 1
 
-The full code for arm control is this:
+El código completo para control de brazo es este:
 
 ::
 
@@ -320,31 +332,31 @@ The full code for arm control is this:
         set_bone_rot("lowerarm", lowerarm_angle)
         set_bone_rot("upperarm", upperarm_angle)
 
-Pressing keys 1/2 select upperarm/lowerarm, select axis by pressing x,
-y, z, rotate using numpad "+"/"-"
+Presionando las teclas 1/2 seleccionas upperarm/lowerarm, selecciona el
+eje al presionar x, y, z, rota usando "+"/"-" en el teclado numérico.
 
-This way you fully control your arm in FK mode using 2 bones. You can
-add additional bones and/or improve "feel" of the interface by using
-coefficients for the change. I recommend you play with this example a
-lot before going to next part.
+De esta forma tu puedes controlar por completo el brazo en modo FK usando
+2 huesos. Puedes agregar huesos adicionales y/o mejorar el "feel" de la
+interface usando coeficientes para el cambio. Recomiendo que juegues con
+este ejemplo un montón antes de ir a la siguiente parte.
 
-You can clone the demo code for this chapter using
+Puedes clonar el código del demo para este capítulo usando
 
 ::
 
     git clone git@github.com:slapin/godot-skel3d.git
     cd demo1
 
-Or you can browse it using web-interface:
+O puedes navegarlo usando la interfaz web:
 
 https://github.com/slapin/godot-skel3d
 
-Using 3D "bones" to implement Inverse Kinematics
-------------------------------------------------
+Usando "bones" 3D para implementar Inverse Kinematics
+-----------------------------------------------------
 
-See :ref:`doc_inverse_kinematics`.
+Ve :ref:`doc_inverse_kinematics`.
 
-Using 3D "bones" to implement ragdoll-like physics
---------------------------------------------------
+Usando "bones" 3D para implementar física ragdoll
+-------------------------------------------------
 
-TODO.
+Para hacer.
