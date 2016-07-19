@@ -3,67 +3,64 @@
 Inverse kinematics
 ==================
 
-This tutorial is a follow-up of :ref:`doc_working_with_3d_skeletons`.
+Este tutorial es una continuación de :ref:`doc_working_with_3d_skeletons`.
 
-Before continuing on, I'd recommend reading some theory, the simplest
-article I find is this:
+Antes de continuar, recomendaría leer algo de teoría, el artículo mas
+simple que encontré es este:
 
 http://freespace.virgin.net/hugo.elias/models/m_ik2.htm
 
-Initial problem
-~~~~~~~~~~~~~~~
+Problema inicial
+~~~~~~~~~~~~~~~~
 
-Talking in Godot terminology, the task we want to solve here is position
-our 2 angles we talked about above so, that the tip of lowerarm bone is
-as close to target point, which is set by target Vector3() as possible
-using only rotations. This task is very calculation-intensive and never
-resolved by analytical equation solve. So, it is an underconstrained
-problem, which means there is unlimited number of solutions to the
-equation.
+Hablando en terminología Godot, la tarea que queremos resolver aquí es
+posicionar los 2 ángulos que hablamos antes, entonces, el extremo
+del hueso lowerarm esta tan cerca del target point, el cual está ajustado
+por el target Vector3() como posible usando solo rotaciones. Esta tarea
+es muy intensiva en calculo y nunca resuelta por una ecuación analítica.
+Entonces, es un problema sin restricciones, lo cual significa que hay
+un número ilimitado de soluciones a la ecuación.
 
 .. image:: /img/inverse_kinematics.png
 
-For easy calculation, for this chapter we consider target is also
-child of Skeleton. If it is not the case for your setup you can always
-reparent it in your script, as you will save on calculations if you
-do.
+Para simplificar los cálculos, en este capítulo consideramos que target
+también es hijo de Skeleton. Si este no es el caso para tu configuración,
+puedes siempre re-apadrinarlo en tu script, ya que ahorraras en cálculos
+si lo haces.
 
-In the picture you see angles alpha and beta. In this case we don't
-use poles and constraints, so we need to add our own. On the picture
-the angles are 2D angles living in plane which is defined by bone
-base, bone tip and target.
-
-The rotation axis is easily calculated using cross-product of bone
-vector and target vector. The rotation in this case will be always in
-positive direction. If t is the Transform which we get from
-get_bone_global_pose() function, the bone vector is
+El eje de rotación es fácilmente calculado usando el producto cruzado
+del vector de hueso y el vector target (objetivo). La rotación en este
+caso va a ser siempre en dirección positiva. Si t es la Transform que
+obtenemos desde la función get_bone_global_pose(), el vector hueso es
 
 ::
 
     t.basis[2]
 
-So we have all information here to execute our algorithm.
+Así que tenemos toda la información aquí para ejecutar nuestro algoritmo.
 
-In game dev it is common to resolve this problem by iteratively closing
-to the desired location, adding/subtracting small numbers to the angles
-until the distance change achieved is less than some small error value.
-Sounds easy enough, but there are Godot problems we need to resolve
-there to achieve our goal.
+En el desarrollo de juegos es común resolver este problema acercándose de
+forma iterativa a la ubicación deseada, sumando/restando pequeños ángulos
+hasta que el cambio de distancia logrado es menos que algún pequeño valor
+de error. Suena bastante fácil, pero hay problemas en Godot que debemos
+resolver para lograr nuestro objetivo.
 
--  **How to find coordinates of the tip of the bone?**
--  **How to find vector from bone base to target?**
+-  **Como encontrar las coordenadas del extremo del hueso?**
+-  **Como encontrar el vector desde la base del hueso hasta el objetivo?**
 
-For our goal (tip of the bone moved within area of target), we need to know
-where the tip of our IK bone is. As we don't use a leaf bone as IK bone, we
-know the coordinate of the bone base is the tip of parent bone. All these
-calculations are quite dependant on the skeleton's structure. You can use
-pre-calculated constants as well. You can add an extra bone for the tip of
-IK and calculate using that.
+Para nuestro propósito (extremo del hueso movido dentro del área del
+objetivo), necesitamos saber dónde está el extremo de nuestro hueso IK.
+Ya que no usamos un leaf bone como IK bone, sabemos que las coordenadas
+de la base del hueso es el extremo del hueso padre. Todos estos cálculos
+son bastante dependientes en la estructura del esqueleto. Pueden usar
+constantes pre-calculadas también. Puedes agregar un hueso extra para el
+extremo de IK y calcularlo usando eso.
 
-Implementation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Implementación
+~~~~~~~~~~~~~~
 
-We will just use exported variable for bone length to be easy.
+Vamos a usar la variable exportada para el largo del hueso para
+simplificarlo.
 
 ::
 
@@ -71,10 +68,11 @@ We will just use exported variable for bone length to be easy.
     export var IK_bone_length=1.0
     export var IK_error = 0.1
 
-Now, we need to apply our transformations from IK bone to the base of
-chain. So we apply rotation to IK bone then move from our IK bone up to
-its parent, then apply rotation again, then move to the parent of
-current bone again, etc. So we need to limit our chain somewhat.
+Ahora, necesitamos aplicar nuestras transformaciones desde el hueso IK
+a la base de la cadena. Así que aplicamos rotación al hueso IK y luego
+mover desde nuestro hueso IK hasta su padre, y aplicar rotación
+nuevamente, luego mover hasta el padre del hueso actual nuevamente, etc.
+Así que necesitamos limitar nuestra cadena un poco.
 
 ::
 
@@ -89,7 +87,7 @@ For ``_ready()`` function:
         skel = get_node("arm/Armature/Skeleton")
         set_process(true)
 
-Now we can write our chain-passing function:
+Ahora podemos escribir nuestra función de pasaje de cadena:
 
 ::
 
@@ -103,15 +101,15 @@ Now we can write our chain-passing function:
             b = skel.get_bone_parent(b)
             l = l - 1
 
-And for the ``_process()`` function:
+Y para la función ``_process()``:
 
 ::
 
     func _process(dt):
         pass_chain(dt)
 
-Executing this script will just pass through bone chain printing bone
-transforms.
+Ejecutando este script solo pasara a través de la cadena de huesos
+imprimiendo las transformaciones de huesos.
 
 ::
 
@@ -137,17 +135,18 @@ transforms.
     func _process(dt):
         pass_chain(dt)
 
-Now we need to actually work with target. The target should be placed
-somewhere accessible. Since "arm" is imported scene, we better place
-target node within our top level scene. But for us to work with target
-easily its Transform should be on the same level as Skeleton.
+Ahora necesitamos trabajar con el objetivo. El objetivo debe estar
+ubicado en algún lugar accesible. Ya que "arm" es una escena importada,
+lo mejor es ubicar el nodo target dentro de nuestro nivel superior de
+escena. Pero para que podamos trabajar fácilmente con el objetivo su
+Transform debe estar en el mismo nivel que el Skeleton.
 
-To cope with this problem we create "target" node under our scene root
-node and at script run we will reparent it copying global transform,
-which will achieve wanted effect.
+Para hacer frente a este problema creamos un nodo "target" bajo nuestra
+raíz de nodos de escena y cuando corra el script vamos a re apadrinarlo
+copiando la transformación global, lo cual logra el efecto deseado.
 
-Create new Spatial node under root node and rename it to "target".
-Then modify ``_ready()`` function to look like this:
+Crea un nuevo nodo Spatial bajo la raíz y renómbralo a "target".
+Luego modifica la función ``_ready()`` para que luzca así:
 
 ::
 
@@ -161,5 +160,3 @@ Then modify ``_ready()`` function to look like this:
         skel.add_child(target)
         target.set_global_transform(ttrans)
         set_process(true)
-
-
