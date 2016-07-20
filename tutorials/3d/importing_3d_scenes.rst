@@ -1,434 +1,465 @@
 .. _doc_importing_3d_scenes:
 
-Importing 3D scenes
-===================
+Importando escenas 3D
+=====================
 
-Introduction
+Introducción
 ------------
 
-Most game engines just import 3D objects, which may contain skeletons or
-animations, and then all further work is done in the engine UI, like
-object placement, full scene animations, etc. In Godot, given the node
-system is very similar to how 3D DCC tools (such as Maya, 3DS Max or Blender)
-work, full 3D scenes can be imported in all their glory. Additionally, by using
-a simple language tag system, it is possible to specify that objects are
-imported as several things, such as collidable, rooms and portals, vehicles
-and wheels, LOD distances, billboards, etc.
+La mayoría de los motores de juegos solo importan objetos 3D, los cuales
+pueden contener esqueletos o animaciones, y luego todo el demás trabajo
+es hecho in la UI del motor, como la ubicación de los objetos,
+animaciones de pantalla completa, etc. En Godot, dado que el sistema de
+nodos es muy similar a cómo funcionan las herramientas 3D DCC (como Maya,
+3DS Max o Blender), escenas completas en 3D pueden ser importadas en
+toda su gloria. Adicionalmente, al usar un lenguaje simple de etiquetas,
+es posible especificar que objetos son importados para diferentes cosas,
+como colisionables, cuartos y portales, vehículos y ruedas, distancias LOD,
+billboards, etc.
 
-This allows for some interesting features:
+Esto permite algunas características interesantes:
 
--  Importing simple scenes, rigged objects, animations, etc.
--  Importing full scenes. Entire scenarios can be created and updated in
-   the 3D DCC and imported to Godot each time they change, then only
-   little editing is needed from the engine side.
--  Full cutscenes can be imported, including multiple character
-   animation, lighting, camera motion, etc.
--  Scenes can be further edited and scripted in the engine, where
-   shaders and environment effects can be added, enemies can be
-   instanced, etc. The importer will update geometry changes if the
-   source scene changes but keep the local changes too (in real-time
-   while using the Godot editor!)
--  Textures can be all batch-imported and updated when the source scene
-   changes.
+-  Importar escenas simples, objetos con rig, animaciones, etc.
+-  Importar escenas completas. Escenarios enteros pueden ser creados y
+   actualizados en el 3D DCC e importados a Godot cada vez que cambian,
+   luego apenas un poco de edición es necesaria del lado del motor.
+-  Cutscenes completas pueden ser importadas, incluyendo animaciones de
+   múltiples personajes, iluminación, movimiento de cámara, etc.
+-  Las escenas pueden continuar siendo editadas y scripteadas en el motor,
+   donde los shaders y efectos de ambiente pueden ser agregados, enemigos
+   ser instanciados, etc. El importador va a actualizar los cambios de
+   geometría si la escena de origen cambia pero mantendrá los cambios
+   locales también (en tiempo real mientras usas el editor Godot!)
+-  Las texturas pueden ser todas importadas en lotes y actualizadas
+   cuando la escena de origen cambia.
 
-This is achieved by using a very simple language tag that will be
-explained in detail later.
+Esto se logra usando un lenguaje de etiquetas muy simple que será
+explicado en detalle a continuación.
 
-Exporting DAE files
--------------------
+Exportando archivos DAE
+-----------------------
 
-Why not FBX?
-~~~~~~~~~~~~
+Porque no FBX?
+~~~~~~~~~~~~~~
 
-Most game engines use the FBX format for importing 3D scenes, which is
-definitely one of the most standardized in the industry. However, this
-format requires the use of a closed library from Autodesk which is
-distributed with a more restrictive licensing terms than Godot. The plan
-is, sometime in the future, to implement an external conversion binary,
-but meanwhile FBX is not really supported.
+La mayoría de los motores de juegos usan el formato FBX para importar
+escenas 3D, el cual definitivamente es uno de los más estandarizados
+en la industria. Sin embargo, este formato requiere el uso de una
+librería cerrada de Autodesk la cual es distribuida con términos de
+licenciamiento más restrictivos que Godot. El plan es, en algún momento
+del futuro, implementar una conversión binaria externa, pero mientras
+tanto FBX no está soportado.
 
-Exporting DAE files from Maya and 3DS Max
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exportando archivos DAE desde Maya y 3DS Max
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Autodesk added built-in collada support to Maya and 3DS Max, but It's
-really broken and should not be used. The best way to export this format
-is by using the
+Autodesk agrego soporte incorporado collada a Maya y 3DS Max, pero esta
+realmente roto y no debería ser usado. La mejor forma de exportar este
+formato es usando los plugins
 `OpenCollada <https://github.com/KhronosGroup/OpenCOLLADA/wiki/OpenCOLLADA-Tools>`__
-plugins. They work really well, although they are not always up-to date
-with the latest version of the software.
+Estos funcionan realmente bien, aunque no siempre están al día con la
+ultima versión del software.
 
-Exporting DAE files from Blender
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exportando archivos DAE desde Blender
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Blender also has built-in collada support, but It's really broken and
-should not be used either.
+Blender también tiene soporte collada incorporado, pero está realmente
+roto y no debería ser usado tampoco.
 
-Godot provides a `Python
+Godot provee un `Python
 Plugin <https://github.com/godotengine/godot/tree/master/tools/export/blender25>`__
-that will do a much better job at exporting the scenes.
+que hará un trabajo mucho mejor de exportar las escenas.
 
-The import process
-------------------
+El proceso de importación
+-------------------------
 
-Import process begins with the 3D scene import menu:
+El proceso de importación comienza con el menú de importar escena 3D:
 
 .. image:: /img/3dimp_menu.png
 
-That opens what is probably the biggest of all the import dialogs:
+Esto abre lo que es probablemente el más grande dialogo de importación
+de todos:
 
 .. image:: /img/3dimp_dialog.png
 
-Many options exist in there, so each section will be explained as
-follows:
+Muchas opciones existen allí, así que cada sección será explicada a
+continuación:
 
 Source & target paths
 ~~~~~~~~~~~~~~~~~~~~~
 
-To import, two options are needed. The first is a source .dae file
-(.dae stands for Collada. More import formats will eventually added,
-but Collada is the most complete open format as of this writing).
+Para importar, dos opciones se necesitan. La primera es el archivo
+.dae fuente (.dae es por Collada. Mas formatos de importación se
+agregaran eventualmente, pero Collada es el formato abierto más completo
+cuando esto escribió).
 
-A target folder needs to be provided, so the importer can import the
-scene there. The imported scene will have the same filename as the
-source one, except for the .scn extension, so make sure you pick good
-names when you export!
+Un target folder necesita proveerse, entonces el importador puede
+importar la escena allí. La escena importada tendrá el mismo nombre
+de archivo que la fuente, excepto por la extensión .scn, así que
+asegúrate de elegir buenos nombres cuando exportas!
 
-The textures will be copied and converted. Textures in 3D applications
-are usually just PNG or JPG files. Godot will convert them to video
-memory texture compression format (s3tc, pvrtc, ericsson, etc.) by
-default to improve performance and save resources.
+Las texturas usadas serán copiadas y convertidas. Las texturas en
+aplicaciones 3D son usualmente solo archivos PNG o JPG. Godot los
+convertirá a formato de compresión de textura de memoria de video(s3tc,
+pvrtc, ericsson, etc.) por defecto para mejorar el rendimiento y
+ahorrar recursos.
 
-Since the original textures, 3D file and textures are usually not needed,
-it's recommended to keep them outside the project. For some hints on
-how to do this the best way, you can check the :ref:`doc_project_organization`
-tutorial.
+Debido a que las texturas originales, archivo 3D y texturas no son
+usualmente necesarias, es recomendado mantenerlas fuera del proyecto.
+Para algunos consejos sobre cómo hacer esto de la mejor forma, puedes
+chequear el tutorial :ref:`doc_project_organization`.
 
-Two options for textures are provided. They can be copied to the same
-place as the scene, or they can be copied to a common path (configurable
-in the project settings). If you choose this, make sure no two textures
-are named the same.
+Dos opciones para texturas se proveen. Pueden ser copiadas al mismo
+lugar que la escena, o pueden copiarse a un path común (ajustable
+en la configuración de proyecto). Si eliges esto, asegúrate que no
+haya dos texturas con el mismo nombre.
 
-3D rigging tips
-~~~~~~~~~~~~~~~
+Consejos de Rigging 3D
+~~~~~~~~~~~~~~~~~~~~~~
 
-Before going into the options, here are some tips for making sure your
-rigs import properly
+Antes de ir a las opciones, aquí hay algunos consejos para asegurarte
+que tus rigs se importen adecuadamente
 
--  Only up to 4 weights are imported per vertex, if a vertex depends of
-   more than 4 bones, only the 4 most important bones (the one with the
-   most weight) will be imported. For most models this usually works
-   fine, but just keep it in mind.
--  Do not use non-uniform scale in bone animation, as this will likely
-   not import properly. Try to accomplish the same effect with more
-   bones.
--  When exporting from Blender, make sure that objects modified by a
-   skeleton are children of it. Many objects can be modified by a single
-   skeleton, but they all should be direct children.
--  The same way, when using Blender, make sure that the relative
-   transform of children nodes to the skeleton is zero (no rotation, no
-   translation, no scale. All zero and scale at 1.0). The position of
-   both objects (the little orange dot) should be at the same place.
+-  Solo se importan hasta 4 weights por vertex, si un vertex depende de
+   más de 4 huesos, solo los 4 más importantes (los que tienen más peso)
+   van a ser importados. Para la mayoría de los modelos esto funciona
+   usualmente bien, pero tenlo en mente.
+-  No uses animaciones de hueso con escala no uniforme, ya que esto
+   es probable que no se importe adecuadamente. Intenta lograr el mismo
+   efecto agregando huesos.
+-  Cuando exportas desde Blender, asegúrate que los objetos modificados
+   por un esqueleto sean hijos de el. Muchos objetos pueden ser modificados
+   por un solo esqueleto, pero todos deben ser hijos directos.
+-  De la misma forma, cuando uses Blender, asegúrate que la transformación
+   relativa de los nodos hijos al esqueleto sea cero (sin rotación, sin
+   translación, sin escala. Todos ceros y con una escala de 1.0). La
+   posición de ambos objetos (el pequeño punto naranja) debe estar en el
+   mismo lugar.
 
-3D import options
-~~~~~~~~~~~~~~~~~
+Opciones de importación 3D
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section contains many options to change the way import workflow
-works. Some (like HDR) will be better explained in other sections, but
-in general a pattern can be visible in the options and that is, many of
-the options end with "-something". For example:
+Esta sección contiene muchas opciones para cambiar la forma en que
+el workflow de importación funciona. Algunos (como HDR) serán mejor
+explicadas en otras secciones, pero en general un patrón puede ser
+visible en las opciones y esto es, muchas de las opciones terminan con
+"-something". Por ejemplo:
 
--  Remove Nodes (-noimp)
--  Set Alpha in Materials (-alpha)
--  Create Collisions (-col).
+-  Remover Nodos (-noimp)
+-  Ajustar Alpha en Materiales (-alpha)
+-  Crear colisiones (-col)
 
-This means that the object names in the 3D DCC need to have those
-options appended at the end for the importer to tell what they are. When
-imported, Godot will convert them to what they are meant to be.
+Esto significa que los nombres de objeto en el DCC 3D necesitan tener
+esas opciones agregadas al final para que el importador sepa que son.
+Cuando se importan, Godot las convertirá a lo que están destinadas a ser.
 
-**Note:** Maya users must use “_" (underscore) instead of "-" (minus).
+**Nota:** Usuarios de Maya deben usar “_" (underscore) en lugar de
+"-" (minus).
 
-Here is an example of how a scene in the 3D DCC looks (using Blender),
-and how it is imported to Godot:
+Aquí hay un ejemplo de como una escena en el DCC 3D luce (usando Blender),
+y como se importa en Godot:
+
 
 .. image:: /img/3dimp_blender.png
 
-Notice that:
+Fíjate que:
 
--  The camera was imported normally.
--  A Room was created (-room).
--  A Portal was created (-portal).
--  The Mesh got static collision added (-col).
--  The Light was not imported (-noimp).
+-  La cámara se importó normalmente.
+-  Un cuarto fue creado (-room).
+-  Un portal fue creado (-portal).
+-  El Mesh tuvo agregado de colisión estática (-col).
+-  La luz no se importo (-noimp).
 
-Options in detail
-~~~~~~~~~~~~~~~~~
+Opciones en detalle
+~~~~~~~~~~~~~~~~~~~
 
-Following is a list of most import options and what they do in more
-detail.
+A continuación una lista de las opciones más importantes y lo que hacen
+con mas detalle.
 
 Remove nodes (-noimp)
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
-Node names that have this at the end will be removed at import time, mo
-matter their type. Erasing them afterwards is most of the times
-pointless because the will be restored if the source scene changes.
+Los nombres de nodos que tengan esto al final serán removidos en tiempo
+de importación, no importa su tipo. Borrarlos luego no tiene sentido la
+mayoría de las veces porque serán restauradas si la escena fuente cambia.
 
 Import animations
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
-Some scene formats (.dae) support one or more animations. If this is
-checked, an `AnimationPlayer <class_animationplayer>`__ node will be
-created, containing the animations.
+Algunos formatos de escena (.dae) soportan una o más animaciones. Si esto
+es chequeado, un nodo `AnimationPlayer <class_animationplayer>`__ será
+creado, conteniendo las animaciones.
+
 
 Compress geometry
 ^^^^^^^^^^^^^^^^^
 
-This option (disabled [STRIKEOUT:or more like, always enabled] at the
-moment at the time of writing this) will compress geometry so it takes
-less space and renders faster (at the cost of less precision).
+Esta opción (deshabilitada [STRIKEOUT:o mas bien, siempre habilitada] al
+momento de escribir esto) va a comprimir la geometría de forma que tome
+menos espacio y renderize mas rápido (al costo de menos precisión).
 
 Force generation of tangent arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The importer detects when you have used a normalmap texture, or when the
-source file contains tangent/binormal information. These arrays are
-needed for normalmapping to work, and most exporters know what they do
-when they export this. However, it might be possible to run into source
-scenes that do not have this information which, as a result, make
-normal-mapping not work. If you notice that normal-maps do not work when
-importing the scene, turn this on!
+El importador detecta cuando has usado una textura normalmap, o cuando
+el archivo fuente contiene información de tangentes/binormales. Estos
+arreglos son necesarios para que funcione normalmapping, y la mayoría de
+los exportadores saben lo que hacen cuando exportan esto. Sin embargo,
+es posible encontrarse con escenas que no tienen esta información lo
+cual, como resultado, hace que normal-mapping no funcione. Si notas que
+los normal-maps no funcionan cuando importas la escena, prende esto!
 
 SRGB -> linear of diffuse textures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When rendering using HDR (High Dynamic Range) it might be desirable to
-use linear-space textures to achieve a more real-life lighting.
-Otherwise, colors may saturate and contrast too much when exposure
-changes. This option must be used together with the SRGB option in
-`WorldEnvironment <class_worldenvironment>`__. The texture import
-options also have the option to do this conversion, but if this one is
-turned on, conversion will always be done to diffuse textures (usually
-what is desired). For more information, read the :ref:`doc_high_dynamic_range`
-tutorial.
+Cuando renderizas usando HDR (High Dynamic Range) puede ser deseable
+usar texturas linear-space para lograr iluminación más real. De otra
+forma, los colores pueden saturar y contrastar demasiado cuando cambia
+la exposición. Esta opción debe ser usada junto con SRGB en
+`WorldEnvironment <class_worldenvironment>`__. Las opciones de
+importación de textura también tienen la opción para hacer esta
+conversión, pero si esta propiedad esta encendida, las conversión
+siempre será hecha a las texturas difusas (usualmente lo que se desea).
+Para mas información, lee el tutorial :ref:`doc_high_dynamic_range`.
 
 Set alpha in materials (-alpha)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When working with most 3D DCCs, its pretty obvious when a texture is
-transparent and has opacity and this rarely affects the workflow or
-final rendering. However, when dealing with real-time rendering,
-materials with alpha blending are usually less optimal to draw, so they
-must be explicitly marked as such.
+Cuando trabajas con la mayoría de los DCCs 3D, es bastante obvio cuando
+una textura es transparente y tiene opacidad lo cual raramente afecta
+el workflow del renderizado final. Sin embargo, cuando tratas con
+renderizado en tiempo real, los materiales con alpha blending son
+usualmente menos óptimos para dibujar, por lo que deben ser marcados
+específicamente como tales.
 
-Originally Godot detected this based on whether if the source texture
-had an alpha channel, but most image manipulation applications like Photoshop or
-Gimp will export this channel anyway even if not used. Code was added
-later to check manually if there really was any transparency in the
-texture, but artists will anyway and very often lay uvmaps into opaque
-parts of a texture and leave unused areas (where no UV exists)
-transparent, making this detection worthless.
+Originalmente Godot detectaba esto basado en si la textura fuente tenia
+un canal alpha, pero la mayoría de las aplicaciones de manipulación de
+imágen como Photoshop o Gimp van a exportar este canal de todas formas
+aun si no es usado. Se agregó código más tarde para chequear manualmente
+si realmente había alguna transparencia en la textura, pero los artistas
+de todas formas muy a menudo dejan uvmaps en partes opacas de la
+textura y otras áreas sin usar (donde no existe UV) transparentes,
+volviendo esta detección sin sentido.
 
-Finally, it was decided that it's best to import everything as opaque
-and leave artists to fix materials that need transparency when it's
-obvious that they are not looking right (see the :ref:`doc_materials`
-tutorial).
+Finalmente, se decidió que es mejor importar todo como opaco y dejar a
+los artistas solucionar los materiales que necesitan transparencia
+cuando es obvio que no lucen bien (ve el tutorial :ref:`doc_materials`).
 
-As a helper, since every 3D DCC allows naming the materials and keeping
-their name upon export, the (-alpha) modifier in their name will hint
-the 3D scene importer in Godot that this material will use the alpha
-channel for transparency.
+Como un ayudante, dado que todo DCC 3D permite nombrar los materiales
+y mantener su nombre al exportar, el modificador (-alpha) en su nombre
+apuntara al importador de escena 3D de Godot que ese material va a usar
+el canal alpha para transparencia.
 
 Set vert. color in materials (-vcol)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Most 3D DCCs support vertex color painting. This is generally applied as
-multiplication or screen blending. However, it is also often the case
-that your exporter will export this information as all 1s, or export it
-as something else and you will not realize it. Since most of the cases
-this option is not desired, just add this to any material to confirm
-that vertex colors are desired.
+La mayoría de los DCC 3D soportan pintado por vertex. Esto es
+generalmente aplicado como una multiplicación o mezcla de pantalla.
+Sin embargo, a menudo se presenta el caso de que tu exportador va a
+exportar esta información como 1s, o exportarla como alguna otra cosa
+y no te darás cuenta. Debido a que en la mayoría de los casos esta
+opción no es deseada, solo agrega esto a cualquier material para
+confirmar que se desea usar vertex colors.
 
 Create collisions (-col, -colonly)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Option "-col" will work only for Mesh nodes. If it is detected, a child
-static collision node will be added, using the same geometry as the mesh.
+La opción "-col" solo funcionara para nodos Mesh. Si es detectada,
+un nodo hijo de colisión estática será agregado, usando la misma
+geometría que la malla.
 
-However, it is often the case that the visual geometry is too complex or
-too un-smooth for collisions, which end up not working well. To solve
-this, the "-colonly" modifier exists, which will remove the mesh upon
-import and create a `StaticBody <class_staticbody>`__ collision instead.
-This helps the visual mesh and actual collision to be separated.
+Sin embargo, a menudo sucede que la geometría visual es demasiado
+compleja o muy poco suave para colisiones, lo que termina no funcionando
+bien. Para resolver esto, existe el modificador -"colonly", el cual
+remueve la malla cuando se importa y en su lugar crea una colisión
+`StaticBody <class_staticbody>`__. Esto ayuda a separar la malla visual
+y colisión.
 
-Option "-colonly" can be also used with Blender's empty objects.
-On import it will create a `StaticBody <class_staticbody>`__ with
-collision node as a child. Collision node will have one of predefined shapes,
-depending on the Blender's empty draw type:
+La opción "-colonly" puede también ser usada con objetos vacíos de
+Blender. Al importar creara un `StaticBody <class_staticbody>`__
+con nodos de colisión como hijos. Los nodos de colisión serán de las
+formas predefinidas, dependiendo en el tipo de empty draw de Blender:
 
 .. image:: /img/3dimp_BlenderEmptyDrawTypes.png
 
--  Single arrow will create `RayShape <class_rayshape>`__
--  Cube will create `BoxShape <class_boxshape>`__
--  Image will create `PlaneShape <class_planeshape>`__
--  Sphere (and other non-listed) will create `SphereShape <class_sphereshape>`__
+-  Una flecha crea `RayShape <class_rayshape>`__
+-  El cubo crea `BoxShape <class_boxshape>`__
+-  Una imagen crea `PlaneShape <class_planeshape>`__
+-  Una esfera (y otros no listados) crea `SphereShape <class_sphereshape>`__
 
-For better visibility in Blender's editor user can set "X-Ray" option on collision
-empties and set some distinct color for them in User Preferences / Themes / 3D View / Empty.
+Para mejor visibilidad en el editor de Blender el usuario puede ajustar
+la opción "on colision empties" y ajustar algún color distintivo para
+ellas en User Preferences / Themes / 3D View / Empty.
 
 Create rooms (-room)
 ^^^^^^^^^^^^^^^^^^^^
 
-This is used to create a room. As a general rule, any node that is a
-child of this node will be considered inside the room (including
-portals).
+Esto es usado para crear un cuarto. Como regla general, cualquier nodo
+que es un hijo de este nodo será considerado dentro del cuarto (incluyendo
+portales).
 
-.. For more information about rooms/portals, look at the [[Portals and Rooms]] tutorial.
+Para más información sobre rooms/portals, mira el tutorial
+[[Portals and Rooms]].
 
-There are two ways in which this modifier can be used. The first is
-using a Dummy/Empty node in the 3D application with the "-room" tag. For this to
-work, the "interior" of the room must be closed (geometry of the
-children should contain walls, roof, floor, etc. and the only holes to
-the outside should be covered with portals). The importer will then
-create a simplified version of the geometry for the room.
+Hay dos formas posibles para usar este modificador. La primera es usando
+un nodo Dummy/Empty en la aplicación 3D con la etiqueta "-room". Para
+que esto funcione, el "interior" del cuarto debe estar cerrado (la
+geometría de los hijos debe contener paredes, techo, piso, etc. y los
+únicos orificios al exterior deben estar cubiertos por portales). El
+importador entonces creara una versión simplificada de la geometría para
+el cuarto.
 
-The second way is to use the "-room" modifier on a mesh node. This will
-use the mesh as the base for the BSP tree that contains the room bounds.
-Make sure that the mesh shape is **closed**, all normals **point
-outside** and that the geometry is **not self-intersecting**, otherwise
-the bounds may be computed wrong (BSP Trees are too picky and difficult
-to work with, which is why they are barely used anymore..).
+La segunda forma es usando el modificador "-room" en un nodo Mesh. Esto
+usará la malla como base para el árbol BPS que contiene los límites de
+los cuartos. Asegúrate que la forma de la malla sea **cerrada**, todas
+las normales **apunten hacia afuera** y que la geometría no se
+**intersecte a si misma**, de otra forma los limites pueden ser mal
+computados (los árboles BSP son demasiado detallistas y difíciles de
+trabajar, motivo por el cual se usan muy poco en la actualidad..).
 
-Anyway, the room will need portals, which are described next.
+De cualquier forma, el cuarto necesitara portales, que se describen a
+continuación.
 
 Create portals (-portal)
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Portals are the view to look outside a room. They are always some flat
-shape on the surface of a room. If the portal is left alone, it is used
-to activate occlusion when looking inside<->outside the room.
+Los portales son la vista para mirar fuera del cuarto. Siempre son
+algún tipo de forma plana en la superficie del cuarto. Si el portal es
+dejado solo, es usado para activar la oclusión cuando miras
+dentro<->fuera del cuarto.
 
-.. Again, more information on the [[Portals and Rooms]] tutorial.
+.. Nuevamente, mas información en el tutorial [[Portals and Rooms]].
 
-Basically, the conditions to make and import a portal from the 3D DCC
-are:
+Básicamente, las condiciones para hacer e importar un portal desde un
+DCC 3D son:
 
--  It should be a child of a room.
--  It should lay on the surface of the room (this doesn't need to be
-   super exact, just make it as close as you can by eye and Godot will
-   adjust it)
--  It must be a flat, convex shape, any flat and convex shape is okay, no
-   matter the axis or size.
--  Normals for the flat shape faces must **all point towards the
-   OUTSIDE** of the room.
+-  Debe ser hijo de un cuarto.
+-  Debe reposar en la superficie del cuarto (esto no necesita ser súper
+   exacto, solo hazlo lo más cercano posible a ojo y Godot lo ajustara)
+-  Debe ser plano, con forma convexa, cualquier forma plana y convexa
+   está bien, no importa el eje o tamaño.
+-  Las normales de la forma plana deben **todas apuntar hacia AFUERA**
+   del cuarto.
 
-Here is how it usually looks:
+Así es como luce usualmente:
 
 .. image:: /img/3dimp_portal.png
 
-To connect to rooms, simply make two identical portals for both rooms
-and place them overlapped. This does not need to be perfectly exact,
-again, as Godot will fix it.
+Para conectar los cuartos, simplemente haz dos portales idénticos para
+ambos cuartos y ubícalos superpuestos. Esto no tiene que ser
+perfectamente exacto, nuevamente, Godot intentara arreglarlo.
 
 [..]
 ^^^^
 
-The rest of the tags in this section should be rather obvious, or will
-be documented/changed in the future.
+El resto de las etiquetes en este sección deberían ser bastante obvios,
+o serán documentados/cambiados en el futuro.
 
 Double-sidedness
 ~~~~~~~~~~~~~~~~
 
-Collada and other formats support specifying the double-sidedness of
-the geometry (in other words, when not double-sided, back-faces are
-not drawn). Godot supports this option per Material, not per Geometry.
+Collada y cualquier otro formato soporta especificar el doble-lado de
+la geometría (en otras palabras, cuando no tiene doble lado, las caras
+hacia atrás no se dibujaran). Godot soporta esta opción por Material,
+no por Geometría.
 
-When exporting from 3D DCCs that work with per-object double-sidedness
-(such as Blender of Maya), make sure that the double sided objects do
-not share a material with the single sided ones or the importer will
-not be able to discern.
+Cuando exportas desde el DCC 3D que funciona con doble-lado por objeto
+(como Blender o Maya), asegúrate que los objetos con doble lado no
+comparten material con los que tienen un solo lado, o el importador
+no sabrá discernir.
 
 Animation options
 ~~~~~~~~~~~~~~~~~
 
-Some things to keep in mind when importing animations. 3D DCCs allow
-animating with curves for every x,y,z component, doing IK constraints
-and other stuff. When imported for real-time, animations are sampled
-(at small intervals) so all this information is lost. Sampled
-animations are fast to process, but can use considerable amounts of
-memory.
+Algunas cosas a tener en cuenta cuando se importan animaciones. Los
+DCCs 3D permiten animación con curvas para cada componente x,y,z haciendo
+IK constraints y otras cosas. Cuando se importa para tiempo real, las
+animaciones son muestreadas (en pequeños intervalos) por lo que toda
+esta información se pierde. Las animaciones muestreadas son rápidas
+para procesar, pero pueden requerir cantidades considerables de
+memoria.
 
-Because of this, the "Optimize" option exists but, in some cases, this
-option might break an animation, so make it sure to disable it if
-you notice any issues.
+Por este motivo, la opción "Optimize" existe pero, en algunos casos,
+esta opción puede romper una animación, así que asegúrate de
+deshabilitarla si notas algún problema.
 
-Some animations are meant to be cycled (like walk animations) if this is
-the case, animation names that end in "-cycle" or "-loop" are
-automatically set to loop.
+Algunas animaciones están destinadas a ser cíclicas (como animaciones de
+caminar) si este es el caso, las animaciones con nombres que terminan
+en "-cycle" o "-loop" son automáticamente ajustadas para repetirse.
 
 Import script
 ~~~~~~~~~~~~~
 
-Creating a script to parse the imported scene is actually really simple.
-This is great for post processing, changing materials, doing funny stuff
-with the geometry, etc.
+Crear un script para procesar la escena importada es en los hechos
+realmente simple. Esto es genial para post processing, cambiar materiales,
+hacer cosas con la geometría, etc.
 
-Create a script that basically looks like this:
+Crea un script que básicamente luce así:
 
 ::
 
-    tool # needed so it runs in editor
+    tool # necesario para que corra en el editor
     extends EditorScenePostImport
 
     func post_import(scene):
-      # do your stuff here
-      pass # scene contains the imported scene starting from the root node
+      # haz tus cosas aquí
+      pass # la escena contiene la escena importada comenzando del nodo raíz
 
-The post-import function takes the imported scene as parameter (the
-parameter is actually the root node of the scene).
+La función por importación toma la escena importada como un parámetro
+(el parámetro es en realidad el nodo raíz de la escena).
+
 
 Update logic
 ~~~~~~~~~~~~
 
-Other types of resources (like samples, meshes, fonts, images, etc.) are
-re-imported entirely when changed and user changes are not kept.
+Otros tipos de recursos (como sonidos, mallas, fuentes, imágenes, etc)
+son re importados por completo cuando cambian y los cambios del usuario
+no se mantienen.
 
-Because of 3D Scenes can be really complex, they use a different update
-strategy. The user might have done local changes to take advantage of
-the engine features and it would be really frustrating if everything is
-lost on re-import because the source asset changed.
+Debido a que las escenas 3D pueden ser realmente complejas, usan una
+estrategia de actualización diferente. El usuario puede haber hecho
+cambios locales para tomar ventaja de las características del motor y
+sería realmente frustrante si todo se pierde al re importar por que
+el asset fuente cambio.
 
-This led to the implementation of a special update strategy. The idea
-behind is that the user will not lose anything he or she did, and only
-added data or data that can't be edited inside Godot will be updated.
+Esto llevo a la implementación de una estrategia de actualización.
+La idea detrás de la misma es que el usuario no pierde nada de lo
+que hizo, y solo datos agregados o que no pueden ser editados en Godot
+se actualizarán.
 
-It works like this:
+Funciona como esto:
 
-Strategy
-^^^^^^^^
+Estrategia
+^^^^^^^^^^
 
-Upon changes on the source asset (ie: .dae), and on re-import, the
-editor will remember the way the scene originally was, and will track
-your local changes like renaming nodes, moving them or reparenting them.
-Finally, the following will be updated:
+Cuando se realizan cambios en el asset fuente (ejemplo: .dae), y se
+re importa, el editor recordara como lucia la escena originalmente,
+y seguirá tus cambios locales como nodos renombrados, moviéndolos
+o re aparentándolos. Finalmente, lo siguiente será actualizado:
 
--  Mesh Data will be replaced by the data from the updated scene.
--  Materials will be kept if they were not modified by the user.
--  Portal and Room shapes will be replaced by the ones from the updated
-   scene.
--  If the user moved a node inside Godot, the transform will be kept. If
-   the user moved a node in the source asset, the transform will be
-   replaced. Finally, if the node was moved in both places, the
-   transform will be combined.
+-  Los datos de mallas serán reemplazados por los datos de la escena
+   actualizada.
+-  Los materiales serán mantenidos si no fueron modificados por el
+   usuario.
+-  Las formas de Portals y Rooms serán remplazadas por las de la escena
+   actualizada.
+-  Si el usuario movio un nodo dentro de Godot, la transformación se
+   mantendrá. Si el usuario movió un nodo en el asset fuente, la
+   transformación será reemplazada. Finalmente, si el nodo fue movido
+   en ambos lugares, la transformación será combinada.
 
-In general, if the user deletes anything from the imported scene (node,
-mesh, material, etc.), updating the source asset will restore what was
-deleted. This is a good way to revert local changes to anything. If you
-really don't want a node anymore in the scene, either delete it from
-both places or add the "-noimp" tag to it in the source asset.
+En general, si el usuario borra cualquier cosa de la escena importada
+(nodo, malla, material, etc.), actualizar el asset fuente va a restaurar
+lo que fue borrado. Esta es una buena forma de revertir cambios locales
+para cualquier cosa. Si realmente no quieres más un nodo en la escena,
+bórralo de los dos lugares o agrega la etiqueta "-noimp" en el asset
+fuente.
+
 
 Fresh re-import
 ^^^^^^^^^^^^^^^
 
-It can also happen that the source asset changed beyond recognition and
-a full fresh re-import is desired. If so, simply re-open the 3D scene
-import dialog from the Import -> Re-Import menu and perform re-import.
+También puede suceder que el asset fuente cambio hasta deja de ser
+reconocible y se desea una re importación completa. Si es así, solo
+re abre el dialogo de importación de escena 3D desde el menú
+Import -> Re-Import y realiza re-import.
