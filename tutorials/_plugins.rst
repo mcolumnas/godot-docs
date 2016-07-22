@@ -1,7 +1,7 @@
-Editor plugins
-==============
+Plugins de Editor
+=================
 
-Coming soon™.
+Pronto™.
 
 .. toctree::
    :maxdepth: 1

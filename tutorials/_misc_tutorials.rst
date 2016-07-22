@@ -1,5 +1,5 @@
-Miscellaneous
-=============
+Misceláneo
+==========
 
 .. toctree::
    :maxdepth: 2

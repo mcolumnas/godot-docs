@@ -1,5 +1,5 @@
-Math
-====
+Matemática
+==========
 
 .. toctree::
    :maxdepth: 1
