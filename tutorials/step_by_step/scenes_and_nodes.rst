@@ -13,10 +13,10 @@ su lugar, eres un chef! Cambia tu atuendo hípster por un un gorro de
 cocinero y una chaqueta doblemente abotonada. Ahora, en lugar de hacer
 juegos, creas nuevas y deliciosas recetas para tus invitados.
 
-Entonces, ¿Como crea un chef su receta? Las recetas se dividen en dos
+Entonces, ¿Cómo crea un chef su receta? Las recetas se dividen en dos
 secciones, la primera son los ingredientes y en segundo lugar las
 instrucciones para prepararlos. De esta manera, cualquiera puede seguir
-la receta y saborear tu magnifica creación.
+la receta y saborear tu magnífica creación.
 
 Hacer juegos en Godot se siente prácticamente igual. Usar el motor es
 como estar en una cocina. En esta cocina, los *nodos* son como un
@@ -49,7 +49,7 @@ nodos tienen diferentes funciones, combinarlos permite crear funciones
 mas complejas.
 
 Esto probablemente no es claro aun y tiene poco sentido, pero todo va
-a va a encajar unas secciones mas adelante. El hecho mas importante a
+a encajar unas secciones más adelante. El hecho mas importante a
 recordar por ahora es que los nodos existen y pueden ser ordenados de
 esa forma.
 
@@ -59,7 +59,7 @@ Escenas
 .. image:: /img/scene_tree_example.png
 
 Ahora que la existencia de nodos ha sido definida, el siguiente paso
-lógico es explicar que es una Escena.
+lógico es explicar qué es una Escena.
 
 Una escena esta compuesta por un grupo de nodos organizados
 jerárquicamente (con estilo de árbol). Tiene las siguientes
@@ -72,7 +72,7 @@ propiedades:
 - Puede haber varias escenas en un proyecto, pero para iniciar,
   una de ellas debe ser seleccionada y cargada primero.
 
-Básicamente, el motor Godot es un **editor de escenas**. Tiene mas
+Básicamente, el motor Godot es un **editor de escenas**. Tiene más
 que suficientes herramientas para editar escenas 2D y 3D así como
 interfaces de usuario, pero el editor gira entorno al concepto de
 editar una escena y los nodos que la componen.
@@ -80,9 +80,9 @@ editar una escena y los nodos que la componen.
 Creando un Nuevo Proyecto
 ----------------------
 
-La teoría es aburrida, asique vamos a cambiar de enfoque y ponernos
+La teoría es aburrida, así que vamos a cambiar de enfoque y ponernos
 prácticos. Siguiendo una larga tradición de tutoriales, el primer
-proyecto va a ser el "Hola Mundo!". Para esto, se usara el editor.
+proyecto va a ser el "Hola Mundo!". Para esto, se usará el editor.
 
 Cuando godot se ejecuta sin un proyecto, aparecerá el Gestor
 Proyectos. Esto ayuda a los desarrolladores a administrar sus
@@ -91,7 +91,7 @@ proyectos.
 .. image:: /img/project_manager.png
 
 Para crear un nuevo proyecto, la opción "Nuevo Proyecto" debe ser
-utilizada. Elije y crea una ruta para el proyecto y especifica el
+utilizada. Elije y crea una ruta para el proyecto y especificá el
 nombre del proyecto.
 
 .. image:: /img/create_new_project.png
@@ -106,19 +106,19 @@ se abre:
 .. image:: /img/empty_editor.png
 
 Como mencionamos antes, hacer juegos en Godot se siente como estar
-en una cocina, asique abramos el refrigerador y agreguemos algunos
+en una cocina, así que abramos el refrigerador y agreguemos algunos
 nodos frescos al proyecto. Comenzaremos con un "Hola Mundo!" Para
 hacer esto, el botón "Nuevo Nodo" debe ser presionado.
 
 .. image:: /img/newnode_button.png
 
-Esto abrirá el dialogo de Crear Nodo, mostrando una larga lista de
+Esto abrirá el diálogo de Crear Nodo, mostrando una larga lista de
 nodos que pueden ser creados:
 
 .. image:: /img/node_classes.png
 
 Desde allí, selecciona el nodo Label (Etiqueta) primero. Buscarlo es
-probablemente la forma mas rápida:
+probablemente la forma más rápida:
 
 .. image:: /img/node_search_label.png
 
@@ -158,7 +158,7 @@ escena en algo como hola.scn en Escena -> Guardar:
 Y aquí es donde algo gracioso sucede. El de archivo es especial, y
 solo permite guardar dentro del proyecto. La raiz del proyecto es
 "res://" que significa "resource path" (camino de recursos).
-Esto significa que los archivos solo pueden ser guardados dentro
+Esto significa que los archivos sólo pueden ser guardados dentro
 del proyecto. En el futuro, cuando hagas operaciones con archivos
 en Godot, recuerda que "res://" es el camino de recursos, y no
 importa la plataforma o lugar de instalación, es la forma de
@@ -169,7 +169,7 @@ el demo "Hola, Mundo!" debería finalmente ejecutarse:
 
 .. image:: /img/helloworld.png
 
-Exito!
+Éxito!
 
 .. _doc_scenes_and_nodes-configuring_the_project:
 
@@ -185,12 +185,12 @@ escena es la que será cargada cuando el proyecto corre.
 Estas configuraciones son todas guardadas en el archivo engine.cfg,
 que es un archivo de texto plano en el formato win.ini, para una
 edición fácil. Hay docenas de configuraciones que pueden ser
-configuradas in ese archivo para alterar como un proyecto se
-ejecuta, por lo que para hacer mas simple el proceso, existe un
-cuadro de dialogo de configuración del proyecto, el cual es un tipo
+configuradas en ese archivo para alterar como un proyecto se
+ejecuta, por lo que para hacer más simple el proceso, existe un
+cuadro de diálogo de configuración del proyecto, el cual es un tipo
 de interfaz para editar engine.cfg
 
-Para acceder al cuadro de dialogo, simplemente ve a Escena ->
+Para acceder al cuadro de diálogo, simplemente ve a Escena ->
 Configuración de proyecto.
 
 Cuando la ventana abre, la tarea será seleccionar la escena
@@ -200,11 +200,11 @@ application/main_scene y seleccionando 'hola.scn'
 .. image:: /img/main_scene.png
 
 Con este cambio, presionar el botón de Play regular (o F5) va a
-correr el proyecto, no importa la escena que se esta editando.
+correr el proyecto, no importa la escena que se está editando.
 
-Yendo atrás con el dialogo de configuración de proyecto. Este dialogo
+Yendo atrás con el diálogo de configuración de proyecto. Este diálogo
 permite una cantidad de opciones que pueden ser agregadas a engine.cfg
-y mostrar sus valores por omisión. Si el valor por defecto esta bien,
+y mostrar sus valores por omisión. Si el valor por defecto está bien,
 entonces no hay necesidad de cambiarlo.
 
 Cuando un valor cambia, se marca un tick a la izquierda del nombre.
@@ -217,9 +217,9 @@ es posible agregar opciones de configuración personalizadas y
 leerlas en tiempo de ejecución usando el singleton :ref:`Globals <class_Globals>`
 
 
-Continuara...
+Continuará...
 ------------------
 
 Este tutorial habla de "escenas y nodos", pero hasta ahora ha habido
-solo *una* escena y *un* nodo! No te preocupes, el próximo tutorial
-se encargara de ello...
+sólo *una* escena y *un* nodo! No te preocupes, el próximo tutorial
+se encargará de ello...
