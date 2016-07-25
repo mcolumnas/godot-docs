@@ -10,41 +10,41 @@ Este pequeño tutorial tiene como objetivo ser una introducción corta y
 práctica a la matemática de vectores, útil para juegos 3D pero también
 3D. De nuevo, la matemática de vectores es útil para juegos 3D pero
 *también* 3D. Es una herramienta asombrosa cuando la entiendes y hace a
-la programación de comportamientos complejos mucho mas simple.
+la programación de comportamientos complejos mucho más simple.
 
-A menudo sucede que programadores jovenes confian demasiado en la
+A menudo sucede que programadores jóvenes confían demasiado en la
 matemática *incorrecta* para resolver un amplio abanico de problemas,
-por ejemplo usando solo trigonometria en lugar de matemática de vectores
-para jugos 2D.
+por ejemplo usando solo trigonometría en lugar de matemática de vectores
+para juegos 2D.
 
-Este tutorial se encofara en el uso practico, con aplicación inmediata al
+Este tutorial se enfocara en el uso práctico, con aplicación inmediata al
 arte de la programación de juegos.
 
 Sistema de coordenadas (2D)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Tipicamente, definimos coordenadas como un par (x,y), x representa el
+Típicamente, definimos coordenadas como un par (x,y), x representa el
 valor horizontal e y el vertical. Esto tiene sentido dado que la pantalla
-es solo un rectangulo en dos dimensiones. Como ejemplo, aquí hay una
+es solo un rectángulo en dos dimensiones. Como ejemplo, aquí hay una
 posición en espacio 2D:
 
 .. image:: /img/tutovec1.png
 
-Una posición puede estar en cualquier lugar del espacio. La posicion (0,0)
-tiene un nombre, es llamada el **origen**. Recuerda este termino bien
-porque tiene mas usos implicitos luego. El (0,0) de un sistema de
+Una posición puede estar en cualquier lugar del espacio. La posición (0,0)
+tiene un nombre, es llamada el **origen**. Recuerda este término bien
+porque tiene más usos implícitos luego. El (0,0) de un sistema de
 n-coordenadas es el **origen**.
 
 En matemática vectorial, las coordenadas tienen dos usos diferentes, ambos
 igualmente importantes. Son usadas para representar una *posición* pero
-tambien un *vector*. La misma posición que antes, cuando se imagina como
+también un *vector*. La misma posición que antes, cuando se imagina como
 un vector, tiene diferente significado.
 
 .. image:: /img/tutovec2.png
 
 Cuando se imagina como vector, dos propiedades pueden inferirse, la
 **dirección** y la **magnitud**. Cada posición en el espacio puede ser
-un vector, con la excepcion del **origen**. Esto es porque las coordenadas
+un vector, con la excepción del **origen**. Esto es porque las coordenadas
 (0,0) no pueden representar dirección (magnitud 0).
 
 .. image:: /img/tutovec2b.png
@@ -54,8 +54,8 @@ Dirección
 
 Dirección es simplemente hacia donde el vector apunta. Imagina una flecha
 que comienza en el **origen** y va hacia la [STRIKEOUT:posición]. La
-punta de la flecha esta en la posición, por lo que siempre apunta hacia
-afuera, alejandose del origen. Imaginarse vectores como flechas ayuda
+punta de la flecha está en la posición, por lo que siempre apunta hacia
+afuera, alejándose del origen. Imaginarse vectores como flechas ayuda
 mucho.
 
 .. image:: /img/tutovec3b.png
@@ -65,7 +65,7 @@ Magnitud
 
 Finalmente, el largo del vector es la distancia desde el origen hasta la
 posición. Obtener el largo del vector es fácil, solo usa el te teorema
-Pitagorico <http://en.wikipedia.org/wiki/Pythagorean_theorem>`__.
+Pitagórico <http://en.wikipedia.org/wiki/Pythagorean_theorem>`__.
 
 ::
 
@@ -74,9 +74,9 @@ Pitagorico <http://en.wikipedia.org/wiki/Pythagorean_theorem>`__.
 Pero... ángulos?
 ----------------
 
-Pero porque no usar un *ángulo*? Despues de todo, podriamos pensar de
+Pero porque no usar un *ángulo*? Después de todo, podríamos pensar de
 un vector como un ángulo y una magnitud, en lugar de una dirección y
-una magnitud. Los ángulos también son un concepto mas familiar.
+una magnitud. Los ángulos también son un concepto más familiar.
 
 Para decir la verdad, los ángulos no son tan útiles en matemática de
 vectores, y la mayoría del tiempo no se los trata directamente. Tal vez
@@ -84,24 +84,24 @@ funcionen en 2D, pero en 3D un montón de lo que usualmente puede ser
 hecho con ángulos no funciona.
 
 Igual, usar ángulos no es una excusa, aun en 2D. La mayoría de lo que
-toma un monton de trabajo con ángulos en 2D, es de todas formas mas
-natural y facil de lograr con matemática de vectores. En matemática
+toma un montón de trabajo con ángulos en 2D, es de todas formas mas
+natural y fácil de lograr con matemática de vectores. En matemática
 vectorial, los ángulos son útiles solo como medida, pero tienen poca
-participacion en la matemática. Entonces, deja de lado la trigonometria
-de una vez, y preparate para adoptar vectores!
+participación en la matemática. Entonces, deja de lado la trigonometría
+de una vez, y prepárate para adoptar vectores!
 
-En cualquier caso, obtener el angulo desde el vector es fácil y puede
+En cualquier caso, obtener el ángulo desde el vector es fácil y puede
 ser logrado con trig... er, que fue eso? Digo, la función
 :ref:`atan2() <class_@GDScript_atan2>`.
 
 Vectores es Godot
 ~~~~~~~~~~~~~~~~
 
-Para hacer los ejemplos mas fáciles, vale la pena explicar como los
+Para hacer los ejemplos más fáciles, vale la pena explicar cómo los
 vectores son implementados en GDScript. GDscript tiene ambos
 :ref:`Vector2 <class_Vector2>` y :ref:`Vector3 <class_Vector3>`,
 para matemática 2D y 3D respectivamente. Godot usa clases de vectores
-tanto para posición como dirección. Tambien contienen variables miembro
+tanto para posición como dirección. También contienen variables miembro
 x e y (para 2D) y x, y, z (para 3D).
 
 
@@ -115,8 +115,8 @@ x e y (para 2D) y x, y, z (para 3D).
     b.y = 8
 
 Cuando se opera con vectores, no es necesario operar directamente en
-los miembros (en realidad esto es mucho mas lento). Los vectores
-soportan operaciones aritmeticas regulares:
+los miembros (en realidad esto es mucho más lento). Los vectores
+soportan operaciones aritméticas regulares:
 
 ::
 
@@ -132,13 +132,13 @@ Es lo mismo que hacer:
     c.x = a.x + b.x
     c.y = a.y + b.y
 
-Excepto que lo primero es mucho mas eficiente y legible.
+Excepto que lo primero es mucho más eficiente y legible.
 
-Las operaciones aritemticas regulares como adición, sustracción,
-multiplicación y division son soportadas.
+Las operaciones aritméticas regulares como adición, sustracción,
+multiplicación y división son soportadas.
 
-La multiplicación y división tambien puede ser mezclada con numeros
-de digito unico, también llamados **escalares**.
+La multiplicación y división también puede ser mezclada con números
+de digito único, también llamados **escalares**.
 
 ::
 
@@ -154,12 +154,12 @@ Es lo mismo que hacer
     c.x = a.x*2.0
     c.y = a.y*2.0
 
-Excepto que, nuevamente, lo primero es mucho mas eficiente y legible.
+Excepto que, nuevamente, lo primero es mucho más eficiente y legible.
 
 Vectores perpendiculares
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Rotar un vector 2D 90º para algun lado, izquierda o derecha, es realmente
+Rotar un vector 2D 90º para algún lado, izquierda o derecha, es realmente
 fácil, solo intercambia x e y, luego niega x o y (la dirección de la
 rotación depende en cual es negado).
 
@@ -170,9 +170,9 @@ Ejemplo:
 ::
 
     var v = Vector2(0,1)
-    # rotar a la derecha (como las agujas del reloj)
+    # rotar a la derecha (horario)
     var v_right = Vector2(-v.y, v.x)
-    # rotar a la izquierda (al reves de las agujas del reloj)
+    # rotar a la izquierda (antihorario)
     var v_right = Vector2(v.y, -v.x)
 
 Este es un truco práctico que se usa a menudo. Es imposible de hacer con
@@ -182,7 +182,7 @@ Vectores unitarios
 ~~~~~~~~~~~~~~~~~~
 
 OK, entonces sabemos lo que es un vector. Tiene una **dirección** y una
-**magnitud**. Tambien sabemos como usarlos en Godot. El siguiente paso
+**magnitud**. También sabemos cómo usarlos en Godot. El siguiente paso
 es aprender sobre **vectores unitarios**. Cualquier vector con una
 magnitud de largo 1 es considerado un **vector unitario**. En 2D,
 imagina dibujar un circulo de radio uno. Ese círculo contiene todos
@@ -194,8 +194,8 @@ Entonces, que es tan especial sobre los vectores unitarios? Los vectores
 unitarios son asombrosos. En otras palabras, los vectores unitarios
 tienen **varias propiedades muy útiles**.
 
-No puedes esperar a saber mas sobre las fantasticas propiedades de los
-vectores unitarios, pero un paso a la vez. Asi que, como se crea un
+No puedes esperar a saber más sobre las fantásticas propiedades de los
+vectores unitarios, pero un paso a la vez. Así que, como se crea un
 vector unitario a partir de un vector regular?
 
 Normalización
@@ -213,11 +213,11 @@ magnitud:
     a.x /= m
     a.y /= m
 
-Como habras adivinado, si el vector tiene magnitud 0 (lo que significa
-que no es un vector pero el **origen** tambien llamado *vector nulo*),
-ocurre una division por 0 y el universo atraviesa un segundo big bang,
+Como habrás adivinado, si el vector tiene magnitud 0 (lo que significa
+que no es un vector pero el **origen** también llamado *vector nulo*),
+ocurre una división por 0 y el universo atraviesa un segundo big bang,
 excepto que en polaridad reversa y luego de vuelta. Como resultado,
-la humanidad esta a salvo pero Godot imprimira un error. Recuerda!
+la humanidad está a salvo pero Godot imprimira un error. Recuerda!
 El vector (0,0) no puede ser normalizado!.
 
 Por supuesto, Vector2 y Vector3 ya tienen un método para esto:
@@ -229,12 +229,12 @@ Por supuesto, Vector2 y Vector3 ya tienen un método para esto:
 Producto escalar
 ~~~~~~~~~~~~~~~~
 
-OK, el **producto escalar** es la parte mas importante de matemática
+OK, el **producto escalar** es la parte más importante de matemática
 de vectores. Sin el producto escalar, Quake nunca hubiera sido hecho.
-Esta es la sección mas importante del tutorial, así que asegurate que
+Esta es la sección más importante del tutorial, así que asegúrate que
 lo entiendes. La mayoria de la gente que intenta aprender matemática
-de vectores abandona aca, a pesar de lo simple que es, no le encunetran
-pie ni cabeza. Porque? Aquí esta el porque, es porque...
+de vectores abandona acá, a pesar de lo simple que es, no le encuetran
+pie ni cabeza. Porque? Aquí está el porqué, es porque...
 
 El producto escalar toma dos vectores y regresa un **escalar**:
 
@@ -243,7 +243,7 @@ El producto escalar toma dos vectores y regresa un **escalar**:
     var s = a.x*b.x + a.y*b.y
 
 Si, básicamente eso. Multiplica **x** del vector **a** por **x** del
-vector **b**. Haz lo mismo con y, luego sumalo. En 3D es muy parecido:
+vector **b**. Haz lo mismo con y, luego súmalo. En 3D es muy parecido:
 
 ::
 
@@ -256,32 +256,32 @@ incorporada:
 
     var s = a.dot(b)
 
-El órden de los dos vectores *no* importa, ``a.dot(b)`` retorna el
+El orden de los dos vectores *no* importa, ``a.dot(b)`` retorna el
 mismo valor que ``b.dot(b)``.
 
 Aquí es donde empieza la desesperación y los libros y tutoriales te
-muestran esta formula:
+muestran esta fórmula:
 
 .. image:: /img/tutovec4.png
 
 Y te das cuenta que es tiempo de abandonar el desarrollo de juegos 3D
 o 2D complejos. Como puede ser que algo tan simple sea tan complejo?
-Alguien mas tendra que hacer el proximo Zelda o Call of Duty. Los
-RPGs vistos de arriba no lucen tan mal despues de todo. Sip, escuche
+Alguien más tendrá que hacer el próximo Zelda o Call of Duty. Los
+RPGs vistos de arriba no lucen tan mal después de todo. Sip, escuche
 que alguien lo ha hecho bastante bien con uno de esos en steam...
 
 Así que este es tu momento, tu tiempo de brillar. **NO TE RINDAS**!
-En este punto, el tutorial tomara un giro rapido y se enfocara en
-lo que hace útil al producto escalar. Esto es, **porque** es util.
+En este punto, el tutorial tomara un giro rápido y se enfocara en
+lo que hace útil al producto escalar. Esto es, **porque** es útil.
 Nos enfocaremos uno por uno en los casos de uso del producto escalar,
-con aplicacion en la vida real. No mas forumlas que no hacen ningun
-sentido. Las formulas tendran un montón de sentido *una vez que aprendes*
+con aplicación en la vida real. No más fórmulas que no tienen ningún
+sentido. Las formulas tendrán un montón de sentido *una vez que aprendes*
 para que son útiles.
 
 Lado
 ------
 
-La primer útilidad y mas imporante propiedad del producto escalar es
+La primer utilidad y mas importante propiedad del producto escalar es
 para chequear para que lado miran las cosas. Imaginemos que tenemos
 dos vectores cualquiera, **a** y **b**. Cualquier **dirección** o
 **magnitud** (menos el **origen**). No importa lo que sean, solo
@@ -291,13 +291,13 @@ imaginemos que computamos el producto escalar entre ellos.
 
     var s = a.dot(b)
 
-La operación retornara un único numero de punto flotante (pero como
+La operación retornara un único número de punto flotante (pero como
 estamos en el mundo de vectores, lo llamamos **scalar**, seguiremos
-usando ese termino de ahora en mas). El número nos dira lo siguiente:
+usando ese término de ahora en más). El número nos dirá lo siguiente:
 
--  Si el número es mas grande que zero, ambos estan mirando hacia la
+-  Si el número es más grande que cero, ambos están mirando hacia la
    misma dirección (el ángulo entre ellos es < 90° grados).
--  Si el numero es menor que zero, ambos estan mirando en direcciones
+-  Si el número es menor que cero, ambos están mirando en direcciones
    opuestas (el ángulo entre ellos es > 90° grados).
 -  Si el número es cero, los vectores tienen forma de L (el ángulo
    entre ellos *es* 90° grados).
@@ -305,14 +305,14 @@ usando ese termino de ahora en mas). El número nos dira lo siguiente:
 .. image:: /img/tutovec5.png
 
 Así que pensemos de un escenario de caso de uso real. Imaginemos que
-una serpiente esta yendo por un bosque, y esta el enemigo cerca. Como
-podemos decir rapidamente si el enemigo descubrio la serpiente? Para
+una serpiente está yendo por un bosque, y esta el enemigo cerca. Como
+podemos decir rápidamente si el enemigo descubrió la serpiente? Para
 poder descubrirla, el enemigo debe poder *ver* la serpiente. Digamos,
 entonces que:
 
--  La serpiente esta en la posicion **A**.
--  El enemigo esta en la posicion **B**.
--  El enemigo esta *mirando* por el vector de dirección **F**.
+-  La serpiente está en la posición **A**.
+-  El enemigo está en la posición **B**.
+-  El enemigo está *mirando* por el vector de dirección **F**.
 
 .. image:: /img/tutovec6.png
 
@@ -325,50 +325,50 @@ Así que, vamos a crear un nuevo vector **BA** que va desde el guardia
 
 .. image:: /img/tutovec7.png
 
-Idealmente, si el guardia esta mirando hacia la serpiente, para hacer
-contacto de ojo, necesitaria hacerlo en la misma dirección que el vector
+Idealmente, si el guardia está mirando hacia la serpiente, para hacer
+contacto de ojo, necesitaría hacerlo en la misma dirección que el vector
 BA.
 
 Si el producto escalar entre **F** y **BA** es mayor que 0, entonces la
-serpiente sera descubierta. Esto sucede porque podremos saber si el
-guardia esta mirando hacia ese lado:
+serpiente será descubierta. Esto sucede porque podremos saber si el
+guardia está mirando hacia ese lado:
 
 ::
 
     if (BA.dot(F) > 0):
         print("!")
 
-Parece que la serpiente esta a salvo por ahora.
+Parece que la serpiente está a salvo por ahora.
 
 Lado con vectores unitarios
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bien, entonces ahora sabemos que el producto escalar entre dos vectores
 nos dejara saber si miran hacia el mismo lado, lados contrarios o son
-perpendiculares entre si.
+perpendiculares entre sí.
 
 Esto funciona igual con todos los vectores, no importa la magnitud por
 lo que los **vectores unitarios** no son la excepción. Sin embargo,
 usando las mismas propiedades con los vectores unitarios brinda un
-resultado aun mas interesante, ya que se agrega una propiedad extra:
+resultado aun más interesante, ya que se agrega una propiedad extra:
 
--  Si ambos vectores estan mirando exactamente hacia la misma dirección
+-  Si ambos vectores están mirando exactamente hacia la misma dirección
    (paralelos, ángulo entre ellos de 0°), el escalar resultante es **1**.
--  Si ambos vectores estan mirando en dirección exactamente opuesta
+-  Si ambos vectores están mirando en dirección exactamente opuesta
    (paralelos, ángulo entre ellos es 180°), el escalar resultante es
    **-1**.
 
 Esto significa que el producto escalar entre dos vectores unitarios
 siempre esta en el rango de 1 a -1. Asique de nuevo...
 
--  Si su angulo es **0°** el producto escalar es **1**.
--  Si su angulo es **90°** el producto escalar es **0**.
--  Si su angulo es **180°** el producto escalar es **-1**.
+-  Si su ángulo es **0°** el producto escalar es **1**.
+-  Si su ángulo es **90°** el producto escalar es **0**.
+-  Si su ángulo es **180°** el producto escalar es **-1**.
 
-Mm... esto es extrañamente familiar... lo he visto antes... donde?
+Mm... esto es extrañamente familiar... lo he visto antes... dónde?
 
 Tomemos dos vectores unitarios. El primero apunta hacia arriba, el
-segundo tambien pero lo rotaremos desde arriba (0°) hasta abajo
+segundo también pero lo rotaremos desde arriba (0°) hasta abajo
 (180°)...
 
 .. image:: /img/tutovec8.png
@@ -411,16 +411,16 @@ Planos
 ~~~~~~
 
 El producto escalar tiene otra propiedad interesante con los vectores
-unitarios. Imagina que perpendicular al vector (y a traves del origen)
-pasa un plano. Los planos dividen el espacio entreo entre positivo
+unitarios. Imagina que perpendicular al vector (y a través del origen)
+pasa un plano. Los planos dividen el espacio entero entre positivo
 (sobre el plano) y negativo (bajo el plano), y (contrario a la creencia
-popular) tambien puedes usar su matemática en 2D:
+popular) también puedes usar su matemática en 2D:
 
 .. image:: /img/tutovec10.png
 
 Los vectores unitarios que son perpendiculares a la superficie (por lo
-que, ellos describen la orientacion de la superficie) son llamados
-**vectores unitarios normales**. Aunque, usualmente se abrebian solo
+que, ellos describen la orientación de la superficie) son llamados
+**vectores unitarios normales**. Aunque, usualmente se abrevian solo
 como \*normals. Las normales aparecen en planos, geometría 3D (para
 determinar hacia donde mira cada cara o vector), etc. Una **normal**
 *es* un **vector unitario**, pero se llama *normal* por su uso.
@@ -431,187 +431,188 @@ de el es perpendicular al vector unitario (o *normal*). El lado hacia
 el cual apunta el vector es el medio-espacio positivo, mientras que
 el otro lado es el medio-espacio negativo. En 3D esto es exactamente
 lo mismo, excepto que el plano es una superficie infinita (imagina
-una pila de papel plana e infinita que puedes orientar y esta sujeta
+una pila de papel plana e infinita que puedes orientar y está sujeta
 al origen) en lugar de una línea.
 
-Distance to plane
+Distancia a plano
 -----------------
 
-Now that it's clear what a plane is, let's go back to the dot product.
-The dot product between a **unit vector** and any **point in space**
-(yes, this time we do dot product between vector and position), returns
-the **distance from the point to the plane**:
-
+Ahora que está claro lo que es un plano, vamos nuevamente al producto
+escalar. El producto escalar entre dos **vectores unitarios* y cualquier
+**punto en el espacio** (si, esta vez hacemos el producto escalar entre
+vector y posición), regresa la **distancia desde el punto al plano**:
 ::
 
     var distance = normal.dot(point)
 
-But not just the absolute distance, if the point is in the negative half
-space the distance will be negative, too:
+Pero no solo la distancia absoluta, si el punto está en en la mitad
+negativa del espacio la distancia será negativa, también:
 
 .. image:: /img/tutovec11.png
 
-This allows us to tell which side of the plane a point is.
+Esto nos permite saber de qué lado de un plano esta un punto.
 
-Away from the origin
---------------------
+Fuera del origen
+----------------
 
-I know what you are thinking! So far this is nice, but *real* planes are
-everywhere in space, not only passing through the origin. You want real
-*plane* action and you want it *now*.
+Se lo que estás pensando! Hasta ahora viene bien, pero los planos
+*verdaderos* están por todos lados en el espacio, no solo pasando por
+el origen. Quieres acción con *planos* reales y lo quieres *ahora*.
 
-Remember that planes not only split space in two, but they also have
-*polarity*. This means that it is possible to have perfectly overlapping
-planes, but their negative and positive half-spaces are swapped.
+Recuerda que los planos no solo dividen el espacio en dos, pero también
+tienen *polaridad*. Esto significa que es posible tener planos
+perfectamente superpuestos, pero sus espacios negativos y positivos
+están intercambiados.
 
-With this in mind, let's describe a full plane as a **normal** *N* and a
-**distance from the origin** scalar *D*. Thus, our plane is represented
-by N and D. For example:
+Con esto en mente, vamos a describir un plano completo como una **normal**
+*N* y una **distancia desde origen** escalar *D*. Entonces, nuestro plano
+es representado por N y D. Por ejemplo:
 
 .. image:: /img/tutovec12.png
 
-For 3D math, Godot provides a :ref:`Plane <class_Plane>`
-built-in type that handles this.
+Para matemática 3D, Godot provee un tipo incorporado :ref:`Plane <class_Plane>`
+que maneja esto.
 
-Basically, N and D can represent any plane in space, be it for 2D or 3D
-(depending on the amount of dimensions of N) and the math is the same
-for both. It's the same as before, but D is the distance from the origin
-to the plane, travelling in N direction. As an example, imagine you want
-to reach a point in the plane, you will just do:
+Básicamente, N y D pueden representar cualquier plano en el espacio, sea
+2D o 3D (dependiendo de la cantidad de las dimensiones de N) y la
+matemática es la misma para ambos. Es lo mismo que antes, pero D es la
+distancia desde el origen al plano, viajando en dirección N. Como un
+ejemplo, imagina que quieres llegar a un punto en el plano, solo harías:
 
 ::
 
     var point_in_plane = N*D
 
-This will stretch (resize) the normal vector and make it touch the
-plane. This math might seem confusing, but it's actually much simpler
-than it seems. If we want to tell, again, the distance from the point to
-the plane, we do the same but adjusting for distance:
+Esto va a estirar (cambiar el tamaño) el vector normal y lo hará tocar el
+plano. Esta matemática puede parecer confusa, pero es en realidad mucho
+más simple de lo que parece. Si queremos saber, nuevamente, la distancia de
+un punto al plano, hacemos lo mismo pero ajustándolo para la distancia:
 
 ::
 
     var distance = N.dot(point) - D
 
-The same thing, using a built-in function:
+Lo mismo, usando una función incorporada:
 
 ::
 
     var distance = plane.distance_to(point)
 
-This will, again, return either a positive or negative distance.
+Esto, nuevamente, regresara una distancia positiva o negativa.
 
-Flipping the polarity of the plane is also very simple, just negate both
-N and D. This will result in a plane in the same position, but with
-inverted negative and positive half spaces:
+Dar vuelta la polaridad del plano también es muy simple, solo niega
+ambos N y D. Esto resultara en un plano en la misma posición, pero
+invirtiendo las mitades positivas y negativas del espacio:
 
 ::
 
     N = -N
     D = -D
 
-Of course, Godot also implements this operator in :ref:`Plane <class_Plane>`,
-so doing:
+Por supuesto, Godot también implementa el operador en :ref:`Plane <class_Plane>`,
+por lo que haciendo:
 
 ::
 
     var inverted_plane = -plane
 
-Will work as expected.
+Funcionará como se espera.
 
-So, remember, a plane is just that and it's main practical use is
-calculating the distance to it. So, why is it useful to calculate the
-distance from a point to a plane? It's extremely useful! Let's see some
-simple examples..
+Así que, recuerda, un plano es solo eso y su uso práctico más importante
+es calcular la distancia a él. Entonces, por qué es útil calcular la
+distancia desde un punto al plano? Es extremadamente útil! Vamos a ver
+algunos ejemplos simples..
 
-Constructing a plane in 2D
---------------------------
+Construyendo un plano en 2D
+---------------------------
 
-Planes clearly don't come out of nowhere, so they must be built.
-Constructing them in 2D is easy, this can be done from either a normal
-(unit vector) and a point, or from two points in space.
+Los planos claramente no vienen de la nada, así que deben ser construidos.
+Construirlos en 2D es fácil, esto puede ser hecho ya sea de una normal
+(vector unitario) y un punto, o de dos puntos en el espacio.
 
-In the case of a normal and a point, most of the work is done, as the
-normal is already computed, so just calculate D from the dot product of
-the normal and the point.
+En el caso de la normal y el punto, la mayor parte del trabajo está hecho,
+porque la normal ya está computada, por lo q es solo calcular D desde el
+producto escalar de la normal y el punto.
 
 ::
 
     var N = normal
     var D = normal.dot(point)
 
-For two points in space, there are actually two planes that pass through
-them, sharing the same space but with normal pointing to the opposite
-directions. To compute the normal from the two points, the direction
-vector must be obtained first, and then it needs to be rotated 90°
-degrees to either side:
+Para dos puntos en el espacio, hay en realidad dos planos que pasan por
+ellos, compartiendo el mismo espacio pero con la normal apuntando en
+direcciones opuestas. Para computar la normal desde los dos puntos, el
+vector de dirección debe ser obtenido en primer lugar, y luego necesita
+ser rotado 90° para cualquiera de los dos lados:
 
 ::
 
-    # calculate vector from a to b
+    # calcular vector desde a to b
     var dvec = (point_b - point_a).normalized()
-    # rotate 90 degrees
+    # rotatr 90 grados
     var normal = Vector2(dvec.y,-dev.x)
-    # or alternatively
+    # o alternativamente
     # var normal = Vector2(-dvec.y,dev.x)
-    # depending the desired side of the normal
+    # dependiendo del lado deseado de la normal
 
-The rest is the same as the previous example, either point_a or
-point_b will work since they are in the same plane:
+El resto es lo mismo que en el ejemplo previo, tanto point_a o point_b
+funcionará ya que están en el mismo plano:
 
 ::
 
     var N = normal
     var D = normal.dot(point_a)
-    # this works the same
+    # esto funciona igual
     # var D = normal.dot(point_b)
 
-Doing the same in 3D is a little more complex and will be explained
-further down.
 
-Some examples of planes
------------------------
+Hacer lo mismo en 3D es un poco más complejo y será explicado mas abajo.
 
-Here is a simple example of what planes are useful for. Imagine you have
-a `convex <http://www.mathsisfun.com/definitions/convex.html>`__
-polygon. For example, a rectangle, a trapezoid, a triangle, or just any
-polygon where faces that don't bend inwards.
+Algunos ejemplos de planos
+--------------------------
 
-For every segment of the polygon, we compute the plane that passes by
-that segment. Once we have the list of planes, we can do neat things,
-for example checking if a point is inside the polygon.
+Aquí hay un ejemplo simple sobre para que son útiles los planos. Imagina
+que tienes un polígono `convexo <http://www.mathsisfun.com/definitions/convex.html>`__
+Por ejemplo, un rectángulo, un trapezoide, un triángulo, o el polígono que
+sea donde las caras no se doblan hacia adentro.
 
-We go through all planes, if we can find a plane where the distance to
-the point is positive, then the point is outside the polygon. If we
-can't, then the point is inside.
+Para cada segmento del polígono, computamos el plano que pasa por dicho
+segmento. Una vez tenemos la lista de planos, podemos hacer cosas
+interesantes, por ejemplo chequear si un punto está dentro de un polígono.
+
+Vamos a través de todos los planos, si podemos encontrar un plano donde la
+distancia al punto es positiva, entonces el punto está fuera del polígono.
+Si no podemos, está dentro
 
 .. image:: /img/tutovec13.png
 
-Code should be something like this:
+El código sería algo como esto:
 
 ::
 
     var inside = true
     for p in planes:
-        # check if distance to plane is positive
+        # chequear si la distancia al plano es positiva
         if (N.dot(point) - D > 0):
             inside = false
-            break # with one that fails, it's enough
+            break # si falla uno, es suficiente
 
-Pretty cool, huh? But this gets much better! With a little more effort,
-similar logic will let us know when two convex polygons are overlapping
-too. This is called the Separating Axis Theorem (or SAT) and most
-physics engines use this to detect collision.
+Bastante copado, eh? Pero se pone mucho mejor! Con un poco más de
+esfuerzo, lógica similar nos permitirá saber cuándo dos polígonos
+convexos están superpuestos también. Esto se llama "Teorema de separación
+de ejes" (Separating Axis Theorem SAT) y la mayoría de los motores de
+física lo usan para detectar colisiones.
 
-The idea is really simple! With a point, just checking if a plane
-returns a positive distance is enough to tell if the point is outside.
-With another polygon, we must find a plane where *all the **other**
-polygon points* return a positive distance to it. This check is
-performed with the planes of A against the points of B, and then with
-the planes of B against the points of A:
+La idea es realmente simple! Con un punto, solo chequear si un plano
+retorna una distancia positiva es suficiente para saber si el punto
+esta afuera. Con otro polígono, debemos encontrar un plano donde *todos
+los **demás** puntos del polígono* retornan una distancia positiva a él.
+Este chequeo es hecho con los planos A contra los puntos de B, y luego con
+los planos B contra los puntos de A:
 
 .. image:: /img/tutovec14.png
 
-Code should be something like this:
+El código debería ser parecido a esto:
 
 ::
 
@@ -625,14 +626,14 @@ Code should be something like this:
                 break
 
         if (all_out):
-            # a separating plane was found
-            # do not continue testing
+            # se encontró un plano separador
+            # no continuar probando
             overlapping = false
             break
 
     if (overlapping):
-        # only do this check if no separating plane
-        # was found in planes of A
+        # solo haz este chequeo si no se encontraron planos
+        # de separación en los planos de A
         for p in planes_of_B:
             var all_out = true
             for v in points_of_A:
@@ -645,39 +646,41 @@ Code should be something like this:
                 break
 
     if (overlapping):
-        print("Polygons Collided!")
+        print("Los polígonos colisionaron!")
 
-As you can see, planes are quite useful, and this is the tip of the
-iceberg. You might be wondering what happens with non convex polygons.
-This is usually just handled by splitting the concave polygon into
-smaller convex polygons, or using a technique such as BSP (which is not
-used much nowadays).
+Como puedes ver, los planos son bastante útiles, y esto es la punta del
+iceberg. Puedes estarte preguntando que sucede con los polígonos no
+convexos. Esto en general se hace dividiendo el polígono concavo en
+polígonos convexos mas pequeños, o usando una técnica como BSP (la cual
+ya no se usa mucho hoy en día).
 
-Cross product
--------------
 
-Quite a lot can be done with the dot product! But the party would not be
-complete without the cross product. Remember back at the beginning of
-this tutorial? Specifically how to obtain a perpendicular (rotated 90
-degrees) vector by swapping x and y, then negating either of them for
-right (clockwise) or left (counter-clockwise) rotation? That ended up
-being useful for calculating a 2D plane normal from two points.
 
-As mentioned before, no such thing exists in 3D because a 3D vector has
-infinite perpendicular vectors. It would also not make sense to obtain a
-3D plane from 2 points, as 3 points are needed instead.
+Producto Vectorial
+------------------
 
-To aid in this kind stuff, the brightest minds of humanity's top
-mathematicians brought us the **cross product**.
+Un montón puede ser hecho con el producto escalar! Pero la fiesta no
+seria completa sin el producto vectorial. Recuerdas al comienzo de este
+tutorial? Específicamente como obtener un vector perpendicular (rotado
+90 grados) al intercambiar x e y, luego negando uno para rotación derecha
+(horario) o izquierda (anti-horario)? Eso termino siendo útil para
+calcular un plano 2D normal desde dos puntos.
 
-The cross product takes two vectors and returns another vector. The
-returned third vector is always perpendicular to the first two. The
-source vectors, of course, must not be the same, and must not be
-parallel or opposite, else the resulting vector will be (0,0,0):
+Como se mencionó antes, no existe tal cosa en 3D porque un vector 3D
+tiene infinitos vectores perpendiculares. Tampoco tendría sentido obtener
+un plano 3D con 2 puntos, ya que en su lugar se necesitan 3 puntos.
+
+Para ayudarnos con este tipo de cosas, las mentes más brillantes de los
+principales matemáticos nos trajo el **producto vectorial**.
+
+El producto vectorial toma dos vectores y retorna otro vector. El tercer
+vector retornado siempre es perpendicular a los dos primeros. Los vectores
+fuente, por supuesto, no deben ser iguales, y no deben ser paralelos u
+opuestos, de lo contrario el vector resultante será (0,0,0):
 
 .. image:: /img/tutovec16.png
 
-The formula for the cross product is:
+La formula para el producto vectorial es:
 
 ::
 
@@ -686,31 +689,33 @@ The formula for the cross product is:
     c.y = (a.z + b.x) - (a.x + b.z)
     c.z = (a.x + b.y) - (a.y + b.x)
 
-This can be simplified, in Godot, to:
+Esto puede ser simplificado, en Godot, a:
 
 ::
 
     var c = a.cross(b)
 
-However, unlike the dot product, doing ``a.cross(b)`` and ``b.cross(a)``
-will yield different results. Specifically, the returned vector will be
-negated in the second case. As you might have realized, this coincides
-with creating perpendicular vectors in 2D. In 3D, there are also two
-possible perpendicular vectors to a pair of 2D vectors.
+Sin embargo, a diferencia del producto escalar, hacer ``a.cross(b)`` y
+``b.cross(a)`` producirá resultados diferentes. Específicamente, el
+vector retornado será negado para el segundo caso. Como te habrás dado
+cuenta, esto coincide con crear planos perpendiculares en 2D. En 3D,
+también hay dos posibles vectores perpendiculares a un par de vectores
+2D.
 
-Also, the resulting cross product of two unit vectors is *not* a unit
-vector. Result will need to be renormalized.
+Además, el resultado del producto vectorial de dos vectores unitarios
+*no* es un vector unitario. El resultado deberá ser re normalizado.
 
-Area of a triangle
-~~~~~~~~~~~~~~~~~~
+área de un triángulo
+~~~~~~~~~~~~~~~~~~~~
 
-Cross product can be used to obtain the surface area of a triangle in
-3D. Given a triangle consisting of 3 points, **A**, **B** and **C**:
+El producto vectorial puede ser usado para obtener la superficie de un
+triángulo en 3D. Dado que un triángulo consiste de 3 puntos, **A**, *B***
+y **C**:
 
 .. image:: /img/tutovec17.png
 
-Take any of them as a pivot and compute the adjacent vectors to the
-other two points. As example, we will use B as a pivot:
+Toma cualquiera de ellos como un pívot y computa los vectores adyacentes
+a los otros dos puntos. A modo de ejemplo: usaremos B como pívot.
 
 ::
 
@@ -719,8 +724,8 @@ other two points. As example, we will use B as a pivot:
 
 .. image:: /img/tutovec18.png
 
-Compute the cross product between **BA** and **BC** to obtain the
-perpendicular vector **P**:
+Computa el producto vectorial entre **BA** y **BC** para obtener el
+vector perpendicular **P**:
 
 ::
 
@@ -728,101 +733,102 @@ perpendicular vector **P**:
 
 .. image:: /img/tutovec19.png
 
-The length (magnitude) of **P** is the surface area of the parallelogram
-built by the two vectors **BA** and **BC**, therefore the surface area
-of the triangle is half of it.
+El largo (magnitud) de **P** es la superficie del área del paralelogramo
+construido por los dos vectores **BA** y **BC**, por lo cual el área de
+superficie del triángulo es la mitad de él.
 
 ::
 
     var area = P.length()/2
 
-Plane of the triangle
+Plano de un triángulo
 ~~~~~~~~~~~~~~~~~~~~~
 
-With **P** computed from the previous step, normalize it to get the
-normal of the plane.
+Con **P** computado desde el paso previo, normalizalo para obtener la
+normal del plano.
 
 ::
 
     var N = P.normalized()
 
-And obtain the distance by doing the dot product of P with any of the 3
-points of the **ABC** triangle:
+Y obtiene la distancia al hacer el producto escalar de P con cualquiera
+de los 3 puntos del triángulo **ABC**:
 
 ::
 
     var D = P.dot(A)
 
-Fantastic! You computed the plane from a triangle!
+Fantástico! Computaste el plano desde un triángulo!
 
-Here's some useful info (that you can find in Godot source code anyway).
-Computing a plane from a triangle can result in 2 planes, so a sort of
-convention needs to be set. This usually depends (in video games and 3D
-visualization) to use the front-facing side of the triangle.
+Aquí un poco de información útil (que puedes encontrar en el código
+fuente de Godot de todas formas). Computar un plano desde un triángulo
+puede resultar en 2 planos, por lo que alguna convención debe ser
+ajustada. Esto usualmente depende (en juegos de video y para visualización
+3D) en usar el lado del triángulo que mira al frente.
 
-In Godot, front-facing triangles are those that, when looking at the
-camera, are in clockwise order. Triangles that look Counter-clockwise
-when looking at the camera are not drawn (this helps to draw less, so
-the back-part of the objects is not drawn).
+En Godot, los triángulos que miran al frente son aquellos que, cuando
+cuando están mirando a la cámara, están en orden horario. Los triángulos
+que miran de forma anti horaria a la cámara no son dibujados (esto ayuda
+a dibujar menos, así la parte trasera de los objetos no es dibujada).
 
-To make it a little clearer, in the image below, the triangle **ABC**
-appears clock-wise when looked at from the *Front Camera*, but to the
-*Rear Camera* it appears counter-clockwise so it will not be drawn.
+Para hacerlo un poco más claro, en la imagen de abajo, el triángulo
+**ABC** aparece de forma horaria cuando se lo mira desde la *Cámara
+Frontal*, pero a la *Cámara trasera* aparece como anti horario por lo
+que no será dibujado.
 
 .. image:: /img/tutovec20.png
 
-Normals of triangles often are sided towards the direction they can be
-viewed from, so in this case, the normal of triangle ABC would point
-towards the front camera:
+Las normales de los triángulos a menudo están hacia el lado de
+dirección que se pueden ver, por lo que en este caso, la normal del
+triángulo ABC apuntaría hacia la cámara frontal:
 
 .. image:: /img/tutovec21.png
 
-So, to obtain N, the correct formula is:
+Así que, para obtener N, la formula correcta es:
 
 ::
 
-    # clockwise normal from triangle formula
+    #  normal horaria de la fórmula del triángulo
     var N = (A-C).cross(A-B).normalized()
-    # for counter-clockwise:
+    # para anti horario:
     # var N = (A-B).cross(A-C).normalized()
     var D = N.dot(A)
 
-Collision detection in 3D
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Detección de colisión en 3D
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is another bonus bit, a reward for being patient and keeping up
-with this long tutorial. Here is another piece of wisdom. This might
-not be something with a direct use case (Godot already does collision
-detection pretty well) but It's a really cool algorithm to understand
-anyway, because it's used by almost all physics engines and collision
-detection libraries :)
+Este es otro pequeño bono, una recompensa por ser paciente y mantenerse
+en este largo tutorial. Aquí hay otra pieza de sabiduría. Esto puede no
+ser algo con un caso de uso directo (Godot ya hace la detección de
+colisión bastante bien) pero es un algoritmo realmente copado para
+entender de todas formas, porque es usado por casi todos los motores
+físicos y librerías de detección de colisión :)
 
-Remember that converting a convex shape in 2D to an array of 2D planes
-was useful for collision detection? You could detect if a point was
-inside any convex shape, or if two 2D convex shapes were overlapping.
+Recuerdas que convertir una figura 2D convexa a un arreglo de planos
+2D fue útil para la detección de colisión? Puedes detectar si un punto
+estaba dentro de una figura convexa, o si dos figuras 2D convexas están
+superpuestas.
 
-Well, this works in 3D too, if two 3D polyhedral shapes are colliding,
-you won't be able to find a separating plane. If a separating plane is
-found, then the shapes are definitely not colliding.
+Bueno, esto funciona en 3D también, si dos figuras 3D poliedros están
+colisionando, no podrás encontrar un plano separador. Si un plano
+separador se encuentra, entonces las formas definitivamente no están
+colisionando.
 
-To refresh a bit a separating plane means that all vertices of polygon A
-are in one side of the plane, and all vertices of polygon B are in the
-other side. This plane is always one of the face-planes of either
-polygon A or polygon B.
-
-In 3D though, there is a problem to this approach, because it is
-possible that, in some cases a separating plane can't be found. This is
-an example of such situation:
+Para refrescar un poco un plano separador significa que todos los
+vértices del polígono A están en un lado del plano, y todos los
+vértices del polígono B están en el otro lado. Este plano es siempre
+uno de los planos de las caras del polígono A o B.
 
 .. image:: /img/tutovec22.png
 
-To avoid it, some extra planes need to be tested as separators, these
-planes are the cross product between the edges of polygon A and the
-edges of polygon B
+Para evitarlo, algunos planos extra deben ser probados como separadores,
+estos planos con el producto vectorial entre los lados del polígono A y
+los lados del polígono B:
+
 
 .. image:: /img/tutovec23.png
 
-So the final algorithm is something like:
+Por lo que el algoritmo final es algo así:
 
 ::
 
@@ -836,14 +842,14 @@ So the final algorithm is something like:
                 break
 
         if (all_out):
-            # a separating plane was found
-            # do not continue testing
+            # un plano separador fue encontrado
+            # no continuar probando
             overlapping = false
             break
 
     if (overlapping):
-        # only do this check if no separating plane
-        # was found in planes of A
+        # solo haz este chequeo si no fue encontrado
+        # un plano separador en los planos de A
         for p in planes_of_B:
             var all_out = true
             for v in points_of_A:
@@ -862,13 +868,12 @@ So the final algorithm is something like:
                 if (n.length() == 0):
                     continue
 
-                var max_A = -1e20 # tiny number
-                var min_A = 1e20 # huge number
+                var max_A = -1e20 # numero diminuto
+                var min_A = 1e20 # numero enorme
 
-                # we are using the dot product directly
-                # so we can map a maximum and minimum range
-                # for each polygon, then check if they
-                # overlap.
+                # estamos usando el producto escalar directamente
+                # por lo que podemos mapear un rango máximo y mínimo
+                # para cada polígono, luego chequear si se superponen
 
                 for v in points_of_A:
                     var d = n.dot(v)
@@ -877,8 +882,8 @@ So the final algorithm is something like:
                     if (d < min_A):
                         min_A = d
 
-                var max_B = -1e20 # tiny number
-                var min_B = 1e20 # huge number
+                var max_B = -1e20 # numero diminuto
+                var min_B = 1e20 # numero enorme
 
                 for v in points_of_B:
                     var d = n.dot(v)
@@ -888,7 +893,7 @@ So the final algorithm is something like:
                         min_B = d
 
                 if (min_A > max_B or min_B > max_A):
-                    # not overlapping!
+                    # no se superponen!
                     overlapping = false
                     break
 
@@ -896,8 +901,8 @@ So the final algorithm is something like:
                 break
 
     if (overlapping):
-       print("Polygons collided!")
+       print("Los polígonos colisionaron!")
 
-This was all! Hope it was helpful, and please give feedback and let know
-if something in this tutorial is not clear! You should be now ready for
-the next challenge... :ref:`doc_matrices_and_transforms`!
+Esto fue todo! Espero que haya sido de ayuda, y por favor danos tu
+feedback y déjanos saber si algo en este tutorial no es claro! Deberías
+estar pronto para el siguiente desafío... :ref:`doc_matrices_and_transforms`!
