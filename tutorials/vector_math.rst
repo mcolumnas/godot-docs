@@ -709,7 +709,7 @@ Además, el resultado del producto vectorial de dos vectores unitarios
 ~~~~~~~~~~~~~~~~~~~~
 
 El producto vectorial puede ser usado para obtener la superficie de un
-triángulo en 3D. Dado que un triángulo consiste de 3 puntos, **A**, *B***
+triángulo en 3D. Dado que un triángulo consiste de 3 puntos, **A**, **B**
 y **C**:
 
 .. image:: /img/tutovec17.png
