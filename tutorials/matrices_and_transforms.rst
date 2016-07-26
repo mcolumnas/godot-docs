@@ -64,11 +64,11 @@ positivo, un vector unitario apuntando hacia Y positivo y una traslación.
 .. image:: /img/tutomat5.png
 
 Llamemos a estos 3 vectores "X", "Y" y "Origen", y vamos a superponerlos
-sobre la nave para que tenga mas sentido:
+sobre la nave para que tenga más sentido:
 
 .. image:: /img/tutomat6.png
 
-Bien, esto es mas lindo, pero aún no tiene sentido. Que tienen que ver
+Bien, esto es más lindo, pero aún no tiene sentido. Que tienen que ver
 X, Y y Origen con como la nave llego allí?
 
 Bueno, tomemos el punto desde el extremo superior de la nave como
@@ -84,12 +84,12 @@ referencia):
 
     var new_pos = pos - origin
 
-Haciendo esto al punto seleccionado lo movera de nuevo al centro:
+Haciendo esto al punto seleccionado lo moverá de nuevo al centro:
 
 .. image:: /img/tutomat8.png
 
-Esto esa esperable, pero luego hagamos algo mas intereasnte. Usando
-el producto escalar de X y el punto, y agregalo al producto escalar
+Esto esa esperable, pero luego hagamos algo mas interesante. Usando
+el producto escalar de X y el punto, y agrégalo al producto escalar
 de Y y el punto:
 
 ::
@@ -101,12 +101,12 @@ de diseño!
 
 .. image:: /img/tutomat9.png
 
-Como sucedio esta magia negra? La nave estaba perdida en el espacio, y
+Como sucedió esta magia negra? La nave estaba perdida en el espacio, y
 ahora esta de nuevo en casa!
 
-Puede parecer extrañio, pero tiene mucha logica. Recuerda, como vimos
-en :ref:`doc_vector_math`, lo que sucedio es que la distancia al eje X,
-y la distancia al eje Y fue computada. Calculanr distancia en una
+Puede parecer extraño, pero tiene mucha lógica. Recuerda, como vimos
+en :ref:`doc_vector_math`, lo que sucedió es que la distancia al eje X,
+y la distancia al eje Y fue computada. Calcular distancia en una
 dirección o plano era uno de los usos para el producto escalar. Esto fue
 suficiente para obtener de vuelta las coordenadas de diseño para cada
 punto en la nave.
@@ -120,30 +120,30 @@ Base
 
 Sabemos lo que es el Origen. Es donde termino el 0,0 (origen) del sistema
 de coordenadas luego de ser transformado a una nueva posición. Por esto
-es llamado *Origen*, pero en la practica, es solo un offset hacia la
+es llamado *Origen*, pero en la práctica, es solo un offset hacia la
 nueva posición.
 
-La base es mas interesante. La base es la dirección de X e Y en el OCS
+La base es más interesante. La base es la dirección de X e Y en el OCS
 (sistema de coordenadas) de la nueva posición transformada. Nos dice que
 ha cambiado, ya sea en 2D o 3D. El Origen (offset) y la Base (dirección)
-comunican "Oye, el X e Y original de tu diseño estan *aqui*,
+comunican "Oye, el X e Y original de tu diseño están *aquí*,
 apuntando hacia *estas direcciones*."
 
-Entonces, cambiemos la respresentación de la base. En lugar de 2 vectores,
+Entonces, cambiemos la representación de la base. En lugar de 2 vectores,
 usemos una *matriz*.
 
 .. image:: /img/tutomat10.png
 
-Los vectores estan allí en la matriz, horizontalmente. El siguiente
-problema ahora es que.. es es esto de una matriz? Bueno, vamos a asumir
+Los vectores están allí en la matriz, horizontalmente. El siguiente
+problema ahora es que.. es esto de una matriz? Bueno, vamos a asumir
 que nunca escuchaste de una matriz.
 
 Transforms en Godot
 -------------------
 
 Este tutorial no explicara matemática de matrices (y sus operaciones)
-en profundidad, solo su uso practico. Hay mucho material sobre eso,
-el cual deberia ser mucho mas simple de entender luego de completar este
+en profundidad, solo su uso práctico. Hay mucho material sobre eso,
+el cual debería ser mucho más simple de entender luego de completar este
 tutorial. Vamos a explicar solo como usar los transforms.
 
 Matrix32
@@ -151,7 +151,7 @@ Matrix32
 
 :ref:`Matrix32 <class_Matrix32>` es una matriz 2x3. Tiene 3 elementos
 Vector2 y es usada para 2D. El eje "X" es el elemento 0, el eje "Y" es
-el elemento 1 y "Origen" es el elemento 2. No esta dividido en
+el elemento 1 y "Origen" es el elemento 2. No está dividido en
 base/origen por conveniencia, debido a su simplicidad.
 
 ::
@@ -161,7 +161,7 @@ base/origen por conveniencia, debido a su simplicidad.
     var y = m[1] # 'Y'
     var o = m[2] # 'Origin'
 
-La mayoria de las operaciones seran explicadas con este tipo de datos
+La mayoría de las operaciones serán explicadas con este tipo de datos
 (Matrix32), pero la misma lógica aplica a 3D.
 
 Identidad
@@ -214,12 +214,12 @@ el origen:
 Esto siempre funcionara en coordenadas globales.
 
 Si en su lugar, la traslación es deseada en coordenadas *locales* de
-la matriz (hacia donde se orienta la *base*), esta el método
+la matriz (hacia donde se orienta la *base*), está el método
 :ref:`Matrix32.translated() <class_Matrix32_translated>` :
 
 ::
 
-    # Mover 2 unidades hacia donde esta orientada la base
+    # Mover 2 unidades hacia donde está orientada la base
     var m = Matrix32()
     m = m.rotated(PI/2) # rotar 90°
     m=m.translated( Vector2(2,0) )
@@ -231,7 +231,7 @@ Escala
 
 Una matriz puede ser escalada también. Escalar multiplicara los vectores
 base por un vector (vector X por componente x de la escala, vector Y por
-el componente y de la escala). Dejara igual el origen:
+el componente y de la escala). Dejará igual el origen:
 
 ::
 
@@ -241,16 +241,16 @@ el componente y de la escala). Dejara igual el origen:
 
 .. image:: /img/tutomat15.png
 
-Este tipo de operaciones en matrices es acumulativa. Significa que cada
+Este tipo de operaciones en matrices es acumulativo. Significa que cada
 una empieza relativa a la anterior. Para aquellos que han estado viviendo
-en el planeta lo suficiente, una buena referencia de como funciona
+en el planeta lo suficiente, una buena referencia de cómo funciona
 transform es esta:
 
 .. image:: /img/tutomat16.png
 
 Una matriz es usada en forma similar a una tortuga. La tortuga muy
-probablemente tenia una matriz en su interior (y estas descubriendo esto
-muchos años *despues* de descubrir que Santa no es real).
+probablemente tenía una matriz en su interior (y estas descubriendo esto
+muchos años *después* de descubrir que Santa no es real).
 
 Transform
 ---------
@@ -269,7 +269,7 @@ Y solo para la base (sin traslación):
 
     var new_pos = m.basis_xform(pos)
 
-Ademas - multiplicar también es valido:
+Ademas - multiplicar también es válido:
 
 ::
 
@@ -304,7 +304,7 @@ Sin embargo, si la Matrix ha sido escalada (los vectores no tienen
 largo de unidad), o los vectores base no son ortogonales (90°), el
 transform inverso no funcionara.
 
-En otras palabras, el transform inverso solo es valido en matrices
+En otras palabras, el transform inverso solo es válido en matrices
 *ortonormales*. Por ello, en estos casos se debe computar un inverso
 afín.
 
@@ -319,7 +319,7 @@ retornara la posición sin cambio:
 Inverso afín
 ------------
 
-El inverso afín es la matriz que hace la operacion inversa de otra
+El inverso afín es la matriz que hace la operación inversa de otra
 matriz, no importa si la matriz tiene escala o los ejes de vectores
 no son ortogonales. El inverso afín es calculado con el método
 affine_inverse():
@@ -340,7 +340,7 @@ Si la matriz es ortonormal, entonces:
     # es lo mismo que
     pos = m.xform_inv(pos)
 
-Multiplicacion de matrices
+Multiplicación de matrices
 --------------------------
 
 Las matrices pueden ser multiplicadas. La multiplicación de dos
@@ -355,7 +355,7 @@ Ejemplo:
 
     var m = more_transforms * some_transforms
 
-Para hacerlo un poco mas claro, esto:
+Para hacerlo un poco más claro, esto:
 
 ::
 
@@ -385,7 +385,7 @@ Multiplicar una matriz por su inverso, resulta en identidad
 
 ::
 
-    # No importa lo que A sea, B sera identidad
+    # No importa lo que A sea, B será identidad
     B = A.affine_inverse() * A
 
 
@@ -413,7 +413,7 @@ Para 3 niveles:
 
 ::
 
-    # debido al orden reverso, se necesitan parentesis
+    # debido al orden reverso, se necesitan paréntesis
     var global_xform = gradparent_matrix + (parent_matrix + child_matrix)
 
 Para hacer una matriz relativa al padre, usa el inverso afín (o el inverso
@@ -431,7 +431,7 @@ Revertirlo es justo como el ejemplo de arriba:
     # transformar de vuelta B local a B global
     var B = A * B_local_to_A
 
-Bien, esto deberia ser suficiente! Completemos el tutorial moviendonos
+Bien, esto debería ser suficiente! Completemos el tutorial moviéndonos
 a matrices 3D.
 
 Matrices & transforms en 3D
@@ -446,7 +446,7 @@ Matrix3
 
 Godot tiene un tipo especial para una matriz 3x3, llamada
 :ref:`Matrix3 <class_Matrix3>`. Puede ser usada para representar una
-rotación y escala 3D. Los sub vectores pueden ser accedidos asi:
+rotación y escala 3D. Los sub vectores pueden ser accedidos así:
 
 ::
 
@@ -464,7 +464,7 @@ O, alternativamente como:
     var y = m.y # Vector3
     var z = m.z # Vector3
 
-Matrix3 tambien es inicializado a Identidad por defecto:
+Matrix3 también es inicializado a Identidad por defecto:
 
 .. image:: /img/tutomat17.png
 
@@ -472,9 +472,9 @@ Rotación in 3D
 --------------
 
 Rotación en 3D es mas complejo que en 2D (traslación y escala son
-iguales), porque rotación es una operación 2D implicita . Para rotar en
+iguales), porque rotación es una operación 2D implícita . Para rotar en
 3D, un *eje*, debe ser seleccionado. La rotación, entonces, sucede
-al rededor de dicho eje.
+alrededor de dicho eje.
 
 El eje para la rotación debe ser un *vector normal*. Es decir, un
 vector que puede apuntar en cualquier dirección, pero cuyo largo debe
@@ -496,8 +496,8 @@ Para agregar el componente final a la mezcla, Godot provee el tipo
 -  *origin* (origen, de tipo :ref:`Vector3 <class_Vector3>`)
 
 Cualquier transformación 3D puede ser representada con Transform, y
-la separación de base y origen hace mas sencillo trabajar con
-traslación y rotación por separada.
+la separación de base y origen hace más sencillo trabajar con
+traslación y rotación por separado.
 
 Un ejemplo:
 
