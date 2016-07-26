@@ -506,4 +506,4 @@ Un ejemplo:
     var t = Transform()
     pos = t.xform(pos) # transformar posición 3D
     pos = t.basis.xform(pos) # (solo rotar)
-    pos = t.origin + pos  (solo trasladar)
+    pos = t.origin + pos # (solo trasladar)
