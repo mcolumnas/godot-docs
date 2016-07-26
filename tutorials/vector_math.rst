@@ -8,8 +8,8 @@ Introducción
 
 Este pequeño tutorial tiene como objetivo ser una introducción corta y
 práctica a la matemática de vectores, útil para juegos 3D pero también
-3D. De nuevo, la matemática de vectores es útil para juegos 3D pero
-*también* 3D. Es una herramienta asombrosa cuando la entiendes y hace a
+2D. De nuevo, la matemática de vectores es útil para juegos 3D pero
+*también* 2D. Es una herramienta asombrosa cuando la entiendes y hace a
 la programación de comportamientos complejos mucho más simple.
 
 A menudo sucede que programadores jóvenes confían demasiado en la
