@@ -1,155 +1,158 @@
 .. _doc_matrices_and_transforms:
 
-Matrices and transforms
-=======================
+Matrices y transformaciones
+===========================
 
-Introduction
+Introducción
 ------------
 
-Before reading this tutorial, it is advised to read the previous one
-about :ref:`doc_vector_math` as this one is a direct continuation.
+Antes de leer este tutorial, es recomendable leer el anterior sobre
+:ref:`doc_vector_math` ya que este es una continuación directa.
 
-This tutorial will be about *transformations* and will cover a little
-about matrices (but not in-depth).
+Este tutorial será sobre *transformaciones* y cubrirá algo sobre matrices
+(pero no en profundidad).
 
-Transformations are most of the time applied as translation, rotation
-and scale so they will be considered as priority here.
+Las transformaciones son aplicadas la mayor parte del tiempo como
+traslación, rotación y escala por lo que serán consideradas como una
+prioridad aquí.
 
-Oriented coordinate system (OCS)
+Sistema orientado de coordenadas (OCS)
 --------------------------------
 
-Imagine we have a spaceship somewhere in space. In Godot this is easy,
-just move the ship somewhere and rotate it:
+Imagina que tenemos una nave en algún lugar del espacio. En Godot esto es
+fácil, solo mueve la nave hacia algún lado y rótala:
 
 .. image:: /img/tutomat1.png
 
-Ok, so in 2D this looks simple, a position and an angle for a rotation.
-But remember, we are grown ups here and don't use angles (plus, angles
-are not really even that useful when working in 3D).
+Bien, entonces en 2D esto luce simple, una posición y un ángulo para una
+rotación. Pero recuerda, somos adultos aquí y no usamos ángulos (además,
+los ángulos ni siquiera son tan útiles cuando trabajamos en 3D).
 
-We should realize that at some point, someone *designed* this
-spaceship. Be it for 2D in a drawing such as Paint.net, Gimp,
-Photoshop, etc. or in 3D through a 3D DCC tool such as Blender, Max,
-Maya, etc.
+Debemos darnos cuenta que en algún punto, alguien *diseño* esta nave.
+Sea un dibujo 2D hecho con Paint.net, Gimp, Photoshop, etc. o en 3D a
+través de herramientas DCC 3D como Blender, Max, Maya, etc.
 
-When it was designed, it was not rotated. It was designed in it's own
-*coordinate system*.
+Cuando fue diseñada, no estaba rotada. Fue diseñada en su propio
+*sistema de coordenadas*.
 
 .. image:: /img/tutomat2.png
 
-This means that the tip of the ship has a coordinate, the fin has
-another, etc. Be it in pixels (2D) or vertices (3D).
+Esto significa que el extremo de la nave tiene una coordenada, el
+alerón tiene otra, etc. Sea en pixels (2D) o vértices (3D).
 
-So, let's recall again that the ship was somewhere in space:
+Así que, recordemos nuevamente que la nave esta en algún lugar del espacio:
 
 .. image:: /img/tutomat3.png
 
-How did it get there? What moved it and rotated it from the place it was
-designed to it's current position? The answer is... a **transform**, the
-ship was *transformed* from their original position to the new one. This
-allows the ship to be displayed where it is.
+Cómo llego allí? Que la movió y roto desde el lugar que fue diseñada a su
+posición actual? La respuesta es... un **transform**, la nave fue
+transformada desde su posición original a la nueva. Esto permite que la
+nave sea mostrada donde está.
 
-But transform is too generic of a term to describe this process. To solve this
-puzzle, we will superimpose the ship's original design position at their
-current position:
+Pero transform es un término muy genérico para describir este proceso.
+Para resolver este puzzle, vamos a superponer la posición del diseño
+original a su posición actual:
+
 
 .. image:: /img/tutomat4.png
 
-So, we can see that the "design space" has been transformed too. How can
-we best represent this transformation? Let's use 3 vectors for this (in
-2D), a unit vector pointing towards X positive, a unit vector pointing
-towards Y positive and a translation.
+Entonces, podemos ver que el "espacio de diseño" ha sido transformado
+también. Como podemos representar mejor esta trasformación? Vamos a usar
+3 vectores para esto (en 2D), un vector unitario apuntando hacia X
+positivo, un vector unitario apuntando hacia Y positivo y una traslación.
 
 .. image:: /img/tutomat5.png
 
-Let's call the 3 vectors "X", "Y" and "Origin", and let's also
-superimpose them over the ship so it makes more sense:
+Llamemos a estos 3 vectores "X", "Y" y "Origen", y vamos a superponerlos
+sobre la nave para que tenga mas sentido:
 
 .. image:: /img/tutomat6.png
 
-Ok, this is nicer, but it still does not make sense. What do X,Y and
-Origin have to do with how the ship got there?
+Bien, esto es mas lindo, pero aún no tiene sentido. Que tienen que ver
+X, Y y Origen con como la nave llego allí?
 
-Well, let's take the point from top tip of the ship as reference:
+Bueno, tomemos el punto desde el extremo superior de la nave como
+referencia:
 
 .. image:: /img/tutomat7.png
 
-And let's apply the following operation to it (and to all the points in
-the ship too, but we'll track the top tip as our reference point):
+Y le aplicamos la siguiente operación (y a todos los puntos en la nave
+también, pero vamos a seguir el extremo superior como punto de
+referencia):
 
 ::
 
     var new_pos = pos - origin
 
-Doing this to the selected point will move it back to the center:
+Haciendo esto al punto seleccionado lo movera de nuevo al centro:
 
 .. image:: /img/tutomat8.png
 
-This was expected, but then let's do something more interesting. Use the
-dot product of X and the point, and add it to the dot product of Y and
-the point:
+Esto esa esperable, pero luego hagamos algo mas intereasnte. Usando
+el producto escalar de X y el punto, y agregalo al producto escalar
+de Y y el punto:
 
 ::
 
     var final_pos = x.dot(new_pos) + y.dot(new_pos)
 
-Then what we have is.. wait a minute, it's the ship in it's design
-position!
+Entonces lo que tenemos es.. espera un minuto, es la nave en su posición
+de diseño!
 
 .. image:: /img/tutomat9.png
 
-How did this black magic happen? The ship was lost in space, and now
-it's back home!
+Como sucedio esta magia negra? La nave estaba perdida en el espacio, y
+ahora esta de nuevo en casa!
 
-It might seem strange, but it does have plenty of logic. Remember, as
-we have seen in the :ref:`doc_vector_math`, what
-happened is that the distance to X axis, and the distance to Y axis
-were computed. Calculating distance in a direction or plane was one of
-the uses for the dot product. This was enough to obtain back the
-design coordinates for every point in the ship.
+Puede parecer extrañio, pero tiene mucha logica. Recuerda, como vimos
+en :ref:`doc_vector_math`, lo que sucedio es que la distancia al eje X,
+y la distancia al eje Y fue computada. Calculanr distancia en una
+dirección o plano era uno de los usos para el producto escalar. Esto fue
+suficiente para obtener de vuelta las coordenadas de diseño para cada
+punto en la nave.
 
-So, what he have been working with so far (with X, Y and Origin) is an
-*Oriented Coordinate System\*. X an Y are the **Basis**, and \*Origin*
-is the offset.
+Entonces, con lo que ha estado trabajando hasta ahora (con X, Y y Origen)
+es un *Sistema ordenado de coordenadas\*. X e Y son la **Base**, y
+\*Origen* es el offset (compensación).
 
-Basis
------
+Base
+----
 
-We know what the Origin is. It's where the 0,0 (origin) of the design
-coordinate system ended up after being transformed to a new position.
-This is why it's called *Origin*, But in practice, it's just an offset
-to the new position.
+Sabemos lo que es el Origen. Es donde termino el 0,0 (origen) del sistema
+de coordenadas luego de ser transformado a una nueva posición. Por esto
+es llamado *Origen*, pero en la practica, es solo un offset hacia la
+nueva posición.
 
-The Basis is more interesting. The basis is the direction of X and Y in the OCS
-from the new, transformed location. It tells what has changed, in either 2D or
-3D. The Origin (offset) and Basis (direction) communicate "Hey, the original X
-and Y axes of your design are *right here*, pointing towards *these
-directions*."
+La base es mas interesante. La base es la dirección de X e Y en el OCS
+(sistema de coordenadas) de la nueva posición transformada. Nos dice que
+ha cambiado, ya sea en 2D o 3D. El Origen (offset) y la Base (dirección)
+comunican "Oye, el X e Y original de tu diseño estan *aqui*,
+apuntando hacia *estas direcciones*."
 
-So, let's change the representation of the basis. Instead of 2 vectors,
-let's use a *matrix*.
+Entonces, cambiemos la respresentación de la base. En lugar de 2 vectores,
+usemos una *matriz*.
 
 .. image:: /img/tutomat10.png
 
-The vectors are up there in the matrix, horizontally. The next problem
-now is that.. what is this matrix thing? Well, we'll assume you've never
-heard of a matrix.
+Los vectores estan allí en la matriz, horizontalmente. El siguiente
+problema ahora es que.. es es esto de una matriz? Bueno, vamos a asumir
+que nunca escuchaste de una matriz.
 
-Transforms in Godot
+Transforms en Godot
 -------------------
 
-This tutorial will not explain matrix math (and their operations) in
-depth, only its practical use. There is plenty of material for that,
-which should be a lot simpler to understand after completing this
-tutorial. We'll just explain how to use transforms.
+Este tutorial no explicara matemática de matrices (y sus operaciones)
+en profundidad, solo su uso practico. Hay mucho material sobre eso,
+el cual deberia ser mucho mas simple de entender luego de completar este
+tutorial. Vamos a explicar solo como usar los transforms.
 
 Matrix32
 --------
 
-:ref:`Matrix32 <class_Matrix32>` is a 3x2 matrix. It has 3 Vector2 elements and
-it's used for 2D. The "X" axis is the element 0, "Y" axis is the element 1 and
-"Origin" is element 2. It's not divided in basis/origin for convenience, due to
-it's simplicity.
+:ref:`Matrix32 <class_Matrix32>` es una matriz 2x3. Tiene 3 elementos
+Vector2 y es usada para 2D. El eje "X" es el elemento 0, el eje "Y" es
+el elemento 1 y "Origen" es el elemento 2. No esta dividido en
+base/origen por conveniencia, debido a su simplicidad.
 
 ::
 
@@ -158,289 +161,292 @@ it's simplicity.
     var y = m[1] # 'Y'
     var o = m[2] # 'Origin'
 
-Most operations will be explained with this datatype (Matrix32), but the
-same logic applies to 3D.
+La mayoria de las operaciones seran explicadas con este tipo de datos
+(Matrix32), pero la misma lógica aplica a 3D.
 
-Identity
---------
+Identidad
+---------
 
-By default, Matrix32 is created as an "identity" matrix. This means:
+Por defecto, Matrix32 es creada como una matriz de "identidad". Esto
+significa:
 
--  'X' Points right: Vector2(1,0)
--  'Y' Points up (or down in pixels): Vector2(0,1)
--  'Origin' is the origin Vector2(0,0)
+-  'X' Apunta a la derecha: Vector2(1,0)
+-  'Y' Apunta arriba (o abajo en pixels): Vector2(0,1)
+-  'Origen' es el origen Vector2(0,0)
 
 .. image:: /img/tutomat11.png
 
-It's easy to guess that an *identity* matrix is just a matrix that
-aligns the transform to it's parent coordinate system. It's an *OCS*
-that hasn't been translated, rotated or scaled. All transform types in
-Godot are created with *identity*.
+Es fácil adivinar que una matriz *identidad* es solo una matriz que
+alinea el transform a su sistema de coordenadas padre. Es un *OCS*
+que no ha sido trasladado, rotado o escalado. Todos los tipos de
+transforms en Godot son creados con *identidad*.
 
-Operations
-----------
+Operaciones
+-----------
 
-Rotation
+Rotación
 --------
 
-Rotating Matrix32 is done by using the "rotated" function:
+Rotar Matrix32 es hecho usando la función "rotated":
 
 ::
 
     var m = Matrix32()
-    m = m.rotated(PI/2) # rotate 90°
+    m = m.rotated(PI/2) # rotar 90°
 
 .. image:: /img/tutomat12.png
 
-Translation
------------
+Traslación
+----------
 
-There are two ways to translate a Matrix32, the first one is just moving
-the origin:
+Hay dos formas de trasladar una Matrix32, la primera es solo mover
+el origen:
 
 ::
 
-    # Move 2 units to the right
+    # Mover 2 unidades a la derecha
     var m = Matrix32()
-    m = m.rotated(PI/2) # rotate 90°
+    m = m.rotated(PI/2) # rotar 90°
     m[2]+=Vector2(2,0)
 
 .. image:: /img/tutomat13.png
 
-This will always work in global coordinates.
+Esto siempre funcionara en coordenadas globales.
 
-If instead, translation is desired in *local* coordinates of the
-matrix (towards where the *basis* is oriented), there is the
-:ref:`Matrix32.translated() <class_Matrix32_translated>`
-method:
+Si en su lugar, la traslación es deseada en coordenadas *locales* de
+la matriz (hacia donde se orienta la *base*), esta el método
+:ref:`Matrix32.translated() <class_Matrix32_translated>` :
 
 ::
 
-    # Move 2 units towards where the basis is oriented
+    # Mover 2 unidades hacia donde esta orientada la base
     var m = Matrix32()
-    m = m.rotated(PI/2) # rotate 90°
+    m = m.rotated(PI/2) # rotar 90°
     m=m.translated( Vector2(2,0) )
 
 .. image:: /img/tutomat14.png
 
-Scale
------
+Escala
+------
 
-A matrix can be scaled too. Scaling will multiply the basis vectors by a
-vector (X vector by x component of the scale, Y vector by y component of
-the scale). It will leave the origin alone:
+Una matriz puede ser escalada también. Escalar multiplicara los vectores
+base por un vector (vector X por componente x de la escala, vector Y por
+el componente y de la escala). Dejara igual el origen:
 
 ::
 
-    # Make the basis twice it's size.
+    # Llevar al doble el tamaño de la base.
     var m = Matrix32()
     m = m.scaled( Vector2(2,2) )
 
 .. image:: /img/tutomat15.png
 
-These kind of operations in matrices are accumulative. It means every
-one starts relative to the previous one. For those that have been living
-on this planet long enough, a good reference of how transform works is
-this:
+Este tipo de operaciones en matrices es acumulativa. Significa que cada
+una empieza relativa a la anterior. Para aquellos que han estado viviendo
+en el planeta lo suficiente, una buena referencia de como funciona
+transform es esta:
 
 .. image:: /img/tutomat16.png
 
-A matrix is used similarly to a turtle. The turtle most likely had a
-matrix inside (and you are likely learning this may years *after*
-discovering Santa is not real).
+Una matriz es usada en forma similar a una tortuga. La tortuga muy
+probablemente tenia una matriz en su interior (y estas descubriendo esto
+muchos años *despues* de descubrir que Santa no es real).
 
 Transform
 ---------
 
-Transform is the act of switching between coordinate systems. To convert
-a position (either 2D or 3D) from "designer" coordinate system to the
-OCS, the "xform" method is used.
+Transform es el acto de conmutar entre sistemas de coordenadas. Para
+convertir una posición (sea 2D o 3D) desde el sistema de coordenadas
+de "diseño" al OCS, el método "xform" es usado:
 
 ::
 
     var new_pos = m.xform(pos)
 
-And only for basis (no translation):
+Y solo para la base (sin traslación):
 
 ::
 
     var new_pos = m.basis_xform(pos)
 
-Post - multiplying is also valid:
+Ademas - multiplicar también es valido:
 
 ::
 
     var new_pos = m * pos
 
-Inverse transform
+Transform inversa
 -----------------
 
-To do the opposite operation (what we did up there with the rocket), the
-"xform_inv" method is used:
+Para hacer la operación opuesta (lo que hicimos arriba con el cohete),
+se usa el método "xform_inv":
 
 ::
 
     var new_pos = m.xform_inv(pos)
 
-Only for Basis:
+Solo para la base:
 
 ::
 
     var new_pos = m.basis_xform_inv(pos)
 
-Or pre-multiplication:
+O pre-multiplicación:
 
 ::
 
     var new_pos = pos * m
 
-Orthonormal matrices
---------------------
+Matrices ortonormales
+---------------------
 
-However, if the Matrix has been scaled (vectors are not unit length),
-or the basis vectors are not orthogonal (90°), the inverse transform
-will not work.
+Sin embargo, si la Matrix ha sido escalada (los vectores no tienen
+largo de unidad), o los vectores base no son ortogonales (90°), el
+transform inverso no funcionara.
 
-In other words, inverse transform is only valid in *orthonormal*
-matrices. For this, these cases an affine inverse must be computed.
+En otras palabras, el transform inverso solo es valido en matrices
+*ortonormales*. Por ello, en estos casos se debe computar un inverso
+afín.
 
-The transform, or inverse transform of an identity matrix will return
-the position unchanged:
+El transform, o el transform inverso de una matriz de identidad
+retornara la posición sin cambio:
 
 ::
 
-    # Does nothing, pos is unchanged
+    # No hace nada, pos no cambia
     pos = Matrix32().xform(pos)
 
-Affine inverse
---------------
+Inverso afín
+------------
 
-The affine inverse is a matrix that does the inverse operation of
-another matrix, no matter if the matrix has scale or the axis vectors
-are not orthogonal. The affine inverse is calculated with the
-affine_inverse() method:
+El inverso afín es la matriz que hace la operacion inversa de otra
+matriz, no importa si la matriz tiene escala o los ejes de vectores
+no son ortogonales. El inverso afín es calculado con el método
+affine_inverse():
 
 ::
 
     var mi = m.affine_inverse()
     var pos = m.xform(pos)
     pos = mi.xform(pos)
-    # pos is unchanged
+    # pos no cambia
 
-If the matrix is orthonormal, then:
+Si la matriz es ortonormal, entonces:
 
 ::
 
-    # if m is orthonormal, then
+    # si m es ortonormal, entonces
     pos = mi.xform(pos)
-    # is the same is
+    # es lo mismo que
     pos = m.xform_inv(pos)
 
-Matrix multiplication
----------------------
+Multiplicacion de matrices
+--------------------------
 
-Matrices can be multiplied. Multiplication of two matrices "chains"
-(concatenates) their transforms.
+Las matrices pueden ser multiplicadas. La multiplicación de dos
+matrices "encadena" (concatena) sus transforms.
 
-However, as per convention, multiplication takes place in reverse
-order.
+Sin embargo, por convención, la multiplicación toma lugar en
+orden reverso.
 
-Example:
+Ejemplo:
 
 ::
 
     var m = more_transforms * some_transforms
 
-To make it a little clearer, this:
+Para hacerlo un poco mas claro, esto:
 
 ::
 
     pos = transform1.xform(pos)
     pos = transform2.xform(pos)
 
-Is the same as:
+Es lo mismo que:
 
 ::
 
-    # note the inverse order
+    # nota el orden inverso
     pos = (transform2 * transform1).xform(pos)
 
-However, this is not the same:
+Sin embargo, esto no es lo mismo:
 
 ::
 
-    # yields a different results
+    # devuelve resultados diferentes
     pos = (transform1 * transform2).xform(pos)
 
-Because in matrix math, A + B is not the same as B + A.
+Porque en matemática de matrices, A + B no es lo mismo que B + A.
 
-Multiplication by inverse
--------------------------
-
-Multiplying a matrix by it's inverse, results in identity
-
-::
-
-    # No matter what A is, B will be identity
-    B = A.affine_inverse() * A
-
-Multiplication by identity
+Multiplicación por inverso
 --------------------------
 
-Multiplying a matrix by identity, will result in the unchanged matrix:
+Multiplicar una matriz por su inverso, resulta en identidad
 
 ::
 
-    # B will be equal to A
+    # No importa lo que A sea, B sera identidad
+    B = A.affine_inverse() * A
+
+
+Multiplicación por identidad
+----------------------------
+
+Multiplicar una matriz por identidad, resultara en una matriz sin cambios:
+::
+
+    # B sera igual que A
     B = A * Matrix32()
 
-Matrix tips
------------
+Consejos de Matrices
+--------------------
 
-When using a transform hierarchy, remember that matrix multiplication is
-reversed! To obtain the global transform for a hierarchy, do:
+Cuando usamos una jerarquía de transform, recuerda que la multiplicación
+de matrices es reversa! Para obtener el transform global para una
+jerarquía, haz:
 
 ::
 
     var global_xform = parent_matrix * child_matrix
 
-For 3 levels:
+Para 3 niveles:
 
 ::
 
-    # due to reverse order, parenthesis are needed
+    # debido al orden reverso, se necesitan parentesis
     var global_xform = gradparent_matrix + (parent_matrix + child_matrix)
 
-To make a matrix relative to the parent, use the affine inverse (or
-regular inverse for orthonormal matrices).
+Para hacer una matriz relativa al padre, usa el inverso afín (o el inverso
+regular para matrices ortonormales).
 
 ::
 
-    # transform B from a global matrix to one local to A
+    # transformar B desde una matriz global a una local a A
     var B_local_to_A = A.affine_inverse() * B
 
-Revert it just like the example above:
+Revertirlo es justo como el ejemplo de arriba:
 
 ::
 
-    # transform back local B to global B
+    # transformar de vuelta B local a B global
     var B = A * B_local_to_A
 
-OK, hopefully this should be enough! Let's complete the tutorial by
-moving to 3D matrices.
+Bien, esto deberia ser suficiente! Completemos el tutorial moviendonos
+a matrices 3D.
 
-Matrices & transforms in 3D
+Matrices & transforms en 3D
 ---------------------------
 
-As mentioned before, for 3D, we deal with 3 :ref:`Vector3 <class_Vector3>`
-vectors for the rotation matrix, and an extra one for the origin.
+Como mencionamos antes, para 3D, nos manejamos con 3 vectores
+:ref:`Vector3 <class_Vector3>` para la matriz de rotación, y uno extra
+para el origen.
 
 Matrix3
 -------
 
-Godot has a special type for a 3x3 matrix, named :ref:`Matrix3 <class_Matrix3>`.
-It can be used to represent a 3D rotation and scale. Sub vectors can be
-accessed as:
+Godot tiene un tipo especial para una matriz 3x3, llamada
+:ref:`Matrix3 <class_Matrix3>`. Puede ser usada para representar una
+rotación y escala 3D. Los sub vectores pueden ser accedidos asi:
 
 ::
 
@@ -449,7 +455,7 @@ accessed as:
     var y = m[1] # Vector3
     var z = m[2] # Vector3
 
-Or, alternatively as:
+O, alternativamente como:
 
 ::
 
@@ -458,44 +464,46 @@ Or, alternatively as:
     var y = m.y # Vector3
     var z = m.z # Vector3
 
-Matrix3 is also initialized to Identity by default:
+Matrix3 tambien es inicializado a Identidad por defecto:
 
 .. image:: /img/tutomat17.png
 
-Rotation in 3D
+Rotación in 3D
 --------------
 
-Rotation in 3D is more complex than in 2D (translation and scale are the
-same), because rotation is an implicit 2D operation. To rotate in 3D, an
-*axis*, must be picked. Rotation, then, happens around this axis.
+Rotación en 3D es mas complejo que en 2D (traslación y escala son
+iguales), porque rotación es una operación 2D implicita . Para rotar en
+3D, un *eje*, debe ser seleccionado. La rotación, entonces, sucede
+al rededor de dicho eje.
 
-The axis for the rotation must be a *normal vector*. As in, a vector
-that can point to any direction, but length must be one (1.0).
+El eje para la rotación debe ser un *vector normal*. Es decir, un
+vector que puede apuntar en cualquier dirección, pero cuyo largo debe
+ser uno (1.0).
 
 ::
 
-    #rotate in Y axis
+    #rotar en el eje Y
     var m3 = Matrix3()
     m3 = m3.rotated( Vector3(0,1,0), PI/2 )
 
 Transform
 ---------
 
-To add the final component to the mix, Godot provides the
-:ref:`Transform <class_Transform>` type. Transform has two members:
+Para agregar el componente final a la mezcla, Godot provee el tipo
+:ref:`Transform <class_Transform>` . Transform tiene dos miembros:
 
--  *basis* (of type :ref:`Matrix3 <class_Matrix3>`
--  *origin* (of type :ref:`Vector3 <class_Vector3>`
+-  *basis* (base, de tipo :ref:`Matrix3 <class_Matrix3>`)
+-  *origin* (origen, de tipo :ref:`Vector3 <class_Vector3>`)
 
-Any 3D transform can be represented with Transform, and the separation
-of basis and origin makes it easier to work translation and rotation
-separately.
+Cualquier transformación 3D puede ser representada con Transform, y
+la separación de base y origen hace mas sencillo trabajar con
+traslación y rotación por separada.
 
-An example:
+Un ejemplo:
 
 ::
 
     var t = Transform()
-    pos = t.xform(pos) # transform 3D position
-    pos = t.basis.xform(pos) # (only rotate)
-    pos = t.origin + pos  (only translate)
+    pos = t.xform(pos) # transformar posición 3D
+    pos = t.basis.xform(pos) # (solo rotar)
+    pos = t.origin + pos  (solo trasladar)
