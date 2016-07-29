@@ -1,113 +1,115 @@
 .. _doc_managing_image_files:
 
-Managing image files
-====================
+Administrando archivos de imagen
+================================
 
-If you have read the previous tutorials on :ref:`doc_resources` and
-:ref:`doc_filesystem`, at this point you know that regular image files
-(.png, .jpg, etc.) are treated as regular resources in Godot.
+Si haz leído los tutoriales previos en :ref:`doc_resources`y
+:ref:`doc_filesystem`, en este punto tu sabes que las imágenes regulares
+(.png, .jpg, etc.) son tratadas como recursos regulares en Godot.
 
-Unlike texture resources (.tex files), image files contain no extra
-information on tiling (texture repeat), mipmaps or filtering. Editing
-this information and saving the texture back will not have any effect,
-since such formats can't contain that information.
+A diferencia de los recursos de texturas (.tex files), los archivos de
+imagen no contienen información extra de mosaico (repetición de
+texturas), mipmaps o filtrado. Editar esta información y guardar la
+textura de nuevo no tendrá ningún efecto, ya que dichos formatos no
+pueden contener esa información.
 
-Image loader
-------------
+Cargador de imágenes
+--------------------
 
-Loading of images is done by the image loader. The behavior of the
-loader for all image files can be changed in the Project Settings dialog
-(Scene -> Project Settings). There is a section with values that
-are used for all image resources:
+La carga de imágenes es hecha por el "image loader". El comportamiento
+del cargador de imágenes para todos los archivos de imagenes puede ser
+cambiado en el dialogo de Configuración de Proyecto (Escena ->
+Configuración de proyecto), Hay una sección con valores que son usados
+para todos los recursos de imágenes:
 
 .. image:: /img/imgloader.png
 
-Image loader options
---------------------
+Opciones del cargador de imágenes
+---------------------------------
 
-Filter
-~~~~~~
+Filter (Filtro)
+~~~~~~~~~~~~~~~
 
-Filter is used when the image is stretched more than its original size,
-so a texel in the image is bigger than a pixel on the screen. Turning
-off the filter produces a retro-like look:
+Filter es usado cuando la imagen es estirada más que tu tamaño original,
+por lo que un texel en la imagen es más grande que el pixel en
+la pantalla. Apagarlo genera un efecto estilo retro:
 
 .. image:: /img/imagefilter.png
 
-Repeat
+Repeat (Repetir)
 ~~~~~~
 
-Repeat is mainly used for 3D textures, so it's off by default (textures
-are imported with the scenes and usually are not in the project as image
-files). When using UV coordinates (something not as common in 2D), and
-the UV value goes beyond the 0,0,1,1 rect, the texture repeats instead
-of clamping to the edge.
+Repeat es usado principalmente para texturas 3D, por lo que está apagado
+por defecto (las texturas son importadas con la escena y usualmente no
+están en el proyecto como archivos). Cuando se usan coordenadas UV (algo
+que no es común en 2D), y el valor UV va más allá de 0,0,1,1 rect, la
+textura se repite en lugar de restringirse al borde.
 
 Mipmaps
 ~~~~~~~
 
-When the mipmaps option is enabled, Godot will generate mipmaps.
-Mipmaps are versions of the image shrunk by half in both axis,
-recursively, until the image is 1 pixel of size. When the 3D hardware
-needs to shrink the image, it finds the largest mipmap it can scale
-from, and scales from there. This improves performance and image
-quality.
+Cuando la opción mipmaps es habilitada, Godot va a generar mipmaps.
+Mipmaps son versiones de una imagen encogidas a la mitad en ambos ejes,
+recursivamente, hasta que la imagen tiene un tamaño de 1 pixel. Cuando
+el hardware 3D necesita encoger la imagen, encuentra el mipmap más grande
+desde el cual puede escalar, y escala desde allí. Esto mejora el
+rendimiento y la calidad de imagen.
 
 .. image:: /img/mipmaps.png
 
-When mipmaps are disabled, images start distorting badly when shrunk
-excessively:
+Cuando los mipmaps son deshabilitados, las imágenes empiezan a
+distorsionarse mucho cuando se encojen excesivamente:
 
 .. image:: /img/imagemipmap.png
 
-Alpha blending
-~~~~~~~~~~~~~~
+Alpha blending (Mezcla Alpha)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `blending
-equation <http://en.wikipedia.org/wiki/Alpha_compositing>`__ used by
-applications like Photoshop is too complex for real-time. There are
-better approximations such as `pre-multiplied
-alpha <http://blogs.msdn.com/b/shawnhar/archive/2009/11/06/premultiplied-alpha.aspx?Redirected=true>`__,
-but they impose more stress in the asset pipeline. In the end, we are
-left with textures that have artifacts in the edges, because apps such
-as Photoshop store white pixels in completely transparent areas. Such
-white pixels end up showing thanks to the texture filter (when active).
+La `ecuación de mezcla <http://en.wikipedia.org/wiki/Alpha_compositing>`__
+usada por aplicaciones como Photoshop es demasiado compleja para tiempo
+real. Hay aproximaciones mejores como `alpha pre-multiplicado
+<http://blogs.msdn.com/b/shawnhar/archive/2009/11/06/premultiplied-alpha.aspx?Redirected=true>`__,
+pero imponen más estrés en el conducto de assets. Al final, terminamos
+con texturas que tienen artefactos en los bordes, porque las aplicaciones
+como Photoshop guardan los pixels blancos en áreas completamente
+transparentes. Esos pixels blancos se terminan mostrando gracias al
+filtro de textura (cuando está activo).
 
-Godot has an option to fix the edges of the image (by painting invisible
-pixels the same color as the visible neighbours):
+Godot tiene una opción para arreglar los bordes de una imagen (al pintar
+pixels invisibles con el mismo color de sus vecinos visibles).
 
 .. image:: /img/fixedborder.png
 
-To do this, open the image from the resources tab, or edit it from the
-property editor from another node or resource, then go to the object
-options and select "Fix Alpha Edges", then save it.
+Para hacer esto, abre la imagen desde la pestaña recursos, o edítala desde
+las propiedades de editor de otro nodo o recurso, luego ve a las opciones
+del objeto y selecciona "Fix Alpha Edges", y guardalo.
 
 .. image:: /img/imagefixalpha.png
 
-Since fixing this in so many images can be a little annoying, both
-Texture Import and Image Export can also perform this operation.
+Debido a que arreglar esto en tantas imágenes puede ser algo molesto,
+tanto Texture Import y Image Export pueden también hacer esta operación.
 
-Texture import
-~~~~~~~~~~~~~~
+Importando texturas
+~~~~~~~~~~~~~~~~~~~
 
-Sometimes, it might be desired to change the above settings per image.
-Unfortunately, the image loader settings are global. Texture flags also
-can't be saved in a regular .png or .jpg file.
+A veces, puede desearse cambiar los ajustes de arriba por imagen.
+Desafortunadamente, los ajustes de image loader son globales. Los flags
+de textura no pueden ser guardados en un archivo regular .png o .jpg.
 
-For such cases, the image can be imported as a texture (.tex), where the
-individual flags can be changed. Godot also keeps track of the original
-file and will re-import if it changes.
+Para esos casos, la imagen puede ser importada como una textura (.tex),
+donde los falgs individuales pueden ser cambiados. Godot también mantiene
+el seguimiento del archivo original y lo re-importara si cambia.
 
-Importing also allows conversion to other formats (WebP, or RAM
-compression) which might be of use in some cases. More information on
-the :ref:`doc_importing_textures` page.
+Importar también permite la conversión a otros formatos (WebP, o
+compresión RAM) la cual puede ser usada en algunos casos. Más información
+en la pagina :ref:`doc_importing_textures`.
 
-Image export
-~~~~~~~~~~~~
+Exportando texturas
+~~~~~~~~~~~~~~~~~~~
 
-It is also possible to convert images to other formats (WebP or RAM
-compression) on export, as well as instructing the exporter to create an
-Atlas for a set of images. It is also possible to ask the exporter to
-scale all images (or selected groups).
+También es posible convertir imágenes a otros formatos (WebP o compresión
+RAM) al exportar, así como instruir al exportador para crear un Atlas
+para un conjunto de imágenes. También es posible pedir al exportador
+que escale todas las imágenes (o grupos seleccionados).
 
-More information on the :ref:`doc_exporting_images` page.
+Mas información en la paginae :ref:`doc_exporting_images`.

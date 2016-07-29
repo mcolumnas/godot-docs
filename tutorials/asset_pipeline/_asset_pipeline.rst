@@ -1,5 +1,5 @@
-Asset pipeline
-==============
+Conducto de Asset
+=================
 
 .. toctree::
    :maxdepth: 2
