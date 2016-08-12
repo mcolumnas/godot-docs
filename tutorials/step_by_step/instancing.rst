@@ -7,15 +7,15 @@ Fundamento
 ----------
 
 Tener una escena y tirar nodos en ella puede funcionar para proyectos
-pequeños, pero en la medida que el proyecto crece, mas y mas nodos son
+pequeños, pero en la medida que el proyecto crece, más y más nodos son
 usados y rápidamente se puede volver inmanejable. Para resolver esto,
 Godot permite que un proyecto este separado en varias escenas. Esto,
 sin embargo, no funciona de la misma forma que en otros motores de
 juegos. De hecho, es bastante diferente, por lo que por favor no
-saltees este tutorial!
+saltes este tutorial!
 
 Para resumir: Una escena es una colección de nodos organizados como
-un árbol, donde solo pueden tener un nodo particular como nodo raíz.
+un árbol, donde soló pueden tener un nodo particular como nodo raíz.
 
 .. image:: /img/tree.png
 
@@ -25,7 +25,7 @@ crear y guardar tantas escenas como se desee.
 .. image:: /img/instancingpre.png
 
 Luego, mientras editas una escena existente o creas una nueva, otras
-escenas pueden ser instanciadas como parte de esta:
+escenas pueden ser instanciadas como parte de está:
 
 .. image:: /img/instancing.png
 
@@ -39,18 +39,18 @@ Instanciar, paso a paso
 Para aprender como instanciar, comencemos descargando un proyecto de
 muestra: :download:`instancing.zip </files/instancing.zip>`.
 
-Descomprime esta escena in el lugar de tu preferencia. Luego, agrega
+Descomprime esta escena en el lugar de tu preferencia. Luego, agrega
 esta escena al gestor de proyectos usando la opción 'Importar':
 
 .. image:: /img/importproject.png
 
-Simplemente navega hasta el lugar donde esta el proyecto y abre
+Simplemente navega hasta el lugar donde está el proyecto y abre
 "engine.cfg". El nuevo proyecto aparecerá en la lista de proyectos.
 Edita el proyecto usando la opción 'Editar'.
 
 Este proyecto contiene dos escenas "ball.scn"(pelota) y
 "container.scn"(contenedor). La escena ball es solo una
-pelota con fisica, mientras que la escena container tiene una
+pelota con física, mientras que la escena container tiene una
 linda forma de colisión, de forma que las pelotas pueden tirarse
 allí.
 
@@ -73,17 +73,17 @@ algo así:
 
 .. image:: /img/continstanced.png
 
-Presiona Reproducir y Voila!
+Presiona Reproducir y Voilà!
 
 .. image:: /img/playinst.png
 
-La pelota instanciada cayo hasta el fondo del pozo.
+La pelota instanciada cayó hasta el fondo del pozo.
 
-Un poco mas
+Un poco más
 -----------
 
 Puede haber tantas instancias como se desee en una escena,
-simplemente intenta instanciar mas pelotas, o duplícalas (Ctrl-D
+simplemente intenta instanciar más pelotas, o duplícalas (Ctrl-D
 o botón derecho -> Duplicar):
 
 .. image:: /img/instmany.png
@@ -92,27 +92,27 @@ Luego intenta correr la escena nuevamente:
 
 .. image:: /img/instmanyrun.png
 
-Esta bueno, eh? Asi es como funciona instanciar.
+Está bueno, eh? Así es como funciona instanciar.
 
 Editando instancias
 -------------------
 
 Selecciona una de las muchas copias de las pelotas y ve al Inspector.
-Hagamos que rebote mucho mas, por lo que busca el parámetro
-bounce(rebote) y configuralo en 1.0:
+Hagamos que rebote mucho más, por lo que busca el parámetro
+bounce(rebote) y configúralo en 1.0:
 
 .. image:: /img/instedit.png
 
 Lo próximo que sucederá es que un botón de "revertir" con forma de
-"flecha en circulo" aparecerá. Cuando este botón esta presente,
+"flecha en círculo" aparecerá. Cuando este botón está presente,
 significa que hemos modificado una propiedad en la escena
-instanciada, ignorando el valor original. Aun si esa propiedad es
+instanciada, ignorando el valor original. Aún si esa propiedad es
 modificada en la escena original, el valor personalizado siempre lo
-sobrescribirá. Tocando el botón de revertir restaurara la propiedad
+sobrescribirá. Tocando el botón de revertir restaurará la propiedad
 al valor original que vino de la escena.
 
 Conclusión
 ----------
 
-Instanciar parece útil, pero hay mas de lo que se ve a simple vista!
-La próxima parte del tutorial de instanciar cubrirá el resto..
+Instanciar parece útil, pero hay más de lo que se ve a simple vista!
+La próxima parte del tutorial de instanciar cubrirá el resto...
