@@ -121,7 +121,7 @@ juego, algo como esto:
 
 Este modelo o modelos similares permiten que los proyectos crezcan hasta
 tamaños realmente grandes y aun ser completamente administrable. Nota
-que todo esta basado en partes del jugo que pueden ser nombradas o
+que todo esta basado en partes del juego que pueden ser nombradas o
 descritas, como la pantalla de ajustes (settings screen) o el valle
 (valley). Debido a que todo en Godot es hecho con escenas, y todo lo
 que puede ser nombrado o descrito puede ser una escena, este workflow
